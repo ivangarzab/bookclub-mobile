@@ -1,5 +1,11 @@
 package com.ivangarzab.bookclub.data.remote.dtos
 
+import com.ivangarzab.bookclub.data.remote.dtos.serializers.DiscordSnowflakeSerializer
+import com.ivangarzab.bookclub.data.remote.dtos.serializers.IntListToStringListSerializer
+import com.ivangarzab.bookclub.data.remote.dtos.serializers.IntToStringSerializer
+import com.ivangarzab.bookclub.data.remote.dtos.serializers.NullableDiscordSnowflakeSerializer
+import com.ivangarzab.bookclub.data.remote.dtos.serializers.NullableIntListToStringListSerializer
+import com.ivangarzab.bookclub.data.remote.dtos.serializers.NullableIntToStringSerializer
 import kotlinx.serialization.Serializable
 
 // ========================================
@@ -8,7 +14,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class BookDto(
-    val id: Int? = null,
+    @Serializable(with = NullableIntToStringSerializer::class)
+    val id: String? = null,
     val title: String,
     val author: String,
     val edition: String? = null,
@@ -27,6 +34,7 @@ data class DiscussionDto(
 
 @Serializable
 data class MemberDto(
+    @Serializable(with = IntToStringSerializer::class)
     val id: String,
     val name: String,
     val points: Int = 0,
@@ -40,7 +48,9 @@ data class MemberDto(
 data class ClubDto(
     val id: String,
     val name: String,
+    @Serializable(with = NullableDiscordSnowflakeSerializer::class)
     val discord_channel: String? = null,
+    @Serializable(with = NullableDiscordSnowflakeSerializer::class)
     val server_id: String? = null
 )
 
@@ -55,6 +65,7 @@ data class SessionDto(
 
 @Serializable
 data class ServerDto(
+    @Serializable(with = DiscordSnowflakeSerializer::class)
     val id: String,
     val name: String
 )
@@ -85,11 +96,14 @@ data class DeleteResponseDto(
 data class ClubResponseDto(
     val id: String,
     val name: String,
+    @Serializable(with = NullableDiscordSnowflakeSerializer::class)
     val discord_channel: String?,
-    val server_id: String,
+    @Serializable(with = NullableDiscordSnowflakeSerializer::class)
+    val server_id: String?,
     val members: List<MemberDto>,
     val active_session: SessionDto?,
     val past_sessions: List<SessionDto>,
+    @Serializable(with = IntListToStringListSerializer::class)
     val shame_list: List<String> // Member IDs
 )
 
@@ -97,19 +111,25 @@ data class ClubResponseDto(
 data class CreateClubRequestDto(
     val id: String? = null,
     val name: String,
+    @Serializable(with = NullableDiscordSnowflakeSerializer::class)
     val discord_channel: String? = null,
-    val server_id: String,
+    @Serializable(with = NullableDiscordSnowflakeSerializer::class)
+    val server_id: String? = null,
     val members: List<MemberDto>? = null,
     val active_session: SessionDto? = null,
+    @Serializable(with = NullableIntListToStringListSerializer::class)
     val shame_list: List<String>? = null
 )
 
 @Serializable
 data class UpdateClubRequestDto(
     val id: String,
-    val server_id: String,
+    @Serializable(with = NullableDiscordSnowflakeSerializer::class)
+    val server_id: String?,
     val name: String? = null,
+    @Serializable(with = NullableDiscordSnowflakeSerializer::class)
     val discord_channel: String? = null,
+    @Serializable(with = NullableIntListToStringListSerializer::class)
     val shame_list: List<String>? = null
 )
 
@@ -236,6 +256,7 @@ data class ServersResponseDto(
 data class ServerClubDto(
     val id: String,
     val name: String,
+    @Serializable(with = NullableDiscordSnowflakeSerializer::class)
     val discord_channel: String?,
     val member_count: Int? = null,
     val latest_session: SessionDto? = null
