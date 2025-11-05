@@ -1,5 +1,12 @@
 package com.ivangarzab.bookclub.domain.models
 
+/**
+ * Domain model for the Member entity.
+ *
+ * Relations ([clubs], [shameClubs]) are nullable to support flexible loading:
+ * - When fetched from API with expand, these are populated with full Club objects
+ * - When fetched without expansion, these may be null
+ */
 data class Member(
 
     val id: String,
@@ -15,6 +22,15 @@ data class Member(
 
     val role: String? = null,
 
-    /** List of Club IDs that this member belongs to. **/
-    val clubs: List<String> = emptyList()
+    /**
+     * List of [Club]s that this member belongs to.
+     * Null when not loaded; empty list when loaded but member belongs to no clubs.
+     */
+    val clubs: List<Club>? = null,
+
+    /**
+     * List of [Club]s where this member is in the shame list.
+     * Null when not loaded; empty list when loaded but member is not shamed anywhere.
+     */
+    val shameClubs: List<Club>? = null
 )
