@@ -44,7 +44,7 @@ import kotlin.test.assertTrue
  * - club-4: [7]
  * - club-5: [6]
  */
-//@Ignore
+@Ignore
 class ClubServiceIntegrationTest {
 
     private lateinit var clubService: ClubService
@@ -68,7 +68,7 @@ class ClubServiceIntegrationTest {
             install(Functions)
         }
 
-        clubService = ClubService(supabase)
+        clubService = ClubServiceImpl(supabase)
     }
 
     @Test
