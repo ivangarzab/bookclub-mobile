@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.mokkery)
     id("com.codingfeline.buildkonfig") version "+"
 }
 
@@ -47,6 +48,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlin.test.junit)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.ktor.client.mock)
         }

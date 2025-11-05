@@ -17,6 +17,7 @@ androidx-test = "1.2.1"
 junit = "4.13.2"
 ktor = "2.3.7"
 supabase = "2.0.4"
+mokkery = "2.10.2"
 
 
 [libraries]
@@ -54,3 +55,4 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 buildKonfig = { id = "com.codingfeline.buildkonfig", version = "0.14.0" }
+mokkery = { id = "dev.mokkery", version.ref = "mokkery" }
