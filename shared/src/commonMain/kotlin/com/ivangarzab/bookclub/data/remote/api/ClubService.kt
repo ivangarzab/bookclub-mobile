@@ -11,10 +11,18 @@ import io.ktor.client.call.body
 import io.ktor.http.HttpMethod
 import io.ktor.util.InternalAPI
 
-@OptIn(InternalAPI::class)
-class ClubService(private val supabase: SupabaseClient) {
+interface ClubService {
+    suspend fun get(clubId: String, serverId: String): ClubResponseDto
+    suspend fun getByChannel(channel: String, serverId: String): ClubResponseDto
+    suspend fun create(request: CreateClubRequestDto): ClubSuccessResponseDto
+    suspend fun update(request: UpdateClubRequestDto): ClubSuccessResponseDto
+    suspend fun delete(clubId: String, serverId: String): DeleteResponseDto
+}
 
-    suspend fun get(clubId: String, serverId: String): ClubResponseDto {
+@OptIn(InternalAPI::class)
+internal class ClubServiceImpl(private val supabase: SupabaseClient) : ClubService {
+
+    override suspend fun get(clubId: String, serverId: String): ClubResponseDto {
         return supabase.functions.invoke("club") {
             method = HttpMethod.Get
             url {
@@ -24,7 +32,7 @@ class ClubService(private val supabase: SupabaseClient) {
         }.body()
     }
 
-    suspend fun getByChannel(channel: String, serverId: String): ClubResponseDto {
+    override suspend fun getByChannel(channel: String, serverId: String): ClubResponseDto {
         return supabase.functions.invoke("club") {
             method = HttpMethod.Get
             url {
@@ -34,21 +42,21 @@ class ClubService(private val supabase: SupabaseClient) {
         }.body()
     }
 
-    suspend fun create(request: CreateClubRequestDto): ClubSuccessResponseDto {
+    override suspend fun create(request: CreateClubRequestDto): ClubSuccessResponseDto {
         return supabase.functions.invoke("club") {
             method = HttpMethod.Post
             body = request
         }.body()
     }
 
-    suspend fun update(request: UpdateClubRequestDto): ClubSuccessResponseDto {
+    override suspend fun update(request: UpdateClubRequestDto): ClubSuccessResponseDto {
         return supabase.functions.invoke("club") {
             method = HttpMethod.Put
             body = request
         }.body()
     }
 
-    suspend fun delete(clubId: String, serverId: String): DeleteResponseDto {
+    override suspend fun delete(clubId: String, serverId: String): DeleteResponseDto {
         return supabase.functions.invoke("club") {
             method = HttpMethod.Delete
             url {

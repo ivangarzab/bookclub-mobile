@@ -11,31 +11,38 @@ import io.ktor.client.call.body
 import io.ktor.http.HttpMethod
 import io.ktor.util.InternalAPI
 
-@OptIn(InternalAPI::class)
-class SessionService(private val supabase: SupabaseClient) {
+interface SessionService {
+    suspend fun get(sessionId: String): SessionResponseDto
+    suspend fun create(request: CreateSessionRequestDto): SessionSuccessResponseDto
+    suspend fun update(request: UpdateSessionRequestDto): SessionSuccessResponseDto
+    suspend fun delete(sessionId: String): DeleteResponseDto
+}
 
-    suspend fun get(sessionId: String): SessionResponseDto {
+@OptIn(InternalAPI::class)
+internal class SessionServiceImpl(private val supabase: SupabaseClient) : SessionService {
+
+    override suspend fun get(sessionId: String): SessionResponseDto {
         return supabase.functions.invoke("session") {
             method = HttpMethod.Get
             url { parameters.append("id", sessionId) }
         }.body()
     }
 
-    suspend fun create(request: CreateSessionRequestDto): SessionSuccessResponseDto {
+    override suspend fun create(request: CreateSessionRequestDto): SessionSuccessResponseDto {
         return supabase.functions.invoke("session") {
             method = HttpMethod.Post
             body = request
         }.body()
     }
 
-    suspend fun update(request: UpdateSessionRequestDto): SessionSuccessResponseDto {
+    override suspend fun update(request: UpdateSessionRequestDto): SessionSuccessResponseDto {
         return supabase.functions.invoke("session") {
             method = HttpMethod.Put
             body = request
         }.body()
     }
 
-    suspend fun delete(sessionId: String): DeleteResponseDto {
+    override suspend fun delete(sessionId: String): DeleteResponseDto {
         return supabase.functions.invoke("session") {
             method = HttpMethod.Delete
             url { parameters.append("id", sessionId) }

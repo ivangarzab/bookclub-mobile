@@ -11,38 +11,46 @@ import io.ktor.client.call.body
 import io.ktor.http.HttpMethod
 import io.ktor.util.InternalAPI
 
-@OptIn(InternalAPI::class)
-class MemberService(private val supabase: SupabaseClient) {
+interface MemberService {
+    suspend fun get(memberId: String): MemberResponseDto
+    suspend fun getByUserId(userId: String): MemberResponseDto
+    suspend fun create(request: CreateMemberRequestDto): MemberSuccessResponseDto
+    suspend fun update(request: UpdateMemberRequestDto): MemberSuccessResponseDto
+    suspend fun delete(memberId: String): DeleteResponseDto
+}
 
-    suspend fun get(memberId: String): MemberResponseDto {
+@OptIn(InternalAPI::class)
+internal class MemberServiceImpl(private val supabase: SupabaseClient) : MemberService {
+
+    override suspend fun get(memberId: String): MemberResponseDto {
         return supabase.functions.invoke("member") {
             method = HttpMethod.Get
             url { parameters.append("id", memberId) }
         }.body()
     }
 
-    suspend fun getByUserId(userId: String): MemberResponseDto {
+    override suspend fun getByUserId(userId: String): MemberResponseDto {
         return supabase.functions.invoke("member") {
             method = HttpMethod.Get
             url { parameters.append("user_id", userId) }
         }.body()
     }
 
-    suspend fun create(request: CreateMemberRequestDto): MemberSuccessResponseDto {
+    override suspend fun create(request: CreateMemberRequestDto): MemberSuccessResponseDto {
         return supabase.functions.invoke("member") {
             method = HttpMethod.Post
             body = request
         }.body()
     }
 
-    suspend fun update(request: UpdateMemberRequestDto): MemberSuccessResponseDto {
+    override suspend fun update(request: UpdateMemberRequestDto): MemberSuccessResponseDto {
         return supabase.functions.invoke("member") {
             method = HttpMethod.Put
             body = request
         }.body()
     }
 
-    suspend fun delete(memberId: String): DeleteResponseDto {
+    override suspend fun delete(memberId: String): DeleteResponseDto {
         return supabase.functions.invoke("member") {
             method = HttpMethod.Delete
             url { parameters.append("id", memberId) }

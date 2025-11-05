@@ -12,37 +12,45 @@ import io.ktor.client.call.body
 import io.ktor.http.HttpMethod
 import io.ktor.util.InternalAPI
 
-@OptIn(InternalAPI::class)
-class ServerService(private val supabase: SupabaseClient) {
+interface ServerService {
+    suspend fun getAll(): ServersResponseDto
+    suspend fun get(serverId: String): ServerResponseDto
+    suspend fun create(request: CreateServerRequestDto): ServerSuccessResponseDto
+    suspend fun update(request: UpdateServerRequestDto): ServerSuccessResponseDto
+    suspend fun delete(serverId: String): DeleteResponseDto
+}
 
-    suspend fun getAll(): ServersResponseDto {
+@OptIn(InternalAPI::class)
+internal class ServerServiceImpl(private val supabase: SupabaseClient) : ServerService {
+
+    override suspend fun getAll(): ServersResponseDto {
         return supabase.functions.invoke("server") {
             method = HttpMethod.Get
         }.body()
     }
 
-    suspend fun get(serverId: String): ServerResponseDto {
+    override suspend fun get(serverId: String): ServerResponseDto {
         return supabase.functions.invoke("server") {
             method = HttpMethod.Get
             url { parameters.append("id", serverId) }
         }.body()
     }
 
-    suspend fun create(request: CreateServerRequestDto): ServerSuccessResponseDto {
+    override suspend fun create(request: CreateServerRequestDto): ServerSuccessResponseDto {
         return supabase.functions.invoke("server") {
             method = HttpMethod.Post
             body = request
         }.body()
     }
 
-    suspend fun update(request: UpdateServerRequestDto): ServerSuccessResponseDto {
+    override suspend fun update(request: UpdateServerRequestDto): ServerSuccessResponseDto {
         return supabase.functions.invoke("server") {
             method = HttpMethod.Put
             body = request
         }.body()
     }
 
-    suspend fun delete(serverId: String): DeleteResponseDto {
+    override suspend fun delete(serverId: String): DeleteResponseDto {
         return supabase.functions.invoke("server") {
             method = HttpMethod.Delete
             url { parameters.append("id", serverId) }
