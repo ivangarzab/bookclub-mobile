@@ -1,4 +1,4 @@
-package com.ivangarzab.bookclub.data.remote.source.internal
+package com.ivangarzab.bookclub.data.remote.api
 
 import com.ivangarzab.bookclub.data.remote.dtos.ClubResponseDto
 import com.ivangarzab.bookclub.data.remote.dtos.ClubSuccessResponseDto
@@ -12,7 +12,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.util.InternalAPI
 
 @OptIn(InternalAPI::class)
-class ClubDataSource(private val supabase: SupabaseClient) {
+class ClubService(private val supabase: SupabaseClient) {
 
     suspend fun get(clubId: String, serverId: String): ClubResponseDto {
         return supabase.functions.invoke("club") {

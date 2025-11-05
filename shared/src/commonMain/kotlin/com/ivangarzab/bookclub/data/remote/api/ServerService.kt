@@ -1,4 +1,4 @@
-package com.ivangarzab.bookclub.data.remote.source.internal
+package com.ivangarzab.bookclub.data.remote.api
 
 import com.ivangarzab.bookclub.data.remote.dtos.CreateServerRequestDto
 import com.ivangarzab.bookclub.data.remote.dtos.DeleteResponseDto
@@ -13,7 +13,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.util.InternalAPI
 
 @OptIn(InternalAPI::class)
-class ServerDataSource(private val supabase: SupabaseClient) {
+class ServerService(private val supabase: SupabaseClient) {
 
     suspend fun getAll(): ServersResponseDto {
         return supabase.functions.invoke("server") {

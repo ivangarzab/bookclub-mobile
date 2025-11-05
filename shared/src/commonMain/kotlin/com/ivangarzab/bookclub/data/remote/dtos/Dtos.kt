@@ -1,11 +1,11 @@
 package com.ivangarzab.bookclub.data.remote.dtos
 
-import com.ivangarzab.bookclub.data.remote.dtos.serializers.DiscordSnowflakeSerializer
-import com.ivangarzab.bookclub.data.remote.dtos.serializers.IntListToStringListSerializer
-import com.ivangarzab.bookclub.data.remote.dtos.serializers.IntToStringSerializer
-import com.ivangarzab.bookclub.data.remote.dtos.serializers.NullableDiscordSnowflakeSerializer
-import com.ivangarzab.bookclub.data.remote.dtos.serializers.NullableIntListToStringListSerializer
-import com.ivangarzab.bookclub.data.remote.dtos.serializers.NullableIntToStringSerializer
+import com.ivangarzab.bookclub.data.remote.serializers.DiscordSnowflakeSerializer
+import com.ivangarzab.bookclub.data.remote.serializers.IntListToStringListSerializer
+import com.ivangarzab.bookclub.data.remote.serializers.IntToStringSerializer
+import com.ivangarzab.bookclub.data.remote.serializers.NullableDiscordSnowflakeSerializer
+import com.ivangarzab.bookclub.data.remote.serializers.NullableIntListToStringListSerializer
+import com.ivangarzab.bookclub.data.remote.serializers.NullableIntToStringSerializer
 import kotlinx.serialization.Serializable
 
 // ========================================

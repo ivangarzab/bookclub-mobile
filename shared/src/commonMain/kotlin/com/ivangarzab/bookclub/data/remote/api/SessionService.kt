@@ -1,4 +1,4 @@
-package com.ivangarzab.bookclub.data.remote.source.internal
+package com.ivangarzab.bookclub.data.remote.api
 
 import com.ivangarzab.bookclub.data.remote.dtos.CreateSessionRequestDto
 import com.ivangarzab.bookclub.data.remote.dtos.DeleteResponseDto
@@ -12,7 +12,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.util.InternalAPI
 
 @OptIn(InternalAPI::class)
-class SessionDataSource(private val supabase: SupabaseClient) {
+class SessionService(private val supabase: SupabaseClient) {
 
     suspend fun get(sessionId: String): SessionResponseDto {
         return supabase.functions.invoke("session") {

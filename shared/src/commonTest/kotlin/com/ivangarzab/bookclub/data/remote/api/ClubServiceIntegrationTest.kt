@@ -1,4 +1,4 @@
-package com.ivangarzab.bookclub.data.remote.source.internal
+package com.ivangarzab.bookclub.data.remote.api
 
 import com.ivangarzab.bookclub.shared.BuildKonfig
 import io.github.jan.supabase.createSupabaseClient
@@ -44,10 +44,10 @@ import kotlin.test.assertTrue
  * - club-4: [7]
  * - club-5: [6]
  */
-@Ignore
-class ClubDataSourceIntegrationTest {
+//@Ignore
+class ClubServiceIntegrationTest {
 
-    private lateinit var clubDataSource: ClubDataSource
+    private lateinit var clubService: ClubService
 
     // Test server IDs from seed.sql
     private val productionServerId = "1039326367428395038"
@@ -68,14 +68,14 @@ class ClubDataSourceIntegrationTest {
             install(Functions)
         }
 
-        clubDataSource = ClubDataSource(supabase)
+        clubService = ClubService(supabase)
     }
 
     @Test
     fun testGetClub() = runTest {
         // Given: club-1 exists in seed data with known values
         // When: getting club-1 from Production Server
-        val response = clubDataSource.get(
+        val response = clubService.get(
             clubId = "club-1",
             serverId = productionServerId
         )
@@ -99,7 +99,7 @@ class ClubDataSourceIntegrationTest {
     fun testGetClubFromDifferentServer() = runTest {
         // Given: club-3 exists on Test Server Alpha
         // When: getting club-3
-        val response = clubDataSource.get(
+        val response = clubService.get(
             clubId = "club-3",
             serverId = testServerAlphaId
         )
@@ -115,7 +115,7 @@ class ClubDataSourceIntegrationTest {
     fun testGetClubWithSession() = runTest {
         // Given: club-1 has active sessions in seed data
         // When: getting club-1
-        val response = clubDataSource.get(
+        val response = clubService.get(
             clubId = "club-1",
             serverId = productionServerId
         )
@@ -135,7 +135,7 @@ class ClubDataSourceIntegrationTest {
     fun testGetClubWithMembers() = runTest {
         // Given: club-1 has multiple members
         // When: getting club-1
-        val response = clubDataSource.get(
+        val response = clubService.get(
             clubId = "club-1",
             serverId = productionServerId
         )
@@ -160,7 +160,7 @@ class ClubDataSourceIntegrationTest {
     fun testGetClubByDiscordChannel() = runTest {
         // Given: club-2 has discord channel 876543210987654321
         // When: getting club by channel
-        val response = clubDataSource.getByChannel(
+        val response = clubService.getByChannel(
             channel = "876543210987654321",
             serverId = productionServerId
         )
@@ -176,7 +176,7 @@ class ClubDataSourceIntegrationTest {
         // When: trying to get a non-existent club
         // Then: should throw an exception
         assertFailsWith<Exception> {
-            clubDataSource.get("non-existent-club-id", productionServerId)
+            clubService.get("non-existent-club-id", productionServerId)
         }
     }
 
@@ -186,7 +186,7 @@ class ClubDataSourceIntegrationTest {
         // When: trying to get it with wrong server ID
         // Then: should throw an exception or return error
         assertFailsWith<Exception> {
-            clubDataSource.get("club-1", "999999999999999999")
+            clubService.get("club-1", "999999999999999999")
         }
     }
 
@@ -196,7 +196,7 @@ class ClubDataSourceIntegrationTest {
         // When: trying to get it from Test Server Alpha
         // Then: should fail (club doesn't exist on that server)
         assertFailsWith<Exception> {
-            clubDataSource.get("club-1", testServerAlphaId)
+            clubService.get("club-1", testServerAlphaId)
         }
     }
 
@@ -204,8 +204,8 @@ class ClubDataSourceIntegrationTest {
     fun testMultipleClubsOnSameServer() = runTest {
         // Given: Production Server has multiple clubs
         // When: getting different clubs from same server
-        val club1 = clubDataSource.get("club-1", productionServerId)
-        val club2 = clubDataSource.get("club-2", productionServerId)
+        val club1 = clubService.get("club-1", productionServerId)
+        val club2 = clubService.get("club-2", productionServerId)
 
         // Then: should get different clubs
         assertEquals("club-1", club1.id)
@@ -223,7 +223,7 @@ class ClubDataSourceIntegrationTest {
     fun testClubShameListIsIntegerList() = runTest {
         // Given: club-2 has shame list [1, 2]
         // When: getting club-2
-        val response = clubDataSource.get("club-2", productionServerId)
+        val response = clubService.get("club-2", productionServerId)
 
         // Then: shame list should contain member IDs as strings
         assertEquals(2, response.shame_list.size)
@@ -240,7 +240,7 @@ class ClubDataSourceIntegrationTest {
     fun testDiscordChannelIsBigint() = runTest {
         // Given: club-1 has discord_channel as bigint
         // When: getting club-1
-        val response = clubDataSource.get("club-1", productionServerId)
+        val response = clubService.get("club-1", productionServerId)
 
         // Then: discord_channel should be a valid Discord Snowflake (large number as string)
         assertNotNull(response.discord_channel)
@@ -257,7 +257,7 @@ class ClubDataSourceIntegrationTest {
     fun testServerIdIsBigint() = runTest {
         // Given: all clubs have server_id as bigint
         // When: getting any club
-        val response = clubDataSource.get("club-1", productionServerId)
+        val response = clubService.get("club-1", productionServerId)
 
         // Then: server_id should be a valid Discord Snowflake
         assertEquals(productionServerId, response.server_id)
@@ -273,7 +273,7 @@ class ClubDataSourceIntegrationTest {
     fun testMemberIdsAreIntegers() = runTest {
         // Given: members have integer IDs
         // When: getting a club with members
-        val response = clubDataSource.get("club-1", productionServerId)
+        val response = clubService.get("club-1", productionServerId)
 
         // Then: all member IDs should be valid integers
         assertTrue(response.members.isNotEmpty(), "Club should have members")

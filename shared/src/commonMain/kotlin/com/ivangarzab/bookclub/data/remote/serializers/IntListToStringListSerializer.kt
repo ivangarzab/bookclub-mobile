@@ -1,4 +1,4 @@
-package com.ivangarzab.bookclub.data.remote.dtos.serializers
+package com.ivangarzab.bookclub.data.remote.serializers
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
