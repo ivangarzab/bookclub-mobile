@@ -1,5 +1,6 @@
 package com.ivangarzab.bookclub.data.remote.serializers
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -48,6 +49,7 @@ object DiscordSnowflakeSerializer : KSerializer<String> {
  * Custom serializer for Discord Snowflake IDs (nullable).
  * Handles conversion between Long? (database/JSON) and String? (Kotlin code).
  */
+@OptIn(ExperimentalSerializationApi::class)
 object NullableDiscordSnowflakeSerializer : KSerializer<String?> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("NullableDiscordSnowflake", PrimitiveKind.STRING)
