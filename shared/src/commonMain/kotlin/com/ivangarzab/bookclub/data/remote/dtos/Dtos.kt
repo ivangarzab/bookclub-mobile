@@ -34,7 +34,7 @@ data class DiscussionDto(
 data class MemberDto(
     @Serializable(with = IntToStringSerializer::class)
     val id: String,
-    val name: String,
+    val name: String? = null,  // Nullable to handle incomplete API responses
     val points: Int = 0,
     val books_read: Int = 0,
     val user_id: String? = null,
@@ -138,6 +138,7 @@ data class ClubSuccessResponseDto(
 
 @Serializable
 data class MemberResponseDto(
+    @Serializable(with = IntToStringSerializer::class)
     val id: String,
     val name: String,
     val points: Int,
@@ -150,6 +151,7 @@ data class MemberResponseDto(
 
 @Serializable
 data class CreateMemberRequestDto(
+    @Serializable(with = NullableIntToStringSerializer::class)
     val id: String? = null,
     val name: String,
     val points: Int = 0,
@@ -161,6 +163,7 @@ data class CreateMemberRequestDto(
 
 @Serializable
 data class UpdateMemberRequestDto(
+    @Serializable(with = IntToStringSerializer::class)
     val id: String,
     val name: String? = null,
     val points: Int? = null,
@@ -213,7 +216,7 @@ data class UpdateSessionRequestDto(
 
 @Serializable
 data class SessionSuccessResponseDto(
-    val success: Boolean,
+    val success: Boolean? = null,  // Nullable to handle "No changes to apply" response
     val message: String,
     val session: SessionDto? = null,
     val updates: SessionUpdatesDto? = null

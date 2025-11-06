@@ -13,7 +13,7 @@ import com.ivangarzab.bookclub.domain.models.Member
 fun MemberDto.toDomain(): Member {
     return Member(
         id = id,
-        name = name,
+        name = name ?: "",  // Provide default if backend doesn't return name
         points = points,
         booksRead = books_read,
         userId = user_id,

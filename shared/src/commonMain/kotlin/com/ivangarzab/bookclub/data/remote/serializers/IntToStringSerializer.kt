@@ -1,63 +1,89 @@
 package com.ivangarzab.bookclub.data.remote.serializers
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.intOrNull
 
 /**
  * Custom serializer for auto-increment integer IDs (non-nullable).
- * Handles conversion between Int (database/JSON) and String (Kotlin code).
+ * Accepts both JSON numbers and strings, always returns String in Kotlin.
  */
 object IntToStringSerializer : KSerializer<String> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("IntToString", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor = String.serializer().descriptor
 
     override fun serialize(encoder: Encoder, value: String) {
-        // Convert string back to int for database storage
+        // Send as integer for backward compatibility with API
         encoder.encodeInt(value.toInt())
     }
 
     override fun deserialize(decoder: Decoder): String {
-        return try {
-            // Try to decode as int (from database) and convert to string
-            decoder.decodeInt().toString()
-        } catch (e: Exception) {
-            // Fallback: try to decode as string
-            decoder.decodeString()
+        // Handle both JSON numbers and strings
+        return if (decoder is JsonDecoder) {
+            val element = decoder.decodeJsonElement()
+            if (element is JsonPrimitive) {
+                // Try as int first, then as string
+                element.intOrNull?.toString() ?: element.content
+            } else {
+                throw IllegalArgumentException("Expected JsonPrimitive but got ${element::class}")
+            }
+        } else {
+            // Non-JSON decoder, try int first
+            try {
+                decoder.decodeInt().toString()
+            } catch (e: Exception) {
+                decoder.decodeString()
+            }
         }
     }
 }
 
 /**
  * Custom serializer for auto-increment integer IDs (nullable).
- * Handles conversion between Int? (database/JSON) and String? (Kotlin code).
+ * Accepts both JSON numbers and strings, always returns String? in Kotlin.
  */
+@OptIn(ExperimentalSerializationApi::class)
 object NullableIntToStringSerializer : KSerializer<String?> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("NullableIntToString", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor = String.serializer().descriptor
 
     override fun serialize(encoder: Encoder, value: String?) {
         if (value == null) {
             encoder.encodeNull()
         } else {
-            // Convert string back to int for database storage
+            // Send as integer for backward compatibility with API
             encoder.encodeInt(value.toInt())
         }
     }
 
     override fun deserialize(decoder: Decoder): String? {
-        return try {
-            // Try to decode as int (from database) and convert to string
-            decoder.decodeInt().toString()
-        } catch (e: Exception) {
-            // Fallback: try to decode as string
-            try {
-                decoder.decodeString()
-            } catch (e: Exception) {
+        // Handle both JSON numbers and strings
+        return if (decoder is JsonDecoder) {
+            val element = decoder.decodeJsonElement()
+            if (element is JsonPrimitive) {
+                if (element.isString && element.content == "null") {
+                    null
+                } else {
+                    // Try as int first, then as string
+                    element.intOrNull?.toString() ?: element.content
+                }
+            } else {
                 null
+            }
+        } else {
+            // Non-JSON decoder, try int first
+            try {
+                decoder.decodeInt().toString()
+            } catch (e: Exception) {
+                try {
+                    decoder.decodeString()
+                } catch (e: Exception) {
+                    null
+                }
             }
         }
     }

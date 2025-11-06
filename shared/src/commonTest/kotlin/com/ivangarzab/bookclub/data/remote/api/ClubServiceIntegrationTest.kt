@@ -1,12 +1,23 @@
 package com.ivangarzab.bookclub.data.remote.api
 
+import com.ivangarzab.bookclub.data.remote.dtos.CreateClubRequestDto
+import com.ivangarzab.bookclub.data.remote.dtos.UpdateClubRequestDto
 import com.ivangarzab.bookclub.shared.BuildKonfig
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.functions.Functions
+import io.github.jan.supabase.serializer.KotlinXSerializer
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respond
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.headersOf
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
@@ -44,7 +55,6 @@ import kotlin.test.assertTrue
  * - club-4: [7]
  * - club-5: [6]
  */
-@Ignore
 class ClubServiceIntegrationTest {
 
     private lateinit var clubService: ClubService
@@ -63,8 +73,16 @@ class ClubServiceIntegrationTest {
 
         val supabase = createSupabaseClient(
             supabaseUrl = url,
-            supabaseKey = key
+            supabaseKey = key,
         ) {
+            // Set custom serializer for all Supabase operations
+            defaultSerializer = KotlinXSerializer(Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+                encodeDefaults = true
+                prettyPrint = true
+            })
+
             install(Functions)
         }
 
@@ -282,6 +300,201 @@ class ClubServiceIntegrationTest {
                 "Member ID '${member.id}' should be a valid integer")
             assertTrue(member.id.toInt() > 0,
                 "Member ID should be positive")
+        }
+    }
+
+    // ========================================
+    // CREATE/UPDATE/DELETE TESTS
+    // (These tests create their own data and clean up after themselves)
+    // ========================================
+
+    @Test
+    fun testCreateClub() = runTest {
+        // Given: a new club request
+        val clubId = "test-club-create"
+        val request = CreateClubRequestDto(
+            name = "Test Create Club",
+            server_id = productionServerId,  // Use the defined variable
+            id = clubId,
+            discord_channel = "999999999999999999"
+        )
+
+        try {
+            // When: creating the club
+            val response = clubService.create(request)
+
+            // Then: should return success
+            assertTrue(response.success, "Club creation should succeed")
+            assertEquals("Test Create Club", response.club.name)
+            assertEquals(clubId, response.club.id)
+            assertEquals(productionServerId, response.club.server_id)
+
+            // Verify it can be retrieved
+            val retrieved = clubService.get(clubId, productionServerId)
+            assertEquals("Test Create Club", retrieved.name)
+        } finally {
+            // Cleanup: delete the test club
+            try {
+                clubService.delete(clubId, productionServerId)
+            } catch (e: Exception) {
+                // Ignore cleanup errors
+            }
+        }
+    }
+
+    @Test
+    fun testUpdateClub() = runTest {
+        // Given: a test club exists
+        val createRequest = CreateClubRequestDto(
+            id = "test-club-update",
+            name = "Original Name",
+            discord_channel = "888888888888888888",
+            server_id = productionServerId
+        )
+        clubService.create(createRequest)
+
+        try {
+            // When: updating the club
+            val updateRequest = com.ivangarzab.bookclub.data.remote.dtos.UpdateClubRequestDto(
+                id = "test-club-update",
+                server_id = productionServerId,
+                name = "Updated Name"
+            )
+            val response = clubService.update(updateRequest)
+
+            // Then: should return success with updated flag
+            assertTrue(response.success, "Club update should succeed")
+            assertTrue(response.club_updated == true, "Club should be marked as updated")
+            assertEquals("Updated Name", response.club.name)
+
+            // Verify changes persisted
+            val retrieved = clubService.get("test-club-update", productionServerId)
+            assertEquals("Updated Name", retrieved.name)
+        } finally {
+            // Cleanup
+            try {
+                clubService.delete("test-club-update", productionServerId)
+            } catch (e: Exception) {
+                // Ignore cleanup errors
+            }
+        }
+    }
+
+    @Test
+    fun testDeleteClub() = runTest {
+        // Given: a test club exists
+        val createRequest = CreateClubRequestDto(
+            id = "test-club-delete",
+            name = "Club To Delete",
+            discord_channel = "777777777777777777",
+            server_id = productionServerId
+        )
+        clubService.create(createRequest)
+
+        // When: deleting the club
+        val response = clubService.delete("test-club-delete", productionServerId)
+
+        // Then: should return success
+        assertTrue(response.success, "Club deletion should succeed")
+
+        // Verify it no longer exists
+        assertFailsWith<Exception> {
+            clubService.get("test-club-delete", productionServerId)
+        }
+    }
+
+    @Test
+    fun testCreateClubWithoutId() = runTest {
+        var clubId: String? = null
+        try {
+            // Given: a club request without explicit ID
+            val request = CreateClubRequestDto(
+                name = "Auto ID Club",
+                discord_channel = "666666666666666666",
+                server_id = productionServerId
+            )
+
+            // When: creating the club
+            val response = clubService.create(request)
+
+            // Then: should generate an ID
+            assertTrue(response.success)
+            assertNotNull(response.club.id, "Should have generated ID")
+            clubId = response.club.id
+
+            // Verify it exists
+            val retrieved = clubService.get(clubId, productionServerId)
+            assertEquals("Auto ID Club", retrieved.name)
+        } finally {
+            // Cleanup
+            clubId?.let {
+                try {
+                    clubService.delete(it, productionServerId)
+                } catch (e: Exception) {
+                    // Ignore cleanup errors
+                }
+            }
+        }
+    }
+
+    @Test
+    fun testUpdateClubShameList() = runTest {
+        // Given: a test club exists
+        val createRequest = CreateClubRequestDto(
+            id = "test-club-shame",
+            name = "Shame Test Club",
+            discord_channel = "555555555555555555",
+            server_id = productionServerId
+        )
+        clubService.create(createRequest)
+
+        try {
+            // When: updating the shame list
+            val updateRequest = UpdateClubRequestDto(
+                id = "test-club-shame",
+                server_id = productionServerId,
+                shame_list = listOf("1", "2", "5")
+            )
+            val response = clubService.update(updateRequest)
+
+            // Then: should update shame list
+            assertTrue(response.success)
+            assertTrue(response.shame_list_updated == true, "Shame list should be marked as updated")
+
+            // Verify shame list persisted
+            val retrieved = clubService.get("test-club-shame", productionServerId)
+            assertEquals(3, retrieved.shame_list.size)
+            assertTrue(retrieved.shame_list.containsAll(listOf("1", "2", "5")))
+        } finally {
+            // Cleanup
+            try {
+                clubService.delete("test-club-shame", productionServerId)
+            } catch (e: Exception) {
+                // Ignore cleanup errors
+            }
+        }
+    }
+
+    /**
+     * Create a mock [HttpClient] using Ktor's [MockEngine] for testing.
+     * TODO: Delete?
+     */
+    private fun createMockHttpClient(responseContent: String): HttpClient {
+        val mockEngine = MockEngine { _ ->
+            respond(
+                content = responseContent,
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
+        }
+
+        return HttpClient(mockEngine) {
+            install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                    isLenient = true
+                })
+            }
         }
     }
 }
