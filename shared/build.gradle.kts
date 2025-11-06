@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.mokkery)
     id("com.codingfeline.buildkonfig") version "+"
+    id("org.jetbrains.kotlinx.kover") version "0.9.3"
 }
 
 kotlin {
@@ -103,5 +104,18 @@ buildkonfig {
             "TEST_SUPABASE_URL",
             testSupabaseUrl
         )
+    }
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                // Exclude generated code, DTOs, etc.
+                classes("*.BuildConfig", "*.BuildKonfig")
+                packages("com.ivangarzab.bookclub.data.remote.dtos")
+                // Add other exclusions as needed
+            }
+        }
     }
 }
