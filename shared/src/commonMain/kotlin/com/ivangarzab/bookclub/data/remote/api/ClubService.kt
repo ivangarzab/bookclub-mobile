@@ -1,5 +1,6 @@
 package com.ivangarzab.bookclub.data.remote.api
 
+import com.ivangarzab.bookclub.data.remote.api.JsonHelper.getJsonForSupabaseService
 import com.ivangarzab.bookclub.data.remote.dtos.ClubResponseDto
 import com.ivangarzab.bookclub.data.remote.dtos.ClubSuccessResponseDto
 import com.ivangarzab.bookclub.data.remote.dtos.CreateClubRequestDto
@@ -10,8 +11,6 @@ import io.github.jan.supabase.functions.functions
 import io.ktor.client.call.body
 import io.ktor.http.HttpMethod
 import io.ktor.utils.io.InternalAPI
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.encodeToString
 
 interface ClubService {
     suspend fun get(clubId: String, serverId: String): ClubResponseDto
@@ -45,7 +44,7 @@ internal class ClubServiceImpl(private val supabase: SupabaseClient) : ClubServi
     }
 
     override suspend fun create(request: CreateClubRequestDto): ClubSuccessResponseDto {
-        val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+        val json = getJsonForSupabaseService()
         val jsonString = json.encodeToString(request)
 
         return supabase.functions.invoke("club") {
@@ -55,7 +54,7 @@ internal class ClubServiceImpl(private val supabase: SupabaseClient) : ClubServi
     }
 
     override suspend fun update(request: UpdateClubRequestDto): ClubSuccessResponseDto {
-        val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+        val json = getJsonForSupabaseService()
         val jsonString = json.encodeToString(request)
 
         return supabase.functions.invoke("club") {

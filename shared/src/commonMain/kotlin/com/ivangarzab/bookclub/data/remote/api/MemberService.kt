@@ -1,5 +1,6 @@
 package com.ivangarzab.bookclub.data.remote.api
 
+import com.ivangarzab.bookclub.data.remote.api.JsonHelper.getJsonForSupabaseService
 import com.ivangarzab.bookclub.data.remote.dtos.CreateMemberRequestDto
 import com.ivangarzab.bookclub.data.remote.dtos.DeleteResponseDto
 import com.ivangarzab.bookclub.data.remote.dtos.MemberResponseDto
@@ -10,8 +11,6 @@ import io.github.jan.supabase.functions.functions
 import io.ktor.client.call.body
 import io.ktor.http.HttpMethod
 import io.ktor.utils.io.InternalAPI
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.encodeToString
 
 interface MemberService {
     suspend fun get(memberId: String): MemberResponseDto
@@ -39,7 +38,7 @@ internal class MemberServiceImpl(private val supabase: SupabaseClient) : MemberS
     }
 
     override suspend fun create(request: CreateMemberRequestDto): MemberSuccessResponseDto {
-        val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+        val json = getJsonForSupabaseService()
         val jsonString = json.encodeToString(request)
 
         return supabase.functions.invoke("member") {
@@ -49,7 +48,7 @@ internal class MemberServiceImpl(private val supabase: SupabaseClient) : MemberS
     }
 
     override suspend fun update(request: UpdateMemberRequestDto): MemberSuccessResponseDto {
-        val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+        val json = getJsonForSupabaseService()
         val jsonString = json.encodeToString(request)
 
         return supabase.functions.invoke("member") {

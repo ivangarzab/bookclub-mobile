@@ -1,5 +1,6 @@
 package com.ivangarzab.bookclub.data.remote.api
 
+import com.ivangarzab.bookclub.data.remote.api.JsonHelper.getJsonForSupabaseService
 import com.ivangarzab.bookclub.data.remote.dtos.CreateSessionRequestDto
 import com.ivangarzab.bookclub.data.remote.dtos.DeleteResponseDto
 import com.ivangarzab.bookclub.data.remote.dtos.SessionResponseDto
@@ -10,8 +11,6 @@ import io.github.jan.supabase.functions.functions
 import io.ktor.client.call.body
 import io.ktor.http.HttpMethod
 import io.ktor.utils.io.InternalAPI
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.encodeToString
 
 interface SessionService {
     suspend fun get(sessionId: String): SessionResponseDto
@@ -31,7 +30,7 @@ internal class SessionServiceImpl(private val supabase: SupabaseClient) : Sessio
     }
 
     override suspend fun create(request: CreateSessionRequestDto): SessionSuccessResponseDto {
-        val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+        val json = getJsonForSupabaseService()
         val jsonString = json.encodeToString(request)
 
         return supabase.functions.invoke("session") {
@@ -41,7 +40,7 @@ internal class SessionServiceImpl(private val supabase: SupabaseClient) : Sessio
     }
 
     override suspend fun update(request: UpdateSessionRequestDto): SessionSuccessResponseDto {
-        val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+        val json = getJsonForSupabaseService()
         val jsonString = json.encodeToString(request)
 
         return supabase.functions.invoke("session") {
