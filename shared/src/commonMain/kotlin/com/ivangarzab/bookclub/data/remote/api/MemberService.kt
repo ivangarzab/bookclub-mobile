@@ -9,7 +9,9 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.functions.functions
 import io.ktor.client.call.body
 import io.ktor.http.HttpMethod
-import io.ktor.util.InternalAPI
+import io.ktor.utils.io.InternalAPI
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
 
 interface MemberService {
     suspend fun get(memberId: String): MemberResponseDto
@@ -37,16 +39,22 @@ internal class MemberServiceImpl(private val supabase: SupabaseClient) : MemberS
     }
 
     override suspend fun create(request: CreateMemberRequestDto): MemberSuccessResponseDto {
+        val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+        val jsonString = json.encodeToString(request)
+
         return supabase.functions.invoke("member") {
             method = HttpMethod.Post
-            body = request
+            body = jsonString
         }.body()
     }
 
     override suspend fun update(request: UpdateMemberRequestDto): MemberSuccessResponseDto {
+        val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+        val jsonString = json.encodeToString(request)
+
         return supabase.functions.invoke("member") {
             method = HttpMethod.Put
-            body = request
+            body = jsonString
         }.body()
     }
 
