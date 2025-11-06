@@ -15,8 +15,8 @@ androidx-core = "1.16.0"
 androidx-lifecycle = "2.9.1"
 androidx-test = "1.2.1"
 junit = "4.13.2"
-ktor = "2.3.7"
-supabase = "2.0.4"
+ktor = "3.2.2"
+supabase = "3.2.6"
 mokkery = "2.10.2"
 
 
@@ -40,10 +40,12 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 
 supabase = { module = "io.github.jan-tennert.supabase:supabase-kt", version.ref = "supabase" }
 supabase-functions = { module = "io.github.jan-tennert.supabase:functions-kt", version.ref = "supabase" }
+supabase-test = { module = "io.github.jan-tennert.supabase:test-kt", version.ref = "supabase" }
 
 junit = { module = "junit:junit", version.ref = "junit" }
 
