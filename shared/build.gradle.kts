@@ -40,9 +40,13 @@ kotlin {
             implementation(libs.supabase)
             implementation(libs.supabase.functions)
 
+            implementation(libs.koin)
+
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.android)
+            implementation(libs.koin.android)
+            implementation(libs.koin.compose)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -52,6 +56,7 @@ kotlin {
             implementation(libs.kotlin.test.junit)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.ktor.client.mock)
+            implementation(libs.koin.test)
         }
     }
 }
