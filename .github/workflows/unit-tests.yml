@@ -47,10 +47,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Common Unit Tests
-        run: ./gradlew shared:testDebugUnitTest --tests '*' --tests '!*IntegrationTest*' --continue
-
-      - name: Run Android Unit Tests
-        run: ./gradlew composeApp:testDebugUnitTest --tests '*' --tests '!*IntegrationTest*' --continue
+        run: ./gradlew shared:testDebugUnitTest -PexcludeTests="**/*IntegrationTest*" --continue
 
       - name: Generate Kover Coverage Report
         run: ./gradlew shared:koverXmlReport shared:koverHtmlReport
