@@ -1,5 +1,6 @@
 package com.ivangarzab.bookclub.data.remote.source
 
+import com.ivangarzab.bark.Bark
 import com.ivangarzab.bookclub.data.remote.api.SessionService
 import com.ivangarzab.bookclub.data.remote.dtos.CreateSessionRequestDto
 import com.ivangarzab.bookclub.data.remote.dtos.UpdateSessionRequestDto
@@ -57,6 +58,7 @@ class SessionRemoteDataSourceImpl(
             val dto = sessionService.get(sessionId)
             Result.success(dto.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to fetch session with id=$sessionId", e)
             Result.failure(e)
         }
     }
@@ -69,6 +71,7 @@ class SessionRemoteDataSourceImpl(
                 ?: throw Exception("Session creation succeeded but no session returned")
             Result.success(session.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to create session", e)
             Result.failure(e)
         }
     }
@@ -80,6 +83,7 @@ class SessionRemoteDataSourceImpl(
                 ?: throw Exception("Session update succeeded but no session returned")
             Result.success(session.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to update session with id=${request.id}", e)
             Result.failure(e)
         }
     }
@@ -93,6 +97,7 @@ class SessionRemoteDataSourceImpl(
                 Result.failure(Exception("Delete failed: ${response.message}"))
             }
         } catch (e: Exception) {
+            Bark.e("Failed to delete session with id=$sessionId", e)
             Result.failure(e)
         }
     }

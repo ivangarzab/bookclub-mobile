@@ -1,5 +1,6 @@
 package com.ivangarzab.bookclub.data.remote.source
 
+import com.ivangarzab.bark.Bark
 import com.ivangarzab.bookclub.data.remote.api.ClubService
 import com.ivangarzab.bookclub.data.remote.dtos.CreateClubRequestDto
 import com.ivangarzab.bookclub.data.remote.dtos.UpdateClubRequestDto
@@ -65,6 +66,7 @@ class ClubRemoteDataSourceImpl(
             val dto = clubService.get(clubId, serverId)
             Result.success(dto.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to get club with clubId=$clubId and from serverId=$serverId", e)
             Result.failure(e)
         }
     }
@@ -74,6 +76,7 @@ class ClubRemoteDataSourceImpl(
             val dto = clubService.getByChannel(channel, serverId)
             Result.success(dto.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to get club from serverId=$serverId by channel=$channel", e)
             Result.failure(e)
         }
     }
@@ -83,6 +86,7 @@ class ClubRemoteDataSourceImpl(
             val response = clubService.create(request)
             Result.success(response.club.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to create club", e)
             Result.failure(e)
         }
     }
@@ -92,6 +96,7 @@ class ClubRemoteDataSourceImpl(
             val response = clubService.update(request)
             Result.success(response.club.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to update club with id=${request.id}", e)
             Result.failure(e)
         }
     }
@@ -105,6 +110,7 @@ class ClubRemoteDataSourceImpl(
                 Result.failure(Exception("Delete failed: ${response.message}"))
             }
         } catch (e: Exception) {
+            Bark.e("Failed to delete club with id=$clubId from serverId=$serverId", e)
             Result.failure(e)
         }
     }
