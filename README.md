@@ -1,8 +1,12 @@
-# 📚 Kluvs
+# 📚 Kluvs 🎬🍽️
 
 [![Full Tests](https://github.com/ivangarzab/bookclub-mobile/actions/workflows/full-tests.yml/badge.svg)](https://github.com/ivangarzab/bookclub-mobile/actions/workflows/full-tests.yml)
 [![codecov](https://codecov.io/gh/ivangarzab/bookclub-mobile/branch/main/graph/badge.svg)](https://codecov.io/gh/ivangarzab/bookclub-mobile)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.2.0-blue.svg?logo=kotlin)](https://kotlinlang.org)
+
+<p align="center">
+  <img src="assets/ic_kluvs.png" alt="Kluvs Logo" width="200"/>
+</p>
 
 ## 🎯 About
 
@@ -116,4 +120,4 @@ The project uses GitHub Actions for continuous integration:
 
 ---
 
-<p align="center">Made with 🖤️using Kotlin Multiplatform</p>
+<p align="center">Made with 🖤️ using Kotlin Multiplatform</p>
