@@ -88,44 +88,44 @@ jobs:
         working-directory: bookclub-mobile
         run: chmod +x gradlew
 
-      - name: Run Integration Tests
+      - name: Run ALL Tests (Unit + Integration)
         working-directory: bookclub-mobile
-        run: |
-          ./gradlew shared:testDebugUnitTest \
-            --tests "*IntegrationTest" \
-            --continue
+        run: ./gradlew shared:testDebugUnitTest --continue
+
+      - name: Generate Complete Kover Coverage Report
+        working-directory: bookclub-mobile
+        run: ./gradlew shared:koverXmlReport shared:koverHtmlReport
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./bookclub-mobile/shared/build/reports/kover/report.xml
+          flags: all-tests
+          name: complete-coverage
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
 
       - name: Stop Supabase
         if: always()
         working-directory: bookclub-api
         run: supabase stop
 
-      - name: Upload Integration Test Results
+      - name: Upload Test Results
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: integration-test-results
+          name: all-test-results
           path: |
-            bookclub-mobile/**/build/test-results/**/*IntegrationTest*.xml
+            bookclub-mobile/**/build/test-results/**/*.xml
             bookclub-mobile/**/build/reports/tests/**
           retention-days: 30
 
-      - name: Publish Integration Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+      - name: Upload Coverage Reports
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          files: |
-            bookclub-mobile/**/build/test-results/**/*IntegrationTest*.xml
-          check_name: "Integration Test Results"
-          comment_title: "Integration Test Results"
-          fail_on: "test failures"
-
-      - name: Comment PR with Integration Test Results
-        uses: dorny/test-reporter@v2
-        if: always() && github.event_name == 'pull_request'
-        with:
-          name: 'Integration Tests'
-          path: 'bookclub-mobile/**/build/test-results/**/*IntegrationTest*.xml'
-          reporter: java-junit
-          fail-on-error: false
-          working-directory: bookclub-mobile
+          name: coverage-reports
+          path: |
+            bookclub-mobile/shared/build/reports/kover/html/
+            bookclub-mobile/shared/build/reports/kover/report.xml
+          retention-days: 30

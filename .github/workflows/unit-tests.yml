@@ -49,9 +49,6 @@ jobs:
       - name: Run Common Unit Tests
         run: ./gradlew shared:testDebugUnitTest -PexcludeTests="**/*IntegrationTest*" --continue
 
-      - name: Generate Kover Coverage Report
-        run: ./gradlew shared:koverXmlReport shared:koverHtmlReport
-
       - name: Upload Kotlin Test Results
         uses: actions/upload-artifact@v4
         if: always() # Upload even if tests fail
@@ -60,16 +57,6 @@ jobs:
           path: |
             **/build/test-results/**/*.xml
             **/build/reports/tests/**
-          retention-days: 30
-
-      - name: Upload Kotlin Coverage Reports
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: kotlin-coverage
-          path: |
-            shared/build/reports/kover/html/
-            shared/build/reports/kover/report.xml
           retention-days: 30
 
       - name: Publish Kotlin Test Results
@@ -162,13 +149,6 @@ jobs:
           name: ios-test-results
           path: ios-test-results
 
-      - name: Download Kotlin Coverage
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          name: kotlin-coverage
-          path: kotlin-coverage
-
       - name: Generate Unified Test Summary
         run: |
           echo "## 🧪 Multi-Platform Test Results" >> $GITHUB_STEP_SUMMARY
@@ -202,30 +182,8 @@ jobs:
           echo "**Combined test files:** $TOTAL_TEST_FILES" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Coverage Summary
-          echo "## 📈 Code Coverage (Kotlin)" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Parse Kotlin coverage
-          if [ -f "kotlin-coverage/report.xml" ]; then
-            K_COVERAGE=$(grep -o '<counter type="LINE"[^>]*covered="[0-9]*"[^>]*missed="[0-9]*"' kotlin-coverage/report.xml | head -1 | sed 's/.*covered="\([0-9]*\)".*missed="\([0-9]*\)".*/\1 \2/')
-            if [ ! -z "$K_COVERAGE" ]; then
-              K_COVERED=$(echo $K_COVERAGE | cut -d' ' -f1)
-              K_MISSED=$(echo $K_COVERAGE | cut -d' ' -f2)
-              K_TOTAL=$((K_COVERED + K_MISSED))
-              K_PERCENTAGE=$((K_TOTAL > 0 ? K_COVERED * 100 / K_TOTAL : 0))
-              echo "**Coverage:** ${K_PERCENTAGE}% (${K_COVERED}/${K_TOTAL} lines)" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "**Coverage:** Could not parse coverage data" >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "**Coverage:** Report not found" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "_Note: iOS coverage will be added via Codecov in a future update_" >> $GITHUB_STEP_SUMMARY
-
-          echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "📋 All artifacts retained for 30 days" >> $GITHUB_STEP_SUMMARY
           echo "🔍 Check individual test result actions for detailed breakdowns" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "💡 **Note:** Full test coverage is available via Codecov on the integration-tests workflow" >> $GITHUB_STEP_SUMMARY
