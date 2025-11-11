@@ -1,14 +1,12 @@
 # 📚 Kluvs
 
-> A Kotlin Multiplatform mobile application for managing book clubs and reading sessions across Discord communities.
-
-[![Full Tests](https://github.com/ivangarzab/bookclub-mobile/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/ivangarzab/bookclub-mobile/actions/workflows/integration-tests.yml)
+[![Full Tests](https://github.com/ivangarzab/bookclub-mobile/actions/workflows/full-tests.yml/badge.svg)](https://github.com/ivangarzab/bookclub-mobile/actions/workflows/full-tests.yml)
 [![codecov](https://codecov.io/gh/ivangarzab/bookclub-mobile/branch/main/graph/badge.svg)](https://codecov.io/gh/ivangarzab/bookclub-mobile)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.2.0-blue.svg?logo=kotlin)](https://kotlinlang.org)
 
 ## 🎯 About
 
-**Kluvs** mobile is a companion app for Discord-based book clubs, allowing members to track their reading progress, manage sessions, and engage with their community on the go.
+**Kluvs** is a Kotlin Multiplatform mobile application for managing book clubs and reading sessions across Discord communities.
 
 ## ✨ Features
 
@@ -26,7 +24,7 @@
 - **Supabase** - Backend-as-a-Service for data and real-time features
 - **Ktor** - Networking and API communication
 - **Koin** - Dependency injection
-- **barK** - Logging strategy for KMP
+- **[barK](https://github.com/ivangarzab/barK)** - Logging strategy for KMP
 - **Kover** - Code coverage
 - **Mokkery** - Testing framework
 
@@ -108,32 +106,14 @@ The project uses GitHub Actions for continuous integration:
 - **Full Tests Suite** - Full test suite with Supabase on push to `main`
 - **Code Coverage** - Tracked via Codecov
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👤 Author
-
-**Ivan Garza**
-
-- GitHub: [@ivangarzab](https://github.com/ivangarzab)
-
 ## 🙏 Acknowledgments
 
 - Built with [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html)
 - Powered by [Supabase](https://supabase.com)
 - Backend API: [bookclub-api](https://github.com/ivangarzab/bookclub-api)
+- Discord companion bot: [quill-bot](https://github.com/ivangarzab/quill-bot)
+- KMP Logging: [barK](https://github.com/ivangarzab/barK)
 
 ---
 
-<p align="center">Made with ❤️ using Kotlin Multiplatform</p>
+<p align="center">Made with 🖤️using Kotlin Multiplatform</p>
