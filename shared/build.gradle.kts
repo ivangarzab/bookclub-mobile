@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.mokkery)
     id("com.codingfeline.buildkonfig") version "+"
+    id("org.jetbrains.kotlinx.kover") version "0.9.3"
 }
 
 kotlin {
@@ -39,18 +40,23 @@ kotlin {
             implementation(libs.supabase)
             implementation(libs.supabase.functions)
 
+            implementation(libs.koin)
+            implementation(libs.bark)
+
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.android)
+            implementation(libs.koin.android)
+            implementation(libs.koin.compose)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation(libs.kotlin.test.junit)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.ktor.client.mock)
+            implementation(libs.koin.test)
         }
     }
 }
@@ -103,5 +109,18 @@ buildkonfig {
             "TEST_SUPABASE_URL",
             testSupabaseUrl
         )
+    }
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                // Exclude generated code, DTOs, etc.
+                classes("*.BuildConfig", "*.BuildKonfig")
+                packages("com.ivangarzab.bookclub.data.remote.dtos")
+                // Add other exclusions as needed
+            }
+        }
     }
 }

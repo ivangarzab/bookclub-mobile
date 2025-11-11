@@ -1,5 +1,6 @@
 package com.ivangarzab.bookclub.data.remote.source
 
+import com.ivangarzab.bark.Bark
 import com.ivangarzab.bookclub.data.remote.api.ServerService
 import com.ivangarzab.bookclub.data.remote.dtos.CreateServerRequestDto
 import com.ivangarzab.bookclub.data.remote.dtos.UpdateServerRequestDto
@@ -62,6 +63,7 @@ class ServerRemoteDataSourceImpl(
             val response = serverService.getAll()
             Result.success(response.servers.map { it.toDomain() })
         } catch (e: Exception) {
+            Bark.e("Failed to fetch all servers list", e)
             Result.failure(e)
         }
     }
@@ -71,6 +73,7 @@ class ServerRemoteDataSourceImpl(
             val dto = serverService.get(serverId)
             Result.success(dto.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to fetch server with id=$serverId", e)
             Result.failure(e)
         }
     }
@@ -80,6 +83,7 @@ class ServerRemoteDataSourceImpl(
             val response = serverService.create(request)
             Result.success(response.server.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to create server", e)
             Result.failure(e)
         }
     }
@@ -89,6 +93,7 @@ class ServerRemoteDataSourceImpl(
             val response = serverService.update(request)
             Result.success(response.server.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to update server with id=${request.id}", e)
             Result.failure(e)
         }
     }
@@ -102,6 +107,7 @@ class ServerRemoteDataSourceImpl(
                 Result.failure(Exception("Delete failed: ${response.message}"))
             }
         } catch (e: Exception) {
+            Bark.e("Failed to delete server with id=$serverId", e)
             Result.failure(e)
         }
     }

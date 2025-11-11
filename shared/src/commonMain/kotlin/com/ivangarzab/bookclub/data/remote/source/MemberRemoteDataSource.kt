@@ -1,5 +1,6 @@
 package com.ivangarzab.bookclub.data.remote.source
 
+import com.ivangarzab.bark.Bark
 import com.ivangarzab.bookclub.data.remote.api.MemberService
 import com.ivangarzab.bookclub.data.remote.dtos.CreateMemberRequestDto
 import com.ivangarzab.bookclub.data.remote.dtos.UpdateMemberRequestDto
@@ -63,6 +64,7 @@ class MemberRemoteDataSourceImpl(
             val dto = memberService.get(memberId)
             Result.success(dto.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to get member with id=$memberId", e)
             Result.failure(e)
         }
     }
@@ -72,6 +74,7 @@ class MemberRemoteDataSourceImpl(
             val dto = memberService.getByUserId(userId)
             Result.success(dto.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to get member with id=$userId", e)
             Result.failure(e)
         }
     }
@@ -81,6 +84,7 @@ class MemberRemoteDataSourceImpl(
             val response = memberService.create(request)
             Result.success(response.member.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to create member", e)
             Result.failure(e)
         }
     }
@@ -90,6 +94,7 @@ class MemberRemoteDataSourceImpl(
             val response = memberService.update(request)
             Result.success(response.member.toDomain())
         } catch (e: Exception) {
+            Bark.e("Failed to update member with id=${request.id}", e)
             Result.failure(e)
         }
     }
@@ -103,6 +108,7 @@ class MemberRemoteDataSourceImpl(
                 Result.failure(Exception("Delete failed: ${response.message}"))
             }
         } catch (e: Exception) {
+            Bark.e("Failed to delete member with id=$memberId", e)
             Result.failure(e)
         }
     }
