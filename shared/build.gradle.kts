@@ -41,6 +41,7 @@ kotlin {
             implementation(libs.supabase.functions)
 
             implementation(libs.koin)
+            implementation(libs.bark)
 
         }
         androidMain.dependencies {
@@ -53,7 +54,6 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation(libs.kotlin.test.junit)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.ktor.client.mock)
             implementation(libs.koin.test)
