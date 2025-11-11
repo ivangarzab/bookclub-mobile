@@ -1,0 +1,129 @@
+name: Full Test Suite
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Allow manual trigger
+
+# Required permissions
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+  actions: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  all-tests:
+    name: Run All Tests
+    runs-on: ubuntu-latest
+    env:
+      # Production Supabase secrets needed for Gradle build configuration
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+
+    steps:
+      - name: Checkout bookclub-mobile
+        uses: actions/checkout@v5
+        with:
+          path: bookclub-mobile
+
+      - name: Checkout bookclub-api
+        uses: actions/checkout@v5
+        with:
+          repository: ivangarzab/bookclub-api
+          path: bookclub-api
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase Local Instance
+        working-directory: bookclub-api
+        run: |
+          echo "Starting Supabase local instance..."
+          supabase init || true
+          supabase start
+          echo "Supabase started successfully"
+
+      - name: Wait for Supabase to be ready
+        run: sleep 10
+
+      - name: Verify Supabase is running
+        working-directory: bookclub-api
+        run: supabase status
+
+      - name: Apply Database Migrations and Seed
+        working-directory: bookclub-api
+        run: |
+          echo "Applying database migrations and seed data..."
+          supabase db reset --local
+          echo "Migrations and seed applied successfully"
+
+      - name: Set Supabase Local Environment Variables
+        run: |
+          echo "TEST_SUPABASE_URL=http://127.0.0.1:54321" >> $GITHUB_ENV
+          echo "TEST_SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0" >> $GITHUB_ENV
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
+          build-root-directory: bookclub-mobile
+
+      - name: Grant Execute Permission for Gradle
+        working-directory: bookclub-mobile
+        run: chmod +x gradlew
+
+      - name: Run ALL Tests (Unit + Integration)
+        working-directory: bookclub-mobile
+        run: ./gradlew shared:testDebugUnitTest --continue
+
+      - name: Generate Complete Kover Coverage Report
+        working-directory: bookclub-mobile
+        run: ./gradlew shared:koverXmlReport shared:koverHtmlReport
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./bookclub-mobile/shared/build/reports/kover/report.xml
+          flags: all-tests
+          name: complete-coverage
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      - name: Stop Supabase
+        if: always()
+        working-directory: bookclub-api
+        run: supabase stop
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: all-test-results
+          path: |
+            bookclub-mobile/**/build/test-results/**/*.xml
+            bookclub-mobile/**/build/reports/tests/**
+          retention-days: 30
+
+      - name: Upload Coverage Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-reports
+          path: |
+            bookclub-mobile/shared/build/reports/kover/html/
+            bookclub-mobile/shared/build/reports/kover/report.xml
+          retention-days: 30

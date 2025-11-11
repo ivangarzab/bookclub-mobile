@@ -7,6 +7,15 @@ plugins {
     id("org.jetbrains.kotlinx.kover") version "0.9.3"
 }
 
+/**
+ * Attempt to get a Gradle Property called [name]; if it fails, attempt to get it as an
+ * Environment Variable; if that fails, return [default].
+ */
+fun getPropertyOrEnvVar(name: String, default: String = ""): String =
+    (findProperty(name) as String?)
+        ?: System.getenv(name)
+        ?: default
+
 kotlin {
     androidTarget {
         compilations.all {
@@ -80,8 +89,8 @@ buildkonfig {
 
     defaultConfigs {
         // Production Supabase credentials
-        val supabaseUrl: String = properties["SUPABASE_URL"] as String
-        val supabaseKey: String = properties["SUPABASE_KEY"] as String
+        val supabaseUrl: String = getPropertyOrEnvVar("SUPABASE_URL")
+        val supabaseKey: String = getPropertyOrEnvVar("SUPABASE_KEY")
         require(supabaseUrl.isNotEmpty() && supabaseKey.isNotEmpty()) {
             "Make sure to provide the SUPABASE_URL and SUPABASE_KEY in your global gradle.properties file."
         }
@@ -97,8 +106,8 @@ buildkonfig {
         )
 
         // Testing Supabase credentials
-        val testSupabaseUrl: String = properties["TEST_SUPABASE_URL"] as String
-        val testSupabaseKey: String = properties["TEST_SUPABASE_KEY"] as String
+        val testSupabaseUrl: String = getPropertyOrEnvVar("TEST_SUPABASE_URL")
+        val testSupabaseKey: String = getPropertyOrEnvVar("TEST_SUPABASE_KEY")
         buildConfigField(
             com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
             "TEST_SUPABASE_KEY",
@@ -116,11 +125,25 @@ kover {
     reports {
         filters {
             excludes {
-                // Exclude generated code, DTOs, etc.
-                classes("*.BuildConfig", "*.BuildKonfig")
-                packages("com.ivangarzab.bookclub.data.remote.dtos")
+                classes("*.BuildConfig", "*.BuildKonfig") // generated code
+                packages("com.ivangarzab.bookclub.data.remote.dtos") // Dtos
+                packages("**.di") // Dependency Injection
                 // Add other exclusions as needed
             }
+        }
+    }
+}
+
+afterEvaluate {
+    /**
+     * The purpose of this task extension is to allow the :shared:testDebugUnitTest to accept
+     * manual exclusions, and make it easier to run the Unit Test suit without running the
+     * Integration tests classes contained within it.
+     */
+    tasks.named("testDebugUnitTest", Test::class) {
+        if (project.hasProperty("excludeTests")) {
+            val exclusions = project.property("excludeTests").toString().split(",")
+            exclude(exclusions)
         }
     }
 }
