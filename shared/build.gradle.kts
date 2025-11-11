@@ -125,9 +125,9 @@ kover {
     reports {
         filters {
             excludes {
-                // Exclude generated code, DTOs, etc.
-                classes("*.BuildConfig", "*.BuildKonfig")
-                packages("com.ivangarzab.bookclub.data.remote.dtos")
+                classes("*.BuildConfig", "*.BuildKonfig") // generated code
+                packages("com.ivangarzab.bookclub.data.remote.dtos") // Dtos
+                packages("**.di") // Dependency Injection
                 // Add other exclusions as needed
             }
         }
