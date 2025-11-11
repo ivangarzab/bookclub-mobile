@@ -16,7 +16,6 @@ import kotlinx.coroutines.test.runTest
  * - 1234567890123456789: Test Server Alpha
  * - 987654321098765432: Test Server Beta
  */
-@Ignore
 class ServerServiceIntegrationTest {
 
     private lateinit var serverService: ServerService

@@ -56,7 +56,6 @@ import kotlin.test.assertTrue
  * - club-4: [7]
  * - club-5: [6]
  */
-@Ignore
 class ClubServiceIntegrationTest {
 
     private lateinit var clubService: ClubService

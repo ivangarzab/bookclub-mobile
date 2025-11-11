@@ -15,7 +15,6 @@ import kotlinx.coroutines.test.runTest
  *
  * Note: Sessions in seed data are tied to clubs and books from the seed.sql file.
  */
-@Ignore
 class SessionServiceIntegrationTest {
 
     private lateinit var sessionService: SessionService
