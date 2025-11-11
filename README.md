@@ -8,7 +8,7 @@
   <img src="assets/ic_kluvs.png" alt="Kluvs Logo" width="200"/>
 </p>
 
-## 🎯 About
+## ℹ️ About
 
 **Kluvs** is a Kotlin Multiplatform mobile application for managing book clubs and reading sessions across Discord communities.
 
@@ -120,4 +120,4 @@ The project uses GitHub Actions for continuous integration:
 
 ---
 
-<p align="center">Made with 🖤️ using Kotlin Multiplatform</p>
+<p align="center"><i>Made with 🖤️ using Kotlin Multiplatform</i></p>
