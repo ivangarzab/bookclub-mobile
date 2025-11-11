@@ -128,3 +128,4 @@ jobs:
           path: 'bookclub-mobile/**/build/test-results/**/*IntegrationTest*.xml'
           reporter: java-junit
           fail-on-error: false
+          working-directory: bookclub-mobile
