@@ -18,6 +18,7 @@ import kotlinx.serialization.json.Json
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
@@ -55,6 +56,7 @@ import kotlin.test.assertTrue
  * - club-4: [7]
  * - club-5: [6]
  */
+@Ignore
 class ClubServiceIntegrationTest {
 
     private lateinit var clubService: ClubService

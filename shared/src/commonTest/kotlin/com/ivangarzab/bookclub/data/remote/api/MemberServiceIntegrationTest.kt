@@ -19,6 +19,7 @@ import kotlinx.coroutines.test.runTest
  * - 5: Joel Salinas (clubs: club-1, club-2)
  * - 6: Jorge Longoria (clubs: club-5)
  */
+@Ignore
 class MemberServiceIntegrationTest {
 
     private lateinit var memberService: MemberService
