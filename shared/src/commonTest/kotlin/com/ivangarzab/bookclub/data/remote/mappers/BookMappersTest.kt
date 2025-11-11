@@ -1,11 +1,13 @@
 package com.ivangarzab.bookclub.data.remote.mappers
 
+import com.ivangarzab.bark.Bark
 import com.ivangarzab.bookclub.data.remote.dtos.BookDto
+import com.ivangarzab.bookclub.util.BarkTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class BookMappersTest {
+class BookMappersTest : BarkTest() {
 
     @Test
     fun `toDomain maps all fields correctly`() {
@@ -21,6 +23,7 @@ class BookMappersTest {
 
         // When: Mapping to domain
         val domain = dto.toDomain()
+        Bark.v("Domain BookDto: $domain")
 
         // Then: All fields are mapped correctly
         assertEquals("123", domain.id)
@@ -45,6 +48,7 @@ class BookMappersTest {
 
         // When: Mapping to domain
         val domain = dto.toDomain()
+        Bark.v("Domain BookDto: $domain")
 
         // Then: Nullable fields are null
         assertNull(domain.id)
