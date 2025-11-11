@@ -22,6 +22,11 @@ jobs:
   kotlin-tests:
     name: Run Kotlin Tests
     runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      TEST_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+      TEST_SUPABASE_KEY: ${{ secrets.TEST_SUPABASE_KEY }}
 
     steps:
       - name: Checkout Code
@@ -94,6 +99,11 @@ jobs:
     name: Run iOS Tests
     runs-on: macos-latest
     if: false #TODO: Make sure to uncomment once there are iOS tests!
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      TEST_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+      TEST_SUPABASE_KEY: ${{ secrets.TEST_SUPABASE_KEY }}
 
     steps:
       - name: Checkout Code
