@@ -7,6 +7,8 @@ plugins {
     id("org.jetbrains.kotlinx.kover") version "0.9.3"
 }
 
+fun getPropertyOrEnvVar(name: String) = findProperty(name) as? String ?: System.getenv(name)
+
 kotlin {
     androidTarget {
         compilations.all {
@@ -80,8 +82,8 @@ buildkonfig {
 
     defaultConfigs {
         // Production Supabase credentials
-        val supabaseUrl: String = properties["SUPABASE_URL"] as String
-        val supabaseKey: String = properties["SUPABASE_KEY"] as String
+        val supabaseUrl: String = getPropertyOrEnvVar("SUPABASE_URL")
+        val supabaseKey: String = getPropertyOrEnvVar("SUPABASE_KEY")
         require(supabaseUrl.isNotEmpty() && supabaseKey.isNotEmpty()) {
             "Make sure to provide the SUPABASE_URL and SUPABASE_KEY in your global gradle.properties file."
         }
@@ -97,8 +99,8 @@ buildkonfig {
         )
 
         // Testing Supabase credentials
-        val testSupabaseUrl: String = properties["TEST_SUPABASE_URL"] as String
-        val testSupabaseKey: String = properties["TEST_SUPABASE_KEY"] as String
+        val testSupabaseUrl: String = getPropertyOrEnvVar("TEST_SUPABASE_URL")
+        val testSupabaseKey: String = getPropertyOrEnvVar("TEST_SUPABASE_KEY")
         buildConfigField(
             com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
             "TEST_SUPABASE_KEY",
