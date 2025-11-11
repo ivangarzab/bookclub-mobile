@@ -1,9 +1,7 @@
-name: Integration Tests
+name: Full Test Suite
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
     branches: [ main ]
   workflow_dispatch: # Allow manual trigger
 
@@ -19,8 +17,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  integration-tests:
-    name: Run Integration Tests
+  all-tests:
+    name: Run All Tests
     runs-on: ubuntu-latest
     env:
       # Production Supabase secrets needed for Gradle build configuration
