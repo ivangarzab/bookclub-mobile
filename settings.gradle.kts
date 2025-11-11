@@ -1,4 +1,4 @@
-rootProject.name = "Bookclubmobile"
+rootProject.name = "Kluvs"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

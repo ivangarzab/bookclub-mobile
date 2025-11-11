@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-import bookclubmobile.composeapp.generated.resources.Res
-import bookclubmobile.composeapp.generated.resources.compose_multiplatform
+import kluvs.composeapp.generated.resources.Res
+import kluvs.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 @Preview
