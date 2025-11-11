@@ -1,5 +1,6 @@
 package com.ivangarzab.bookclub.di
 
+import com.ivangarzab.bookclub.data.remote.di.remoteDataModule
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
@@ -15,7 +16,8 @@ expect val platformDataModule: Module
 fun initKoin(appDeclaration: KoinAppDeclaration = {}) = startKoin {
     appDeclaration()
     modules(
-        platformDataModule
+        platformDataModule,
+        remoteDataModule,
     )
 }
 
