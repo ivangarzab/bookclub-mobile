@@ -79,10 +79,10 @@ jobs:
           echo "TEST_SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0" >> $GITHUB_ENV
 
       - name: Setup Gradle
-        working-directory: bookclub-mobile
         uses: gradle/gradle-build-action@v2
         with:
           gradle-home-cache-cleanup: true
+          build-root-directory: bookclub-mobile
 
       - name: Grant Execute Permission for Gradle
         working-directory: bookclub-mobile
