@@ -47,6 +47,18 @@ jobs:
       - name: Run Common Unit Tests
         run: ./gradlew shared:testDebugUnitTest -PexcludeTests="**/*IntegrationTest*" --continue
 
+      - name: Generate Unit Test Coverage Report
+        run: ./gradlew shared:koverXmlReport shared:koverHtmlReport
+
+      - name: Upload Unit Test Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./shared/build/reports/kover/report.xml
+          flags: unit-tests
+          name: unit-test-coverage
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
       - name: Upload Kotlin Test Results
         uses: actions/upload-artifact@v4
         if: always() # Upload even if tests fail
@@ -55,6 +67,16 @@ jobs:
           path: |
             **/build/test-results/**/*.xml
             **/build/reports/tests/**
+          retention-days: 30
+
+      - name: Upload Unit Test Coverage Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-test-coverage-reports
+          path: |
+            shared/build/reports/kover/html/
+            shared/build/reports/kover/report.xml
           retention-days: 30
 
       - name: Publish Kotlin Test Results
@@ -184,4 +206,5 @@ jobs:
           echo "📋 All artifacts retained for 30 days" >> $GITHUB_STEP_SUMMARY
           echo "🔍 Check individual test result actions for detailed breakdowns" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "💡 **Note:** Full test coverage is available via Codecov on the integration-tests workflow" >> $GITHUB_STEP_SUMMARY
+          echo "📊 **Coverage:** Unit test coverage available via Codecov" >> $GITHUB_STEP_SUMMARY
+          echo "💡 **Note:** Complete coverage (unit + integration) available on main branch via full-tests workflow" >> $GITHUB_STEP_SUMMARY
