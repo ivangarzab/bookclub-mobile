@@ -47,18 +47,6 @@ jobs:
       - name: Run Common Unit Tests
         run: ./gradlew shared:testDebugUnitTest -PexcludeTests="**/*IntegrationTest*" --continue
 
-      - name: Generate Unit Test Coverage Report
-        run: ./gradlew shared:koverXmlReport shared:koverHtmlReport -PexcludeTests="**/*IntegrationTest*" --continue
-
-      - name: Upload Unit Test Coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          files: ./shared/build/reports/kover/report.xml
-          flags: unit-tests
-          name: unit-test-coverage
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
-
       - name: Upload Kotlin Test Results
         uses: actions/upload-artifact@v4
         if: always() # Upload even if tests fail
@@ -67,16 +55,6 @@ jobs:
           path: |
             **/build/test-results/**/*.xml
             **/build/reports/tests/**
-          retention-days: 30
-
-      - name: Upload Unit Test Coverage Reports
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: unit-test-coverage-reports
-          path: |
-            shared/build/reports/kover/html/
-            shared/build/reports/kover/report.xml
           retention-days: 30
 
       - name: Publish Kotlin Test Results
