@@ -146,6 +146,24 @@ class SessionRepositoryTest {
     }
 
     @Test
+    fun `createSession using default discussions parameter`() = runTest {
+        val clubId = "club-456"
+        val expectedSession = Session(
+            id = "session-new",
+            clubId = clubId,
+            book = testBook,
+            dueDate = testDueDate
+        )
+        everySuspend { remoteDataSource.createSession(any()) } returns Result.success(expectedSession)
+
+        val result = repository.createSession(clubId, testBook, testDueDate)
+
+        assertTrue(result.isSuccess)
+        assertEquals(expectedSession, result.getOrNull())
+        verifySuspend { remoteDataSource.createSession(any()) }
+    }
+
+    @Test
     fun `createSession with discussions creates session with discussions`() = runTest {
         val clubId = "club-456"
         val expectedSession = Session(

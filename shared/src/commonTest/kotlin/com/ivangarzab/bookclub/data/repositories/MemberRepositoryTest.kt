@@ -161,6 +161,24 @@ class MemberRepositoryTest {
     }
 
     @Test
+    fun `createMember using default clubIds parameter`() = runTest {
+        val memberName = "Member Without Clubs"
+        val expectedMember = Member(
+            id = "member-no-clubs",
+            name = memberName,
+            points = 0,
+            booksRead = 0
+        )
+        everySuspend { remoteDataSource.createMember(any()) } returns Result.success(expectedMember)
+
+        val result = repository.createMember(memberName, "user-123", "Reader")
+
+        assertTrue(result.isSuccess)
+        assertEquals(expectedMember, result.getOrNull())
+        verifySuspend { remoteDataSource.createMember(any()) }
+    }
+
+    @Test
     fun `createMember with club IDs adds member to clubs`() = runTest {
         val memberName = "New Member"
         val clubIds = listOf("club-1", "club-2", "club-3")
