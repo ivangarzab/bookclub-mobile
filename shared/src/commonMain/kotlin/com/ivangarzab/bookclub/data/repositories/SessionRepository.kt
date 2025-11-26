@@ -4,6 +4,7 @@ import com.ivangarzab.bookclub.data.remote.dtos.BookDto
 import com.ivangarzab.bookclub.data.remote.dtos.CreateSessionRequestDto
 import com.ivangarzab.bookclub.data.remote.dtos.DiscussionDto
 import com.ivangarzab.bookclub.data.remote.dtos.UpdateSessionRequestDto
+import com.ivangarzab.bookclub.data.remote.mappers.toDto
 import com.ivangarzab.bookclub.data.remote.source.SessionRemoteDataSource
 import com.ivangarzab.bookclub.domain.models.Book
 import com.ivangarzab.bookclub.domain.models.Discussion
@@ -143,14 +144,3 @@ internal class SessionRepositoryImpl(
     override suspend fun deleteSession(sessionId: String): Result<String> =
         sessionRemoteDataSource.deleteSession(sessionId)
 }
-
-/**
- * Maps a [Discussion] domain model to a [DiscussionDto].
- */
-private fun Discussion.toDto(): DiscussionDto = DiscussionDto(
-    id = id,
-    session_id = sessionId,
-    title = title,
-    date = date.toString(),
-    location = location
-)

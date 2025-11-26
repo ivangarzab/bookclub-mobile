@@ -16,3 +16,14 @@ fun DiscussionDto.toDomain(): Discussion {
         location = location
     )
 }
+
+/**
+ * Maps a [Discussion] domain model to a [DiscussionDto].
+ */
+fun Discussion.toDto(): DiscussionDto = DiscussionDto(
+    id = id,
+    session_id = sessionId,
+    title = title,
+    date = date.toString(),
+    location = location
+)
