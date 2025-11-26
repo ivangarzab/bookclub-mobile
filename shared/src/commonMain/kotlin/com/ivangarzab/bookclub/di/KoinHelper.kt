@@ -1,6 +1,7 @@
 package com.ivangarzab.bookclub.di
 
 import com.ivangarzab.bookclub.data.remote.di.remoteDataModule
+import com.ivangarzab.bookclub.data.repositories.di.repositoryModule
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
@@ -18,6 +19,7 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) = startKoin {
     modules(
         platformDataModule,
         remoteDataModule,
+        repositoryModule,
     )
 }
 
