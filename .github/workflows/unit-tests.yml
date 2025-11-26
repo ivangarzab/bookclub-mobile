@@ -48,7 +48,7 @@ jobs:
         run: ./gradlew shared:testDebugUnitTest -PexcludeTests="**/*IntegrationTest*" --continue
 
       - name: Generate Unit Test Coverage Report
-        run: ./gradlew shared:koverXmlReport shared:koverHtmlReport
+        run: ./gradlew shared:koverXmlReport shared:koverHtmlReport -PexcludeTests="**/*IntegrationTest*" --continue
 
       - name: Upload Unit Test Coverage to Codecov
         uses: codecov/codecov-action@v4
