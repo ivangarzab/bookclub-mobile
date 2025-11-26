@@ -184,5 +184,4 @@ jobs:
           echo "📋 All artifacts retained for 30 days" >> $GITHUB_STEP_SUMMARY
           echo "🔍 Check individual test result actions for detailed breakdowns" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📊 **Coverage:** Unit test coverage available via Codecov" >> $GITHUB_STEP_SUMMARY
-          echo "💡 **Note:** Complete coverage (unit + integration) available on main branch via full-tests workflow" >> $GITHUB_STEP_SUMMARY
+          echo "💡 **Note:** Full test coverage is available via Codecov on the integration-tests workflow" >> $GITHUB_STEP_SUMMARY
