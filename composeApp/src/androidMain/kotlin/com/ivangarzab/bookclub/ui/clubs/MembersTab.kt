@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,22 +37,27 @@ val memberList = listOf(
 
 @Composable
 fun MembersTab(modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
-        Spacer(Modifier.height(8.dp))
-
-        Text(
-            text = "Members (X)",
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.titleMedium
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
         )
+    ) {
+        Column(modifier = modifier.padding(16.dp)) {
+            Text(
+                text = "Members (X)",
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleMedium
+            )
 
-        Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(8.dp))
 
-        LazyColumn {
-            itemsIndexed(memberList) { index, member ->
-                MemberListItem(member.first, member.second)
-                if (index < memberList.size - 1) {
-                    MemberDivider()
+            LazyColumn {
+                itemsIndexed(memberList) { index, member ->
+                    MemberListItem(member.first, member.second)
+                    if (index < memberList.size - 1) {
+                        MemberDivider()
+                    }
                 }
             }
         }
@@ -79,7 +86,7 @@ private fun MemberListItem(
                 modifier = Modifier
                     .size(40.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.primaryContainer,
+                        color = MaterialTheme.colorScheme.primary,
                         shape = CircleShape
                     )
             )
@@ -106,8 +113,9 @@ private fun MemberDivider() {
 @Composable
 fun Preview_MembersTab() = KluvsTheme {
     MembersTab(
-        modifier = Modifier.background(color = MaterialTheme.colorScheme.surface)
-        .fillMaxSize()
-        .padding(horizontal = 16.dp, vertical = 8.dp)
+        modifier = Modifier
+            .background(color = MaterialTheme.colorScheme.surface)
+            .fillMaxSize()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     )
 }
