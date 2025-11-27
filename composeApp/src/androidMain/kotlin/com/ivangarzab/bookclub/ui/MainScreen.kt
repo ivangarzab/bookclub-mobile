@@ -1,5 +1,12 @@
 package com.ivangarzab.bookclub.ui
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -17,8 +24,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.ivangarzab.bookclub.R
@@ -33,17 +42,31 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     modifier: Modifier = Modifier
 ) {
+    val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(
         pageCount = { 2 },
         initialPage = 0
     )
-    val scope = rememberCoroutineScope()
+    val titles = listOf(
+        stringResource(R.string.clubs),
+        stringResource(R.string.me)
+    )
 
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.app_name)) }
+                title = {
+                    AnimatedContent(
+                        targetState = pagerState.currentPage,
+                        transitionSpec = {
+                            slideInVertically { -it } togetherWith slideOutVertically { it }
+                        },
+                        label = "title_animation"
+                    ) { page ->
+                        Text(titles[page])
+                    }
+                }
             )
         },
         bottomBar = {
@@ -57,9 +80,23 @@ fun MainScreen(
                     unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
                 )
+                val scale by animateFloatAsState(
+                    targetValue = if (pagerState.currentPage == 0) 1f else 0.85f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ),
+                    label = "tab_scale"
+                )
 
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Star, contentDescription = null) },
+                    icon = {
+                        Icon(
+                            Icons.Default.Star,
+                            contentDescription = null,
+                            modifier = Modifier.scale(scale)
+                        )
+                    },
                     label = { Text(stringResource(R.string.clubs)) },
                     selected = pagerState.currentPage == 0,
                     colors = itemColors,
@@ -69,19 +106,15 @@ fun MainScreen(
                         }
                     }
                 )
-                /*NavigationBarItem(
-                    icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                    label = { Text(stringResource(R.string.home)) },
-                    selected = pagerState.currentPage == 1,
-                    colors = itemColors,
-                    onClick = {
-                        scope.launch {
-                            pagerState.animateScrollToPage(1)
-                        }
-                    }
-                )*/
+
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Person, contentDescription = null) },
+                    icon = {
+                        Icon(
+                            Icons.Default.Person,
+                            contentDescription = null,
+                            modifier = Modifier.scale(scale)
+                        )
+                    },
                     label = { Text(stringResource(R.string.me)) },
                     selected = pagerState.currentPage == 1,
                     colors = itemColors,
