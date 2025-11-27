@@ -1,12 +1,10 @@
 package com.ivangarzab.bookclub.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,7 +24,6 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.ivangarzab.bookclub.R
 import com.ivangarzab.bookclub.theme.KluvsTheme
 import com.ivangarzab.bookclub.ui.clubs.ClubsScreen
-import com.ivangarzab.bookclub.ui.home.HomeScreen
 import com.ivangarzab.bookclub.ui.me.MeScreen
 import com.ivangarzab.bookclub.ui.me.testCurrentlyReadingData
 import kotlinx.coroutines.launch
@@ -37,8 +34,8 @@ fun MainScreen(
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState(
-        pageCount = { 3 },
-        initialPage = 1
+        pageCount = { 2 },
+        initialPage = 0
     )
     val scope = rememberCoroutineScope()
 
@@ -72,7 +69,7 @@ fun MainScreen(
                         }
                     }
                 )
-                NavigationBarItem(
+                /*NavigationBarItem(
                     icon = { Icon(Icons.Default.Home, contentDescription = null) },
                     label = { Text(stringResource(R.string.home)) },
                     selected = pagerState.currentPage == 1,
@@ -82,15 +79,15 @@ fun MainScreen(
                             pagerState.animateScrollToPage(1)
                         }
                     }
-                )
+                )*/
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Person, contentDescription = null) },
                     label = { Text(stringResource(R.string.me)) },
-                    selected = pagerState.currentPage == 2,
+                    selected = pagerState.currentPage == 1,
                     colors = itemColors,
                     onClick = {
                         scope.launch {
-                            pagerState.animateScrollToPage(2)
+                            pagerState.animateScrollToPage(1)
                         }
                     }
                 )
@@ -107,8 +104,8 @@ fun MainScreen(
                 .fillMaxSize()
             when (page) {
                 0 -> ClubsScreen(contentModifier)
-                1 -> HomeScreen(contentModifier)
-                2 -> MeScreen(contentModifier, testCurrentlyReadingData)
+                1 -> /*HomeScreen(contentModifier)
+                2 ->*/ MeScreen(contentModifier, testCurrentlyReadingData)
             }
         }
     }
