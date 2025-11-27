@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.ivangarzab.bookclub.R
 import com.ivangarzab.bookclub.theme.KluvsTheme
+import com.ivangarzab.bookclub.ui.components.NextDiscussionCard
 
 // Dummy discussion data
 data class DummyDiscussion(
@@ -203,49 +204,12 @@ private fun DiscussionTimelineItem(
         // Discussion content
         if (discussion.isNext) {
             // Next discussion with orange box
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = RoundedCornerShape(4.dp)
-                    )
-                    .background(
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
-                        shape = RoundedCornerShape(4.dp)
-                    )
-                    .padding(horizontal = 8.dp, vertical = 12.dp)
-            ) {
-                Text(
-                    text = discussion.title,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Spacer(Modifier.height(4.dp))
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        modifier = Modifier.size(16.dp),
-                        imageVector = Icons.Default.LocationOn,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = discussion.location,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = discussion.date,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
+            NextDiscussionCard(
+                modifier = Modifier.fillMaxWidth(),
+                title = discussion.title,
+                location = discussion.location,
+                formattedDate = discussion.date
+            )
         } else {
             // Past discussions are grayed out
             val textColor = MaterialTheme.colorScheme.onSurface.copy(
