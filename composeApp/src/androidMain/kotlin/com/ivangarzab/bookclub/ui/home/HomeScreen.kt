@@ -1,6 +1,7 @@
 package com.ivangarzab.bookclub.ui.home
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +15,9 @@ fun HomeScreen(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        Text("Home Content")
+        Text(
+            "Home Content",
+            color = MaterialTheme.colorScheme.onBackground
+        )
     }
 }

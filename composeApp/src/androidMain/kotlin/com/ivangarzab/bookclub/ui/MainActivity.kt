@@ -12,7 +12,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ivangarzab.bookclub.App
 import com.ivangarzab.bookclub.theme.KluvsTheme
 
 class MainActivity : ComponentActivity() {
@@ -49,10 +48,4 @@ fun MainNavHost(
 
 object NavDestinations {
     const val MAIN = "main"
-}
-
-@Preview
-@Composable
-fun Preview_MainActivity() = KluvsTheme {
-    App()
 }

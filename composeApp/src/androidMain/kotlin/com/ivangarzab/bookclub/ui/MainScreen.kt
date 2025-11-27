@@ -1,5 +1,6 @@
 package com.ivangarzab.bookclub.ui
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,13 +15,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ivangarzab.bookclub.R
@@ -50,13 +51,21 @@ fun MainScreen(
         },
         bottomBar = {
             NavigationBar(
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.background
             ) {
+                val itemColors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                )
+
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Star, contentDescription = null) },
                     label = { Text(stringResource(R.string.clubs)) },
                     selected = pagerState.currentPage == 0,
+                    colors = itemColors,
                     onClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(0)
@@ -67,6 +76,7 @@ fun MainScreen(
                     icon = { Icon(Icons.Default.Home, contentDescription = null) },
                     label = { Text(stringResource(R.string.home)) },
                     selected = pagerState.currentPage == 1,
+                    colors = itemColors,
                     onClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(1)
@@ -77,6 +87,7 @@ fun MainScreen(
                     icon = { Icon(Icons.Default.Person, contentDescription = null) },
                     label = { Text(stringResource(R.string.me)) },
                     selected = pagerState.currentPage == 2,
+                    colors = itemColors,
                     onClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(2)
@@ -94,7 +105,7 @@ fun MainScreen(
         ) { page ->
             val contentModifier = Modifier
                 .fillMaxSize()
-                .background(color = Color.LightGray)
+                .background(color = MaterialTheme.colorScheme.surfaceVariant)
             when (page) {
                 0 -> ClubsScreen(contentModifier)
                 1 -> HomeScreen(contentModifier)
@@ -107,5 +118,11 @@ fun MainScreen(
 @Preview
 @Composable
 fun Preview_MainScreen() = KluvsTheme {
+    MainScreen()
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun PreviewDark_MainScreen() = KluvsTheme {
     MainScreen()
 }
