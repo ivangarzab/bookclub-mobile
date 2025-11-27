@@ -22,8 +22,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.ivangarzab.bookclub.R
 import com.ivangarzab.bookclub.theme.KluvsTheme
 
 val memberList = listOf(
@@ -45,7 +47,7 @@ fun MembersTab(modifier: Modifier = Modifier) {
     ) {
         Column(modifier = modifier.padding(16.dp)) {
             Text(
-                text = "Members (X)",
+                text = stringResource(R.string.members_x, "X"),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium
             )
@@ -97,7 +99,7 @@ private fun MemberListItem(
             )
         }
         Text(
-            text = "$points pts",
+            text = stringResource(R.string.x_points, points),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.bodyMedium
         )

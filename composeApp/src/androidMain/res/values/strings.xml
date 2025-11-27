@@ -6,4 +6,17 @@
     <string name="general">General</string>
     <string name="active_session">Active Session</string>
     <string name="members">Members</string>
+    <string name="members_x">Members (%s)</string>
+    <string name="x_points">%s pts.</string>
+    <string name="sessions_book">Session\'s Book</string>
+    <string name="by_author">by %s</string>
+    <string name="due_date">Due Date:</string>
+    <string name="discussion_timeline">Discussion Timeline</string>
+    <string name="club_name">Club Name</string>
+    <string name="x_members">%s members</string>
+    <string name="founded_in_x">Founded in %s</string>
+    <string name="current_book">Current Book</string>
+    <string name="vertical_separator">|</string>
+    <string name="x_pages">%s pages</string>
+    <string name="next_discussion">Next Discussion</string>
 </resources>

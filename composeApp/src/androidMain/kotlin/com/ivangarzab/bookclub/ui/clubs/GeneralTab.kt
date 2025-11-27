@@ -22,8 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.ivangarzab.bookclub.R
 import com.ivangarzab.bookclub.theme.KluvsTheme
 
 @Composable
@@ -43,19 +45,19 @@ fun GeneralTab(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Club Name",
+                    text = stringResource(R.string.club_name),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "X members",
+                    text = stringResource(R.string.x_members, "X"),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "Founded in Year",
+                    text = stringResource(R.string.founded_in_x, "Year"),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium,
                 )
@@ -73,7 +75,7 @@ fun GeneralTab(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Current Book",
+                    text = stringResource(R.string.current_book),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -97,12 +99,12 @@ fun GeneralTab(
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Text(
-                        text = "|",
+                        text = stringResource(R.string.vertical_separator),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Text(
-                        text = "XXX pages",
+                        text = stringResource(R.string.x_pages, "XXX"),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -122,7 +124,7 @@ fun GeneralTab(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Next Discussion",
+                    text = stringResource(R.string.next_discussion),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.titleMedium
                 )

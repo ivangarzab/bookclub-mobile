@@ -30,13 +30,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.ivangarzab.bookclub.R
 import com.ivangarzab.bookclub.theme.KluvsTheme
 
 // Dummy discussion data
@@ -73,13 +74,13 @@ fun ActiveSessionTab(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Active Session Book",
+                    text = stringResource(R.string.sessions_book),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "by Author",
+                    text = stringResource(R.string.by_author, "Author"),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -87,9 +88,9 @@ fun ActiveSessionTab(
                 Text(
                     text = buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Medium)) {
-                            append("Due Date: ")
+                            append(stringResource(R.string.due_date))
                         }
-                        append("Month Day, Year")
+                        append(" Month Day, Year")
                     },
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium,
@@ -108,7 +109,7 @@ fun ActiveSessionTab(
             )
         ) {
             Text(
-                text = "Discussion Timeline",
+                text = stringResource(R.string.discussion_timeline),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium
             )
