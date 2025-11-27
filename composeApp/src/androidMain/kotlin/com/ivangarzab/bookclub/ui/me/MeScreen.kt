@@ -124,14 +124,18 @@ private fun Footer(
             FooterItem(label = "Help & Support")
             Spacer(modifier.padding(vertical = 8.dp))
             Divider(color = MaterialTheme.colorScheme.inverseOnSurface)
-            Spacer(modifier.padding(vertical = 8.dp))
-            Text(
-                text = stringResource(R.string.version_x, "0.0.1"),
-                color = MaterialTheme.colorScheme.inverseOnSurface,
-                style = MaterialTheme.typography.bodySmall,
-                fontStyle = FontStyle.Italic,
-                textAlign = TextAlign.Right
-            )
+            Spacer(modifier.padding(vertical = 4.dp))
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Text(
+                    text = stringResource(R.string.version_x, "0.0.1"),
+                    color = MaterialTheme.colorScheme.inverseOnSurface,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontStyle = FontStyle.Italic
+                )
+            }
         }
     }
 }

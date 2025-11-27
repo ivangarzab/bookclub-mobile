@@ -47,7 +47,7 @@ fun CurrentlyReadingSection(
 
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(currentReadings) { reading ->
                     CurrentlyReadingItem(title = reading.first, progress = reading.second)
@@ -72,14 +72,15 @@ private fun CurrentlyReadingItem(
             style = MaterialTheme.typography.bodyLarge
         )
 
-        Spacer(Modifier.padding(8.dp))
+        Spacer(Modifier.padding(4.dp))
 
         LinearProgressIndicator(
             modifier = Modifier.fillMaxWidth(),
             progress = { progress },
             color = MaterialTheme.colorScheme.primary,
-            trackColor = MaterialTheme.colorScheme.surface,
-            strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            gapSize = 0.dp,
+            drawStopIndicator = { }
         )
     }
 }
