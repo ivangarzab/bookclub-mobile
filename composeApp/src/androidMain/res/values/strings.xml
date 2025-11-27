@@ -3,4 +3,7 @@
     <string name="home">Home</string>
     <string name="clubs">Clubs</string>
     <string name="me">Me</string>
+    <string name="general">General</string>
+    <string name="active_session">Active Session</string>
+    <string name="members">Members</string>
 </resources>
