@@ -37,8 +37,8 @@ fun StatisticsSection(
         ) {
             Text(
                 text = stringResource(R.string.your_statistics),
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.titleLarge
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.titleMedium
             )
 
             Spacer(Modifier.padding(8.dp))
@@ -86,12 +86,12 @@ private fun StatisticsItem(
             Text(
                 text = label,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 text = value,
                 color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.bodyLarge
             )
         }
     }
