@@ -28,6 +28,7 @@ import com.ivangarzab.bookclub.theme.KluvsTheme
 import com.ivangarzab.bookclub.ui.clubs.ClubsScreen
 import com.ivangarzab.bookclub.ui.home.HomeScreen
 import com.ivangarzab.bookclub.ui.me.MeScreen
+import com.ivangarzab.bookclub.ui.me.testCurrentlyReadingData
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,11 +105,10 @@ fun MainScreen(
         ) { page ->
             val contentModifier = Modifier
                 .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.surfaceVariant)
             when (page) {
                 0 -> ClubsScreen(contentModifier)
                 1 -> HomeScreen(contentModifier)
-                2 -> MeScreen(contentModifier)
+                2 -> MeScreen(contentModifier, testCurrentlyReadingData)
             }
         }
     }
