@@ -68,15 +68,6 @@ private fun ActiveSessionTab(modifier: Modifier = Modifier) {
     )
 }
 
-@Composable
-private fun MembersTab(modifier: Modifier = Modifier) {
-    Text(
-        "Members Content",
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.onBackground
-    )
-}
-
 @PreviewLightDark
 @Composable
 fun Preview_ClubsScreen() = KluvsTheme {

@@ -1,0 +1,113 @@
+package com.ivangarzab.bookclub.ui.clubs
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
+import com.ivangarzab.bookclub.theme.KluvsTheme
+
+val memberList = listOf(
+    Pair("Iván Garza Bermea", 166),
+    Pair("Monica Michelle Morales", 100),
+    Pair("Marco \"Chitho\" Rivera", 143),
+    Pair("Anacleto \"Keto\" Longoria", 42),
+    Pair("Joel Oscar Julian Salinas", 0),
+    Pair("Ginseng Joaquin Guzman", 69),
+)
+
+@Composable
+fun MembersTab(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        Spacer(Modifier.height(8.dp))
+
+        Text(
+            text = "Members (X)",
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        LazyColumn {
+            itemsIndexed(memberList) { index, member ->
+                MemberListItem(member.first, member.second)
+                if (index < memberList.size - 1) {
+                    MemberDivider()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MemberListItem(
+    name: String,
+    points: Int,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Placeholder avatar
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        shape = CircleShape
+                    )
+            )
+            Text(
+                text = name,
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+        Text(
+            text = "$points pts",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+@Composable
+private fun MemberDivider() {
+    HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
+}
+
+@PreviewLightDark
+@Composable
+fun Preview_MembersTab() = KluvsTheme {
+    MembersTab(
+        modifier = Modifier.background(color = MaterialTheme.colorScheme.surface)
+        .fillMaxSize()
+        .padding(horizontal = 16.dp, vertical = 8.dp)
+    )
+}
