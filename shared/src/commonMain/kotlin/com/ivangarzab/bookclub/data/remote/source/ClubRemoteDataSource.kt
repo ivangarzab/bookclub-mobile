@@ -18,15 +18,18 @@ import com.ivangarzab.bookclub.domain.models.Club
 interface ClubRemoteDataSource {
 
     /**
-     * Fetches a club by ID and server ID.
+     * Fetches a club by ID with optional server ID.
      *
      * Returns a [Club] with all nested relations populated:
      * - members (full Member objects)
      * - activeSession (full Session object)
      * - pastSessions (full Session objects)
      * - shameList (member IDs)
+     *
+     * @param clubId The ID of the club to retrieve
+     * @param serverId Optional server ID for Discord integration (null for mobile-only clubs)
      */
-    suspend fun getClub(clubId: String, serverId: String): Result<Club>
+    suspend fun getClub(clubId: String, serverId: String? = null): Result<Club>
 
     /**
      * Fetches a club by Discord channel ID and server ID.
@@ -50,23 +53,27 @@ interface ClubRemoteDataSource {
     suspend fun updateClub(request: UpdateClubRequestDto): Result<Club>
 
     /**
-     * Deletes a club by ID and server ID.
+     * Deletes a club by ID with optional server ID.
      *
      * Returns success message on successful deletion.
+     *
+     * @param clubId The ID of the club to delete
+     * @param serverId Optional server ID for Discord integration (null for mobile-only clubs)
      */
-    suspend fun deleteClub(clubId: String, serverId: String): Result<String>
+    suspend fun deleteClub(clubId: String, serverId: String? = null): Result<String>
 }
 
 class ClubRemoteDataSourceImpl(
     private val clubService: ClubService
 ) : ClubRemoteDataSource {
 
-    override suspend fun getClub(clubId: String, serverId: String): Result<Club> {
+    override suspend fun getClub(clubId: String, serverId: String?): Result<Club> {
         return try {
             val dto = clubService.get(clubId, serverId)
             Result.success(dto.toDomain())
         } catch (e: Exception) {
-            Bark.e("Failed to get club with clubId=$clubId and from serverId=$serverId", e)
+            val serverIdMsg = serverId?.let { "from serverId=$it" } ?: "(no serverId)"
+            Bark.e("Failed to get club with clubId=$clubId $serverIdMsg", e)
             Result.failure(e)
         }
     }
@@ -101,7 +108,7 @@ class ClubRemoteDataSourceImpl(
         }
     }
 
-    override suspend fun deleteClub(clubId: String, serverId: String): Result<String> {
+    override suspend fun deleteClub(clubId: String, serverId: String?): Result<String> {
         return try {
             val response = clubService.delete(clubId, serverId)
             if (response.success) {
@@ -110,7 +117,8 @@ class ClubRemoteDataSourceImpl(
                 Result.failure(Exception("Delete failed: ${response.message}"))
             }
         } catch (e: Exception) {
-            Bark.e("Failed to delete club with id=$clubId from serverId=$serverId", e)
+            val serverIdMsg = serverId?.let { "from serverId=$it" } ?: "(no serverId)"
+            Bark.e("Failed to delete club with id=$clubId $serverIdMsg", e)
             Result.failure(e)
         }
     }
