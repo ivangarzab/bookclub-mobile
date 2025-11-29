@@ -13,22 +13,23 @@ import io.ktor.http.HttpMethod
 import io.ktor.utils.io.InternalAPI
 
 interface ClubService {
-    suspend fun get(clubId: String, serverId: String): ClubResponseDto
+    suspend fun get(clubId: String, serverId: String? = null): ClubResponseDto
     suspend fun getByChannel(channel: String, serverId: String): ClubResponseDto
     suspend fun create(request: CreateClubRequestDto): ClubSuccessResponseDto
     suspend fun update(request: UpdateClubRequestDto): ClubSuccessResponseDto
-    suspend fun delete(clubId: String, serverId: String): DeleteResponseDto
+    suspend fun delete(clubId: String, serverId: String? = null): DeleteResponseDto
 }
 
 @OptIn(InternalAPI::class)
 internal class ClubServiceImpl(private val supabase: SupabaseClient) : ClubService {
 
-    override suspend fun get(clubId: String, serverId: String): ClubResponseDto {
+    override suspend fun get(clubId: String, serverId: String?): ClubResponseDto {
         return supabase.functions.invoke("club") {
             method = HttpMethod.Get
             url {
                 parameters.append("id", clubId)
-                parameters.append("server_id", serverId)
+                // Only append server_id if provided (Discord use case)
+                serverId?.let { parameters.append("server_id", it) }
             }
         }.body()
     }
@@ -63,12 +64,13 @@ internal class ClubServiceImpl(private val supabase: SupabaseClient) : ClubServi
         }.body()
     }
 
-    override suspend fun delete(clubId: String, serverId: String): DeleteResponseDto {
+    override suspend fun delete(clubId: String, serverId: String?): DeleteResponseDto {
         return supabase.functions.invoke("club") {
             method = HttpMethod.Delete
             url {
                 parameters.append("id", clubId)
-                parameters.append("server_id", serverId)
+                // Only append server_id if provided (Discord use case)
+                serverId?.let { parameters.append("server_id", it) }
             }
         }.body()
     }

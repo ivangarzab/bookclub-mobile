@@ -1,6 +1,11 @@
 package com.ivangarzab.bookclub.data.remote.mappers
 
-import com.ivangarzab.bookclub.data.remote.dtos.*
+import com.ivangarzab.bookclub.data.remote.dtos.BookDto
+import com.ivangarzab.bookclub.data.remote.dtos.ClubDto
+import com.ivangarzab.bookclub.data.remote.dtos.ClubResponseDto
+import com.ivangarzab.bookclub.data.remote.dtos.MemberDto
+import com.ivangarzab.bookclub.data.remote.dtos.ServerClubDto
+import com.ivangarzab.bookclub.data.remote.dtos.SessionDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

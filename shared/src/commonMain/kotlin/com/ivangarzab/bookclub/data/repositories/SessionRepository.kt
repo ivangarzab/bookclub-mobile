@@ -2,7 +2,6 @@ package com.ivangarzab.bookclub.data.repositories
 
 import com.ivangarzab.bookclub.data.remote.dtos.BookDto
 import com.ivangarzab.bookclub.data.remote.dtos.CreateSessionRequestDto
-import com.ivangarzab.bookclub.data.remote.dtos.DiscussionDto
 import com.ivangarzab.bookclub.data.remote.dtos.UpdateSessionRequestDto
 import com.ivangarzab.bookclub.data.remote.mappers.toDto
 import com.ivangarzab.bookclub.data.remote.source.SessionRemoteDataSource

@@ -1,0 +1,261 @@
+package com.ivangarzab.bookclub.domain.usecases.club
+
+import com.ivangarzab.bookclub.data.repositories.ClubRepository
+import com.ivangarzab.bookclub.domain.models.Book
+import com.ivangarzab.bookclub.domain.models.Club
+import com.ivangarzab.bookclub.domain.models.Discussion
+import com.ivangarzab.bookclub.domain.models.Session
+import com.ivangarzab.bookclub.domain.usecases.util.FormatDateTimeUseCase
+import dev.mokkery.answering.returns
+import dev.mokkery.everySuspend
+import dev.mokkery.mock
+import dev.mokkery.verifySuspend
+import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDateTime
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+
+class GetActiveSessionUseCaseTest {
+
+    private lateinit var clubRepository: ClubRepository
+    private val formatDateTime = FormatDateTimeUseCase()
+    private lateinit var useCase: GetActiveSessionUseCase
+
+    @BeforeTest
+    fun setup() {
+        clubRepository = mock<ClubRepository>()
+        useCase = GetActiveSessionUseCase(clubRepository, formatDateTime)
+    }
+
+    @Test
+    fun `returns null when club has no active session`() = runTest {
+        // Given
+        val clubId = "club-123"
+        val club = Club(
+            id = clubId,
+            name = "Test Club",
+            serverId = null,
+            discordChannel = null,
+            members = emptyList(),
+            activeSession = null,
+            pastSessions = emptyList(),
+            shameList = emptyList()
+        )
+        everySuspend { clubRepository.getClub(clubId) } returns Result.success(club)
+
+        // When
+        val result = useCase(clubId)
+
+        // Then
+        assertTrue(result.isSuccess)
+        assertNull(result.getOrNull())
+        verifySuspend { clubRepository.getClub(clubId) }
+    }
+
+    @Test
+    fun `returns active session details with book information`() = runTest {
+        // Given
+        val clubId = "club-123"
+        val book = Book(
+            id = "book-1",
+            title = "The Hobbit",
+            author = "J.R.R. Tolkien",
+            edition = null,
+            year = 1937,
+            isbn = null
+        )
+        val dueDate = LocalDateTime(2025, 3, 15, 0, 0)
+        val session = Session(
+            id = "session-1",
+            clubId = clubId,
+            book = book,
+            dueDate = dueDate,
+            discussions = emptyList()
+        )
+        val club = Club(
+            id = clubId,
+            name = "Test Club",
+            serverId = null,
+            discordChannel = null,
+            members = emptyList(),
+            activeSession = session,
+            pastSessions = emptyList(),
+            shameList = emptyList()
+        )
+        everySuspend { clubRepository.getClub(clubId) } returns Result.success(club)
+
+        // When
+        val result = useCase(clubId)
+
+        // Then
+        assertTrue(result.isSuccess)
+        val sessionDetails = result.getOrNull()!!
+        assertEquals("session-1", sessionDetails.sessionId)
+        assertEquals("The Hobbit", sessionDetails.book.title)
+        assertEquals("J.R.R. Tolkien", sessionDetails.book.author)
+        assertEquals("1937", sessionDetails.book.year)
+        // Verify formatted date contains expected parts
+        assertTrue(sessionDetails.dueDate.contains("March"))
+        assertTrue(sessionDetails.dueDate.contains("2025"))
+        verifySuspend { clubRepository.getClub(clubId) }
+    }
+
+    @Test
+    fun `handles null due date gracefully`() = runTest {
+        // Given
+        val clubId = "club-123"
+        val session = Session(
+            id = "session-1",
+            clubId = clubId,
+            book = Book(id = "b1", title = "Book", author = "Author", edition = null, year = null, isbn = null),
+            dueDate = null,
+            discussions = emptyList()
+        )
+        val club = Club(
+            id = clubId,
+            name = "Test Club",
+            serverId = null,
+            discordChannel = null,
+            members = emptyList(),
+            activeSession = session,
+            pastSessions = emptyList(),
+            shameList = emptyList()
+        )
+        everySuspend { clubRepository.getClub(clubId) } returns Result.success(club)
+
+        // When
+        val result = useCase(clubId)
+
+        // Then
+        assertTrue(result.isSuccess)
+        assertEquals("No due date", result.getOrNull()?.dueDate)
+        verifySuspend { clubRepository.getClub(clubId) }
+    }
+
+    @Test
+    fun `marks discussions with correct status flags`() = runTest {
+        // Given
+        val clubId = "club-123"
+        val pastDate = LocalDateTime(2024, 1, 1, 19, 0)
+        val futureDate1 = LocalDateTime(2026, 1, 1, 19, 0)
+        val futureDate2 = LocalDateTime(2026, 2, 1, 19, 0)
+
+        val discussions = listOf(
+            Discussion(id = "d1", sessionId = "s1", title = "Past", date = pastDate, location = null),
+            Discussion(id = "d2", sessionId = "s1", title = "Next", date = futureDate1, location = null),
+            Discussion(id = "d3", sessionId = "s1", title = "Future", date = futureDate2, location = null)
+        )
+
+        val session = Session(
+            id = "session-1",
+            clubId = clubId,
+            book = Book(id = "b1", title = "Book", author = "Author", edition = null, year = null, isbn = null),
+            dueDate = null,
+            discussions = discussions
+        )
+        val club = Club(
+            id = clubId,
+            name = "Test Club",
+            serverId = null,
+            discordChannel = null,
+            members = emptyList(),
+            activeSession = session,
+            pastSessions = emptyList(),
+            shameList = emptyList()
+        )
+
+        everySuspend { clubRepository.getClub(clubId) } returns Result.success(club)
+
+        // When
+        val result = useCase(clubId)
+
+        // Then
+        assertTrue(result.isSuccess)
+        val timeline = result.getOrNull()!!.discussions
+        assertEquals(3, timeline.size)
+
+        // First discussion is past
+        assertTrue(timeline[0].isPast)
+        assertFalse(timeline[0].isNext)
+        assertFalse(timeline[0].isFuture)
+
+        // Second discussion is next
+        assertFalse(timeline[1].isPast)
+        assertTrue(timeline[1].isNext)
+        assertFalse(timeline[1].isFuture)
+
+        // Third discussion is future
+        assertFalse(timeline[2].isPast)
+        assertFalse(timeline[2].isNext)
+        assertTrue(timeline[2].isFuture)
+
+        verifySuspend { clubRepository.getClub(clubId) }
+    }
+
+    @Test
+    fun `sorts discussions chronologically`() = runTest {
+        // Given
+        val clubId = "club-123"
+        val date1 = LocalDateTime(2025, 3, 1, 19, 0)
+        val date2 = LocalDateTime(2025, 1, 1, 19, 0)
+        val date3 = LocalDateTime(2025, 2, 1, 19, 0)
+
+        // Deliberately unsorted
+        val discussions = listOf(
+            Discussion(id = "d1", sessionId = "s1", title = "Third", date = date1, location = null),
+            Discussion(id = "d2", sessionId = "s1", title = "First", date = date2, location = null),
+            Discussion(id = "d3", sessionId = "s1", title = "Second", date = date3, location = null)
+        )
+
+        val session = Session(
+            id = "session-1",
+            clubId = clubId,
+            book = Book(id = "b1", title = "Book", author = "Author", edition = null, year = null, isbn = null),
+            dueDate = null,
+            discussions = discussions
+        )
+        val club = Club(
+            id = clubId,
+            name = "Test Club",
+            serverId = null,
+            discordChannel = null,
+            members = emptyList(),
+            activeSession = session,
+            pastSessions = emptyList(),
+            shameList = emptyList()
+        )
+
+        everySuspend { clubRepository.getClub(clubId) } returns Result.success(club)
+
+        // When
+        val result = useCase(clubId)
+
+        // Then
+        assertTrue(result.isSuccess)
+        val timeline = result.getOrNull()!!.discussions
+        assertEquals("First", timeline[0].title)
+        assertEquals("Second", timeline[1].title)
+        assertEquals("Third", timeline[2].title)
+        verifySuspend { clubRepository.getClub(clubId) }
+    }
+
+    @Test
+    fun `returns failure when repository fails`() = runTest {
+        // Given
+        val clubId = "club-123"
+        val exception = Exception("Club not found")
+        everySuspend { clubRepository.getClub(clubId) } returns Result.failure(exception)
+
+        // When
+        val result = useCase(clubId)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
+        verifySuspend { clubRepository.getClub(clubId) }
+    }
+}

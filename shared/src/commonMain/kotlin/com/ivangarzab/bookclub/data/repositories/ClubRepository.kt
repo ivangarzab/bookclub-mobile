@@ -15,53 +15,53 @@ import com.ivangarzab.bookclub.domain.models.Club
 interface ClubRepository {
 
     /**
-     * Retrieves a single club by its ID and server ID.
+     * Retrieves a single club by its ID with optional server ID.
      *
      * @param clubId The ID of the club to retrieve
-     * @param serverId The ID of the server the club belongs to
+     * @param serverId Optional server ID for Discord integration (defaults to null for mobile-only clubs)
      * @return Result containing the Club (with nested members, sessions, etc.) if successful,
      *         or an error if the operation failed
      */
-    suspend fun getClub(clubId: String, serverId: String): Result<Club>
+    suspend fun getClub(clubId: String, serverId: String? = null): Result<Club>
 
     /**
      * Creates a new club.
      *
      * @param name The name of the club
-     * @param serverId The ID of the server this club belongs to
+     * @param serverId Optional server ID for Discord integration (defaults to null for mobile-only clubs)
      * @param discordChannel Optional Discord channel to associate with this club
      * @return Result containing the created Club if successful, or an error if the operation failed
      */
     suspend fun createClub(
         name: String,
-        serverId: String,
-        discordChannel: String?
+        serverId: String? = null,
+        discordChannel: String? = null
     ): Result<Club>
 
     /**
      * Updates an existing club.
      *
      * @param clubId The ID of the club to update
-     * @param serverId The ID of the server the club belongs to
+     * @param serverId Optional server ID for Discord integration (defaults to null for mobile-only clubs)
      * @param name Optional new name for the club (null to keep current value)
      * @param discordChannel Optional new Discord channel (null to keep current value)
      * @return Result containing the updated Club if successful, or an error if the operation failed
      */
     suspend fun updateClub(
         clubId: String,
-        serverId: String,
-        name: String?,
-        discordChannel: String?
+        serverId: String? = null,
+        name: String? = null,
+        discordChannel: String? = null
     ): Result<Club>
 
     /**
      * Deletes a club by its ID.
      *
      * @param clubId The ID of the club to delete
-     * @param serverId The ID of the server the club belongs to
+     * @param serverId Optional server ID for Discord integration (defaults to null for mobile-only clubs)
      * @return Result containing success message if deletion was successful, or an error if the operation failed
      */
-    suspend fun deleteClub(clubId: String, serverId: String): Result<String>
+    suspend fun deleteClub(clubId: String, serverId: String? = null): Result<String>
 }
 
 /**
@@ -78,12 +78,12 @@ internal class ClubRepositoryImpl(
     private val clubRemoteDataSource: ClubRemoteDataSource
 ) : ClubRepository {
 
-    override suspend fun getClub(clubId: String, serverId: String): Result<Club> =
+    override suspend fun getClub(clubId: String, serverId: String?): Result<Club> =
         clubRemoteDataSource.getClub(clubId, serverId)
 
     override suspend fun createClub(
         name: String,
-        serverId: String,
+        serverId: String?,
         discordChannel: String?
     ): Result<Club> =
         clubRemoteDataSource.createClub(
@@ -96,7 +96,7 @@ internal class ClubRepositoryImpl(
 
     override suspend fun updateClub(
         clubId: String,
-        serverId: String,
+        serverId: String?,
         name: String?,
         discordChannel: String?
     ): Result<Club> =
@@ -109,6 +109,6 @@ internal class ClubRepositoryImpl(
             )
         )
 
-    override suspend fun deleteClub(clubId: String, serverId: String): Result<String> =
+    override suspend fun deleteClub(clubId: String, serverId: String?): Result<String> =
         clubRemoteDataSource.deleteClub(clubId, serverId)
 }

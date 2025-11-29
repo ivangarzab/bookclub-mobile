@@ -7,8 +7,14 @@ import com.ivangarzab.bookclub.data.remote.dtos.UpdateSessionRequestDto
 import com.ivangarzab.bookclub.shared.BuildKonfig
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.functions.Functions
-import kotlin.test.*
 import kotlinx.coroutines.test.runTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 /**
  * Integration tests for SessionService using local Supabase instance with seed data.

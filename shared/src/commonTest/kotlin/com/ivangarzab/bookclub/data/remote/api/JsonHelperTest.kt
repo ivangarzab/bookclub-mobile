@@ -1,7 +1,6 @@
 package com.ivangarzab.bookclub.data.remote.api
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
