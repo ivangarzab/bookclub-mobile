@@ -42,7 +42,7 @@ class GetClubDetailsUseCase(
                 clubId = club.id,
                 clubName = club.name,
                 memberCount = club.members?.size ?: 0,
-                foundedYear = "20205", // TODO: Add founded_date to clubs table in backend
+                foundedYear = null, // TODO: Add founded_date to clubs table in backend
                 currentBook = club.activeSession?.book?.let {
                     BookInfo(
                         title = it.title,
