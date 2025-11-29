@@ -8,7 +8,6 @@ import com.ivangarzab.bookclub.domain.models.Discussion
 import com.ivangarzab.bookclub.domain.models.Member
 import com.ivangarzab.bookclub.domain.models.Session
 import com.ivangarzab.bookclub.domain.usecases.util.FormatDateTimeUseCase
-import com.ivangarzab.bookclub.presentation.models.DateTimeFormat
 import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
 import dev.mokkery.mock

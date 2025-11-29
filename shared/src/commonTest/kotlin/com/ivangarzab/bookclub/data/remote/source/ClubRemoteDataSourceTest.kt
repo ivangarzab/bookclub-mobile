@@ -1,7 +1,13 @@
 package com.ivangarzab.bookclub.data.remote.source
 
 import com.ivangarzab.bookclub.data.remote.api.ClubService
-import com.ivangarzab.bookclub.data.remote.dtos.*
+import com.ivangarzab.bookclub.data.remote.dtos.ClubDto
+import com.ivangarzab.bookclub.data.remote.dtos.ClubResponseDto
+import com.ivangarzab.bookclub.data.remote.dtos.ClubSuccessResponseDto
+import com.ivangarzab.bookclub.data.remote.dtos.CreateClubRequestDto
+import com.ivangarzab.bookclub.data.remote.dtos.DeleteResponseDto
+import com.ivangarzab.bookclub.data.remote.dtos.MemberDto
+import com.ivangarzab.bookclub.data.remote.dtos.UpdateClubRequestDto
 import dev.mokkery.answering.returns
 import dev.mokkery.answering.throws
 import dev.mokkery.everySuspend

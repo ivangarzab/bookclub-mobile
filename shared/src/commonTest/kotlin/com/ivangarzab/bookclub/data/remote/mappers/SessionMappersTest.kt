@@ -1,10 +1,13 @@
 package com.ivangarzab.bookclub.data.remote.mappers
 
-import com.ivangarzab.bookclub.data.remote.dtos.*
+import com.ivangarzab.bookclub.data.remote.dtos.BookDto
+import com.ivangarzab.bookclub.data.remote.dtos.ClubDto
+import com.ivangarzab.bookclub.data.remote.dtos.DiscussionDto
+import com.ivangarzab.bookclub.data.remote.dtos.SessionDto
+import com.ivangarzab.bookclub.data.remote.dtos.SessionResponseDto
 import kotlinx.datetime.LocalDateTime
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
