@@ -47,6 +47,74 @@ Integration tests require a local Supabase instance. The full test suite runs in
 
 **Note**: Integration tests connect to a Supabase instance specified by `TEST_SUPABASE_URL` and `TEST_SUPABASE_KEY` environment variables.
 
+#### Setting Up Local Supabase for Integration Tests
+
+Integration tests rely on a **local Supabase instance** running from the `bookclub-api` project. This ensures tests run against a consistent, isolated environment with seed data.
+
+**Prerequisites:**
+1. The `bookclub-api` project must be cloned at `/Users/ivangarzab/Git/bookclub-api`
+2. Supabase CLI must be installed (`brew install supabase/tap/supabase`)
+
+**Setup Workflow:**
+
+```bash
+# Navigate to the API project
+cd /Users/ivangarzab/Git/bookclub-api
+
+# Start local Supabase (if not already running)
+npx supabase start
+
+# Check status to get local credentials
+npx supabase status
+# Note: API URL is typically http://127.0.0.1:54321
+# Note: anon key is provided in the status output
+```
+
+**Environment Configuration:**
+
+Add these to your `~/.gradle/gradle.properties`:
+
+```properties
+TEST_SUPABASE_URL=http://127.0.0.1:54321
+TEST_SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+```
+
+**⚠️ Important: Applying Backend Changes**
+
+When the backend API (`bookclub-api`) has new database migrations:
+
+```bash
+# Navigate to API project
+cd /Users/ivangarzab/Git/bookclub-api
+
+# Reset local database to apply new migrations and reseed
+npx supabase db reset
+```
+
+This command:
+- Drops and recreates the local database
+- Applies ALL migrations in order (including new ones)
+- Re-seeds test data from `supabase/seed.sql`
+- Restarts Supabase containers
+
+**Common Issues:**
+
+1. **Tests failing with 404/NotFound errors**:
+   - Likely cause: Backend migrations haven't been applied to local DB
+   - Solution: Run `npx supabase db reset` in the API project
+
+2. **Tests failing with schema errors**:
+   - Likely cause: Stale database schema (missing migrations)
+   - Solution: Run `npx supabase db reset` in the API project
+
+3. **Connection errors**:
+   - Verify local Supabase is running: `npx supabase status`
+   - Verify `TEST_SUPABASE_URL` points to `http://127.0.0.1:54321`
+
+**Test Data:**
+
+Integration tests use seed data defined in `/Users/ivangarzab/Git/bookclub-api/supabase/seed.sql`. See test file headers (e.g., `ClubServiceIntegrationTest.kt:28-50`) for documentation of available test data.
+
 ### Run Specific Test
 
 ```bash
