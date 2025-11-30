@@ -4,6 +4,7 @@ import com.ivangarzab.bookclub.data.remote.dtos.SessionDto
 import com.ivangarzab.bookclub.data.remote.dtos.SessionResponseDto
 import com.ivangarzab.bookclub.domain.models.Session
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.atTime
 
 /**
@@ -17,7 +18,7 @@ fun SessionDto.toDomain(): Session {
         id = id,
         clubId = club_id ?: "",
         book = book?.toDomain() ?: error("SessionDto missing required book data"),
-        dueDate = due_date?.let { LocalDate.parse(it).atTime(0, 0) },
+        dueDate = due_date?.let { parseDateString(it) },
         discussions = discussions.map { it.toDomain() }
     )
 }
@@ -32,7 +33,22 @@ fun SessionResponseDto.toDomain(): Session {
         id = id,
         clubId = club.id,
         book = book.toDomain(),
-        dueDate = due_date?.let { LocalDate.parse(it).atTime(0, 0) },
+        dueDate = due_date?.let { parseDateString(it) },
         discussions = discussions.map { it.toDomain() }
     )
+}
+
+/**
+ * Helper function to parse a date string that could be either:
+ * - Date-only format: "2024-12-31"
+ * - DateTime format: "2024-12-31T23:59:59"
+ */
+private fun parseDateString(dateString: String): LocalDateTime {
+    return try {
+        // Try parsing as full DateTime first
+        LocalDateTime.parse(dateString)
+    } catch (e: Exception) {
+        // If that fails, parse as date-only and add midnight time
+        LocalDate.parse(dateString).atTime(0, 0)
+    }
 }
