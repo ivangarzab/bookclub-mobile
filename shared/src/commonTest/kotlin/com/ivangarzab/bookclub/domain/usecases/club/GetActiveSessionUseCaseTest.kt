@@ -194,6 +194,57 @@ class GetActiveSessionUseCaseTest {
     }
 
     @Test
+    fun `marks all discussions as past when all dates have passed`() = runTest {
+        // Given
+        val clubId = "club-123"
+        val pastDate1 = LocalDateTime(2024, 1, 1, 19, 0)
+        val pastDate2 = LocalDateTime(2024, 2, 1, 19, 0)
+        val pastDate3 = LocalDateTime(2024, 3, 1, 19, 0)
+
+        val discussions = listOf(
+            Discussion(id = "d1", sessionId = "s1", title = "Past 1", date = pastDate1, location = null),
+            Discussion(id = "d2", sessionId = "s1", title = "Past 2", date = pastDate2, location = null),
+            Discussion(id = "d3", sessionId = "s1", title = "Past 3", date = pastDate3, location = null)
+        )
+
+        val session = Session(
+            id = "session-1",
+            clubId = clubId,
+            book = Book(id = "b1", title = "Book", author = "Author", edition = null, year = null, isbn = null),
+            dueDate = null,
+            discussions = discussions
+        )
+        val club = Club(
+            id = clubId,
+            name = "Test Club",
+            serverId = null,
+            discordChannel = null,
+            members = emptyList(),
+            activeSession = session,
+            pastSessions = emptyList(),
+            shameList = emptyList()
+        )
+
+        everySuspend { clubRepository.getClub(clubId) } returns Result.success(club)
+
+        // When
+        val result = useCase(clubId)
+
+        // Then
+        assertTrue(result.isSuccess)
+        val timeline = result.getOrNull()!!.discussions
+        assertEquals(3, timeline.size)
+
+        // All discussions should be marked as past, none as next
+        timeline.forEach { discussion ->
+            assertTrue(discussion.isPast, "Discussion '${discussion.title}' should be marked as past")
+            assertFalse(discussion.isNext, "Discussion '${discussion.title}' should not be marked as next")
+        }
+
+        verifySuspend { clubRepository.getClub(clubId) }
+    }
+
+    @Test
     fun `sorts discussions chronologically`() = runTest {
         // Given
         val clubId = "club-123"

@@ -61,8 +61,11 @@ class GetActiveSessionUseCase(
                             title = discussion.title,
                             location = discussion.location,
                             date = formatDateTime(discussion.date, DateTimeFormat.FULL),
-                            isPast = nextDiscussionIndex != -1 && index < nextDiscussionIndex,
-                            isNext = index == nextDiscussionIndex
+                            // If no upcoming discussions (nextDiscussionIndex == -1), all are past
+                            // Otherwise, discussions before the next one are past
+                            isPast = nextDiscussionIndex == -1 || index < nextDiscussionIndex,
+                            // Only mark as next if there IS a next discussion
+                            isNext = nextDiscussionIndex != -1 && index == nextDiscussionIndex
                         )
                     }
                 )
