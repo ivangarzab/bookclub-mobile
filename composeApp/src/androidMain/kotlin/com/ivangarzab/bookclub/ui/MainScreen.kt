@@ -136,7 +136,7 @@ fun MainScreen(
             val contentModifier = Modifier
                 .fillMaxSize()
             when (page) {
-                0 -> ClubsScreen(contentModifier)
+                0 -> ClubsScreen(contentModifier, "0f01ad5e-0665-4f02-8cdd-8d55ecb26ac3")
                 1 -> /*HomeScreen(contentModifier)
                 2 ->*/ MeScreen(contentModifier, testCurrentlyReadingData)
             }
