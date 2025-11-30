@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Kluvs</string>
+    <string name="na">N/A</string>
+    <string name="tbd">TBD</string>
     <string name="home">Home</string>
     <string name="clubs">Clubs</string>
     <string name="me">Me</string>
@@ -26,4 +28,9 @@
     <string name="no_of_clubs">Number of Clubs</string>
     <string name="currently_reading">Currently Reading</string>
     <string name="version_x">Version: %s</string>
+    <string name="no_book_data">Not currently reading a book</string>
+    <string name="no_upcoming_discussion">No upcoming discussion</string>
+    <string name="no_club_details">No club details available</string>
+    <string name="no_session_details">No session details available</string>
+    <string name="no_members_in_club">No members in club</string>
 </resources>

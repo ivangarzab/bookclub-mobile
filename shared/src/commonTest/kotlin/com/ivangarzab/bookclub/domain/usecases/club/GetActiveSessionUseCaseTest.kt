@@ -181,17 +181,14 @@ class GetActiveSessionUseCaseTest {
         // First discussion is past
         assertTrue(timeline[0].isPast)
         assertFalse(timeline[0].isNext)
-        assertFalse(timeline[0].isFuture)
 
         // Second discussion is next
         assertFalse(timeline[1].isPast)
         assertTrue(timeline[1].isNext)
-        assertFalse(timeline[1].isFuture)
 
         // Third discussion is future
         assertFalse(timeline[2].isPast)
         assertFalse(timeline[2].isNext)
-        assertTrue(timeline[2].isFuture)
 
         verifySuspend { clubRepository.getClub(clubId) }
     }

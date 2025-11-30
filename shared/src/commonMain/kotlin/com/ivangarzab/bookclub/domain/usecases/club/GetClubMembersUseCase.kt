@@ -3,12 +3,12 @@ package com.ivangarzab.bookclub.domain.usecases.club
 import com.ivangarzab.bookclub.data.repositories.ClubRepository
 import com.ivangarzab.bookclub.domain.models.Club
 import com.ivangarzab.bookclub.domain.models.Member
-import com.ivangarzab.bookclub.presentation.models.MemberListItem
+import com.ivangarzab.bookclub.presentation.models.MemberListItemInfo
 
 /**
  * UseCase for fetching club members sorted by points for MembersTab.
  *
- * Transforms domain [Member] models into UI-friendly [MemberListItem] with:
+ * Transforms domain [Member] models into UI-friendly [MemberListItemInfo] with:
  * - Member information
  * - Points for ranking
  * - Sorted by points (descending)
@@ -25,12 +25,12 @@ class GetClubMembersUseCase(
      * Returns empty list if club has no members.
      *
      * @param clubId The ID of the club to retrieve members for
-     * @return Result containing list of [MemberListItem] if successful, or error if failed
+     * @return Result containing list of [MemberListItemInfo] if successful, or error if failed
      */
-    suspend operator fun invoke(clubId: String): Result<List<MemberListItem>> {
+    suspend operator fun invoke(clubId: String): Result<List<MemberListItemInfo>> {
         return clubRepository.getClub(clubId).map { club: Club ->
             club.members?.map { member: Member ->
-                MemberListItem(
+                MemberListItemInfo(
                     memberId = member.id,
                     name = member.name,
                     points = member.points,

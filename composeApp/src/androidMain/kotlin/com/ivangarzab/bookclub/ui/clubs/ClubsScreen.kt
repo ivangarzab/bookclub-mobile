@@ -87,9 +87,9 @@ fun ClubsScreenContent(
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                 // Tab content
                 when (selectedTabIndex) {
-                    0 -> GeneralTab(tabModifier)
-                    1 -> ActiveSessionTab(tabModifier)
-                    2 -> MembersTab(tabModifier)
+                    0 -> GeneralTab(tabModifier, state.clubDetails)
+                    1 -> ActiveSessionTab(tabModifier, state.activeSession)
+                    2 -> MembersTab(tabModifier, state.members)
                 }
             }
         }
