@@ -51,7 +51,7 @@ class MeViewModel(
             )
             val error = when {
                 errors.isEmpty() -> null
-                errors.size == 1 -> errors.first()
+                errors.distinct().size == 1 -> errors.first() // All errors are identical
                 else -> "Multiple errors occurred"
             }
             error?.let { e ->
