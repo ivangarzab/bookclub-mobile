@@ -20,11 +20,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.ivangarzab.bookclub.R
+import com.ivangarzab.bookclub.presentation.models.UserStatistics
 import com.ivangarzab.bookclub.theme.KluvsTheme
 
 @Composable
 fun StatisticsSection(
     modifier: Modifier = Modifier,
+    data: UserStatistics?
 ) {
     Card(
         modifier = modifier,
@@ -45,21 +47,33 @@ fun StatisticsSection(
 
             StatisticsItem(
                 label = stringResource(R.string.no_of_clubs),
-                value = "XX"
+                value = data?.clubsCount.let { clubsCount ->
+                    if (clubsCount != null && clubsCount > 0) {
+                        clubsCount.toString()
+                    } else stringResource(R.string.na)
+                }
             )
 
             Spacer(Modifier.padding(4.dp))
 
             StatisticsItem(
                 label = stringResource(R.string.points),
-                value = "YYY"
+                value = data?.totalPoints.let { totalPoints ->
+                    if (totalPoints != null && totalPoints > 0) {
+                        totalPoints.toString()
+                    } else stringResource(R.string.na)
+                }
             )
 
             Spacer(Modifier.padding(4.dp))
 
             StatisticsItem(
                 label = stringResource(R.string.books_read),
-                value = "ZZ"
+                value = data?.booksRead.let { booksRead ->
+                    if (booksRead != null && booksRead > 0) {
+                        booksRead.toString()
+                    } else stringResource(R.string.na)
+                }
             )
         }
     }
@@ -110,5 +124,12 @@ private fun Preview_StatisticsItem() = KluvsTheme {
 @PreviewLightDark
 @Composable
 private fun Preview_StatisticsSection() = KluvsTheme {
-    StatisticsSection(modifier = Modifier.background(color = MaterialTheme.colorScheme.background))
+    StatisticsSection(
+        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+        data = UserStatistics(
+            clubsCount = 1,
+            totalPoints = 100,
+            booksRead = 2
+        )
+    )
 }
