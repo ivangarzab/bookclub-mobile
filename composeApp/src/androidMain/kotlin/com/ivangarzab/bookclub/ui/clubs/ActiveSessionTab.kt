@@ -15,9 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -28,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -188,7 +186,7 @@ private fun DiscussionTimelineItem(
             ) {
                 if (discussion.isPast) {
                     Icon(
-                        Icons.Default.Check,
+                        painter = painterResource(R.drawable.ic_checkmark),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.background,
                         modifier = Modifier.size(16.dp)
@@ -231,7 +229,7 @@ private fun DiscussionTimelineItem(
                 ) {
                     Icon(
                         modifier = Modifier.size(16.dp),
-                        imageVector = Icons.Default.LocationOn,
+                        painter = painterResource(R.drawable.ic_location),
                         contentDescription = null,
                         tint = textColor
                     )
