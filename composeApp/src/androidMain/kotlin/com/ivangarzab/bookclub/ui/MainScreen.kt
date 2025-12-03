@@ -9,11 +9,9 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,8 +26,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import com.ivangarzab.bookclub.R
 import com.ivangarzab.bookclub.theme.KluvsTheme
 import com.ivangarzab.bookclub.ui.clubs.ClubsScreen
@@ -80,21 +80,22 @@ fun MainScreen(
                     unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
                 )
-                val scale by animateFloatAsState(
+                val clubScale by animateFloatAsState(
                     targetValue = if (pagerState.currentPage == 0) 1f else 0.85f,
                     animationSpec = spring(
                         dampingRatio = Spring.DampingRatioMediumBouncy,
                         stiffness = Spring.StiffnessLow
                     ),
-                    label = "tab_scale"
+                    label = "tab_club"
                 )
-
                 NavigationBarItem(
                     icon = {
                         Icon(
-                            Icons.Default.Star,
-                            contentDescription = null,
-                            modifier = Modifier.scale(scale)
+                            modifier = Modifier
+                                .size(24.dp)
+                                .scale(clubScale),
+                            painter = painterResource(R.drawable.ic_club),
+                            contentDescription = null
                         )
                     },
                     label = { Text(stringResource(R.string.clubs)) },
@@ -107,12 +108,22 @@ fun MainScreen(
                     }
                 )
 
+                val meScale by animateFloatAsState(
+                    targetValue = if (pagerState.currentPage == 1) 1f else 0.85f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ),
+                    label = "tab_me"
+                )
                 NavigationBarItem(
                     icon = {
                         Icon(
-                            Icons.Default.Person,
-                            contentDescription = null,
-                            modifier = Modifier.scale(scale)
+                            modifier = Modifier
+                                .size(24.dp)
+                                .scale(meScale),
+                            painter = painterResource(R.drawable.ic_user),
+                            contentDescription = null
                         )
                     },
                     label = { Text(stringResource(R.string.me)) },

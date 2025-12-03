@@ -1,5 +1,6 @@
 package com.ivangarzab.bookclub.ui.me
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -21,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -116,11 +116,17 @@ private fun Footer(
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
         ) {
-            FooterItem(label = "Settings")
+            FooterItem(
+                label = "Settings",
+                icon = R.drawable.ic_settings
+            )
             Spacer(modifier.padding(vertical = 8.dp))
             Divider(color = MaterialTheme.colorScheme.inverseOnSurface)
             Spacer(modifier.padding(vertical = 8.dp))
-            FooterItem(label = "Help & Support")
+            FooterItem(
+                label = "Help & Support",
+                icon = R.drawable.ic_help
+            )
             Spacer(modifier.padding(vertical = 8.dp))
             Divider(color = MaterialTheme.colorScheme.inverseOnSurface)
             Spacer(modifier.padding(vertical = 4.dp))
@@ -142,14 +148,16 @@ private fun Footer(
 @Composable
 private fun FooterItem(
     modifier: Modifier = Modifier,
-    label: String
+    label: String,
+    @DrawableRes icon: Int,
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = Icons.Default.Settings,
+            modifier = Modifier.size(24.dp),
+            painter = painterResource(icon),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary
         )
