@@ -1,5 +1,7 @@
 package com.ivangarzab.bookclub.domain.models
 
+import kotlinx.datetime.LocalDateTime
+
 /**
  * Domain model for the Member entity.
  *
@@ -13,6 +15,9 @@ data class Member(
 
     val name: String,
 
+    /** Username handle for this member. */
+    val handle: String? = null,
+
     val points: Int = 0,
 
     val booksRead: Int = 0,
@@ -21,6 +26,9 @@ data class Member(
     val userId: String? = null,
 
     val role: String? = null,
+
+    /** Timestamp when this member account was created. */
+    val createdAt: LocalDateTime? = null,
 
     /**
      * List of [Club]s that this member belongs to.

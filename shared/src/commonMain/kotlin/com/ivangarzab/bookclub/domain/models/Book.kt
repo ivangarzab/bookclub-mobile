@@ -15,5 +15,7 @@ data class Book(
 
     val year: Int? = null,
 
-    val isbn: String?
+    val isbn: String?,
+
+    val pageCount: Int? = null
 )

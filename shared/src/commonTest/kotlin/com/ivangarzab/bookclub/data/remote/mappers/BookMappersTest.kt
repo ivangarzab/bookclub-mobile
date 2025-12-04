@@ -18,7 +18,8 @@ class BookMappersTest : BarkTest() {
             author = "J.R.R. Tolkien",
             edition = "First Edition",
             year = 1937,
-            isbn = "978-0-395-07122-1"
+            isbn = "978-0-395-07122-1",
+            page_count = 310
         )
 
         // When: Mapping to domain
@@ -32,6 +33,7 @@ class BookMappersTest : BarkTest() {
         assertEquals("First Edition", domain.edition)
         assertEquals(1937, domain.year)
         assertEquals("978-0-395-07122-1", domain.isbn)
+        assertEquals(310, domain.pageCount)
     }
 
     @Test
@@ -43,7 +45,8 @@ class BookMappersTest : BarkTest() {
             author = "Some Author",
             edition = null,
             year = null,
-            isbn = null
+            isbn = null,
+            page_count = null
         )
 
         // When: Mapping to domain
@@ -57,5 +60,6 @@ class BookMappersTest : BarkTest() {
         assertNull(domain.edition)
         assertNull(domain.year)
         assertNull(domain.isbn)
+        assertNull(domain.pageCount)
     }
 }

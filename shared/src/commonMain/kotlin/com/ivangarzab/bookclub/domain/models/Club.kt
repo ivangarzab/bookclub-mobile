@@ -1,5 +1,7 @@
 package com.ivangarzab.bookclub.domain.models
 
+import kotlinx.datetime.LocalDate
+
 /**
  * Domain model for the Club entity.
  *
@@ -18,6 +20,9 @@ data class Club(
 
     /** Server ID that this Club belongs to. **/
     val serverId: String? = null,
+
+    /** Date when this club was founded. **/
+    val foundedDate: LocalDate? = null,
 
     /** List of member IDs in the shame list. **/
     val shameList: List<String> = emptyList(),
