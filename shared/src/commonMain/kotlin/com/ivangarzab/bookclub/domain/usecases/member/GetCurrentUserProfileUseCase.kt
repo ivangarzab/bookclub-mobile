@@ -32,12 +32,21 @@ class GetCurrentUserProfileUseCase(
             UserProfile(
                 memberId = member.id,
                 name = member.name,
-                handle = member.handle,
+                handle = member.handle ?: generateHandleFromName(member.name),
                 joinDate = member.createdAt?.let {
                     formatDateTime(it, DateTimeFormat.YEAR_ONLY)
-                } ?: "2026",
+                } ?: "2025",
                 avatarUrl = null // TODO: Add avatar support when available
             )
         }
     }
+
+    /**
+    * Generates a handle from a member's name.
+    * Converts "John Doe" to "@johndoe".
+    */
+    private fun generateHandleFromName(name: String): String {
+        return "@${name.lowercase().replace(" ", "")}"
+    }
+
 }
