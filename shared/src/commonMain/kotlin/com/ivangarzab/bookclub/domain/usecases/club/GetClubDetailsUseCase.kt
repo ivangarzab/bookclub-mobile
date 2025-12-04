@@ -42,13 +42,13 @@ class GetClubDetailsUseCase(
                 clubId = club.id,
                 clubName = club.name,
                 memberCount = club.members?.size ?: 0,
-                foundedYear = null, // TODO: Add founded_date to clubs table in backend
+                foundedYear = club.foundedDate?.year?.toString(),
                 currentBook = club.activeSession?.book?.let {
                     BookInfo(
                         title = it.title,
                         author = it.author,
                         year = it.year?.toString(),
-                        pageCount = null // TODO: Add page_count to books table if needed
+                        pageCount = it.pageCount,
                     )
                 },
                 nextDiscussion = club.activeSession?.discussions

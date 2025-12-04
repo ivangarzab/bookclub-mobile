@@ -33,6 +33,7 @@ class GetClubMembersUseCase(
                 MemberListItemInfo(
                     memberId = member.id,
                     name = member.name,
+                    handle = member.handle ?: "@",
                     points = member.points,
                     avatarUrl = null // TODO: Add avatar support when available
                 )
