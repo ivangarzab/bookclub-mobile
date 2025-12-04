@@ -29,35 +29,33 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.ivangarzab.bookclub.R
+import com.ivangarzab.bookclub.presentation.models.ActiveSessionDetails
+import com.ivangarzab.bookclub.presentation.models.BookInfo
+import com.ivangarzab.bookclub.presentation.models.DiscussionTimelineItemInfo
 import com.ivangarzab.bookclub.theme.KluvsTheme
 import com.ivangarzab.bookclub.ui.components.NextDiscussionCard
-
-// Dummy discussion data
-data class DummyDiscussion(
-    val title: String,
-    val date: String,
-    val location: String,
-    val isPast: Boolean,
-    val isNext: Boolean
-)
-val dummyDiscussions = listOf(
-    DummyDiscussion("Discussion #1", "Jan 15, 2025 at 7:00 PM", "Coffee Shop", isPast = true, isNext = false),
-    DummyDiscussion("Discussion #2", "Jan 29, 2025 at 7:00 PM", "Library", isPast = true, isNext = false),
-    DummyDiscussion("Discussion #3", "Feb 12, 2025 at 7:00 PM", "Book Store", isPast = false, isNext = true),
-    DummyDiscussion("Discussion #4", "Feb 26, 2025 at 7:00 PM", "Community Center", isPast = false, isNext = false),
-    DummyDiscussion("Discussion #5", "Feb 28, 2025 at 7:00 PM", "Community Center", isPast = false, isNext = false),
-    DummyDiscussion("Discussion #6", "March 6, 2025 at 7:00 PM", "Home", isPast = false, isNext = false),
-)
+import com.ivangarzab.bookclub.ui.components.NoTabData
 
 @Composable
 fun ActiveSessionTab(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    sessionDetails: ActiveSessionDetails?,
 ) {
+    if (sessionDetails == null) {
+        NoTabData(
+            modifier = modifier,
+            text = R.string.no_session_details
+        )
+        return
+    }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -71,13 +69,13 @@ fun ActiveSessionTab(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = stringResource(R.string.sessions_book),
+                    text = sessionDetails.book.title,
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = stringResource(R.string.by_author, "Author"),
+                    text = stringResource(R.string.by_author, sessionDetails.book.author),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -87,7 +85,7 @@ fun ActiveSessionTab(
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Medium)) {
                             append(stringResource(R.string.due_date))
                         }
-                        append(" Month Day, Year")
+                        append(" ${sessionDetails.dueDate}")
                     },
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium,
@@ -111,16 +109,18 @@ fun ActiveSessionTab(
                 style = MaterialTheme.typography.titleMedium
             )
 
-            // Timeline
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(0.dp)
-            ) {
-                itemsIndexed(dummyDiscussions) { index, discussion ->
-                    DiscussionTimelineItem(
-                        discussion = discussion,
-                        isFirst = index == 0,
-                        isLast = index == dummyDiscussions.size - 1
-                    )
+            sessionDetails.discussions.let { discussions ->
+                // Timeline
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(0.dp)
+                ) {
+                    itemsIndexed(discussions) { index, discussion ->
+                        DiscussionTimelineItem(
+                            discussion = discussion,
+                            isFirst = index == 0,
+                            isLast = index == discussions.size - 1
+                        )
+                    }
                 }
             }
         }
@@ -129,7 +129,7 @@ fun ActiveSessionTab(
 
 @Composable
 private fun DiscussionTimelineItem(
-    discussion: DummyDiscussion,
+    discussion: DiscussionTimelineItemInfo,
     isFirst: Boolean,
     isLast: Boolean,
     modifier: Modifier = Modifier
@@ -257,6 +257,19 @@ fun Preview_ActiveSessionTab() = KluvsTheme {
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surface)
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        sessionDetails = ActiveSessionDetails(
+            sessionId = "0",
+            book = BookInfo(title = "1984", author = "George Orwell", year = "1948", pageCount = null),
+            dueDate = "January 1st, 2030",
+            discussions = listOf(
+                DiscussionTimelineItemInfo(id = "0", title = "Discussion #1", location = "Coffee Shop", date = "Jan 15, 2025 at 7:00 PM", isPast = true, isNext = false),
+                DiscussionTimelineItemInfo(id = "1", title = "Discussion #2", location = "Library", date = "Jan 29, 2025 at 7:00 PM", isPast = true, isNext = false),
+                DiscussionTimelineItemInfo(id = "2", title = "Discussion #3", location = "Book Store", date = "Feb 12, 2025 at 7:00 PM", isPast = false, isNext = true),
+                DiscussionTimelineItemInfo(id = "3", title = "Discussion #4", location = "Community Center", date = "Feb 26, 2025 at 7:00 PM", isPast = false, isNext = false),
+                DiscussionTimelineItemInfo(id = "4", title = "Discussion #5", location = "Discord", date = "Feb 28, 2025 at 7:00 PM", isPast = false, isNext = false),
+                DiscussionTimelineItemInfo(id = "5", title = "Discussion #6", location = "Home", date = "March 6th, 2025 at 7:00 PM", isPast = false, isNext = false),
+            )
+        )
     )
 }

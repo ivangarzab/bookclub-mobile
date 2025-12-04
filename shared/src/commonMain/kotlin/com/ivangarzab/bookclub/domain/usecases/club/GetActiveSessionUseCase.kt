@@ -6,7 +6,7 @@ import com.ivangarzab.bookclub.domain.usecases.util.FormatDateTimeUseCase
 import com.ivangarzab.bookclub.presentation.models.ActiveSessionDetails
 import com.ivangarzab.bookclub.presentation.models.BookInfo
 import com.ivangarzab.bookclub.presentation.models.DateTimeFormat
-import com.ivangarzab.bookclub.presentation.models.DiscussionTimelineItem
+import com.ivangarzab.bookclub.presentation.models.DiscussionTimelineItemInfo
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock.System.now
@@ -56,14 +56,16 @@ class GetActiveSessionUseCase(
                     ),
                     dueDate = session.dueDate?.let { formatDateTime(it, DateTimeFormat.DATE_ONLY) } ?: "No due date",
                     discussions = sortedDiscussions.mapIndexed { index, discussion ->
-                        DiscussionTimelineItem(
+                        DiscussionTimelineItemInfo(
                             id = discussion.id,
                             title = discussion.title,
-                            location = discussion.location,
+                            location = discussion.location ?: "TBD...",
                             date = formatDateTime(discussion.date, DateTimeFormat.FULL),
-                            isPast = nextDiscussionIndex != -1 && index < nextDiscussionIndex,
-                            isNext = index == nextDiscussionIndex,
-                            isFuture = nextDiscussionIndex != -1 && index > nextDiscussionIndex
+                            // If no upcoming discussions (nextDiscussionIndex == -1), all are past
+                            // Otherwise, discussions before the next one are past
+                            isPast = nextDiscussionIndex == -1 || index < nextDiscussionIndex,
+                            // Only mark as next if there IS a next discussion
+                            isNext = nextDiscussionIndex != -1 && index == nextDiscussionIndex
                         )
                     }
                 )

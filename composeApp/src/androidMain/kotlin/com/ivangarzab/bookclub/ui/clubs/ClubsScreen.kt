@@ -1,5 +1,9 @@
 package com.ivangarzab.bookclub.ui.clubs
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +14,8 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -19,42 +25,92 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.ivangarzab.bookclub.R
+import com.ivangarzab.bookclub.presentation.viewmodels.club.ClubDetailsState
+import com.ivangarzab.bookclub.presentation.viewmodels.club.ClubDetailsViewModel
 import com.ivangarzab.bookclub.theme.KluvsTheme
+import com.ivangarzab.bookclub.ui.components.ErrorScreen
+import com.ivangarzab.bookclub.ui.components.LoadingScreen
+import com.ivangarzab.bookclub.presentation.models.ScreenState
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ClubsScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    clubId: String,
+    viewModel: ClubDetailsViewModel = koinViewModel()
 ) {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val tabs = listOf(
-        stringResource(R.string.general),
-        stringResource(R.string.active_session),
-        stringResource(R.string.members)
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(clubId) {
+        viewModel.loadClubData(clubId)
+    }
+
+    ClubsScreenContent(
+        modifier = modifier,
+        state = state,
+        onRetry = viewModel::refresh
     )
+}
 
-    Column(modifier = modifier) {
-        TabRow(
-            selectedTabIndex = selectedTabIndex,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            tabs.forEachIndexed { index, title ->
-                Tab(
-                    selected = selectedTabIndex == index,
-                    onClick = { selectedTabIndex = index },
-                    text = { Text(title) }
+@Composable
+fun ClubsScreenContent(
+    modifier: Modifier = Modifier,
+    state: ClubDetailsState,
+    onRetry: () -> Unit,
+) {
+    val screenState = when {
+        state.isLoading -> ScreenState.Loading
+        state.error != null -> ScreenState.Error(state.error!!)
+        else -> ScreenState.Content
+    }
+
+    AnimatedContent(
+        targetState = screenState,
+        transitionSpec = {
+            fadeIn() togetherWith fadeOut()
+        },
+        label = "ClubsScreenTransition"
+    ) { targetState ->
+        when (targetState) {
+            is ScreenState.Loading -> LoadingScreen()
+            is ScreenState.Error -> ErrorScreen(
+                message = targetState.message,
+                onRetry = onRetry
+            )
+            is ScreenState.Content -> {
+                var selectedTabIndex by remember { mutableIntStateOf(0) }
+                val tabs = listOf(
+                    stringResource(R.string.general),
+                    stringResource(R.string.active_session),
+                    stringResource(R.string.members)
                 )
-            }
-        }
 
-        val tabModifier = Modifier
-            .background(color = MaterialTheme.colorScheme.surface)
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-        // Tab content
-        when (selectedTabIndex) {
-            0 -> GeneralTab(tabModifier)
-            1 -> ActiveSessionTab(tabModifier)
-            2 -> MembersTab(tabModifier)
+                Column(modifier = modifier) {
+                    TabRow(
+                        selectedTabIndex = selectedTabIndex,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        tabs.forEachIndexed { index, title ->
+                            Tab(
+                                selected = selectedTabIndex == index,
+                                onClick = { selectedTabIndex = index },
+                                text = { Text(title) }
+                            )
+                        }
+                    }
+
+                    val tabModifier = Modifier
+                        .background(color = MaterialTheme.colorScheme.surface)
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                    // Tab content
+                    when (selectedTabIndex) {
+                        0 -> GeneralTab(tabModifier, state.clubDetails)
+                        1 -> ActiveSessionTab(tabModifier, state.activeSession)
+                        2 -> MembersTab(tabModifier, state.members)
+                    }
+                }
+            }
         }
     }
 }
@@ -62,5 +118,11 @@ fun ClubsScreen(
 @PreviewLightDark
 @Composable
 fun Preview_ClubsScreen() = KluvsTheme {
-    ClubsScreen(modifier = Modifier.background(color = MaterialTheme.colorScheme.background))
+    ClubsScreenContent(
+        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+        state = ClubDetailsState(
+            isLoading = false
+        ),
+        onRetry = { }
+    )
 }

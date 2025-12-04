@@ -32,6 +32,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.androidx.navigation)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.koin)
+            implementation(libs.koin.compose)
+            implementation(libs.bark)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

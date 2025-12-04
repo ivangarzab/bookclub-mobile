@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LinearProgressIndicator
@@ -16,15 +14,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.ivangarzab.bookclub.R
+import com.ivangarzab.bookclub.presentation.models.CurrentlyReadingBook
 import com.ivangarzab.bookclub.theme.KluvsTheme
 
 @Composable
 fun CurrentlyReadingSection(
     modifier: Modifier = Modifier,
-    currentReadings: List<Pair<String, Float>>,
+    currentReadings: List<CurrentlyReadingBook>,
 ) {
     Card(
         modifier = modifier,
@@ -43,13 +43,25 @@ fun CurrentlyReadingSection(
 
             Spacer(Modifier.padding(8.dp))
 
-            LazyColumn(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(currentReadings) { reading ->
-                    CurrentlyReadingItem(title = reading.first, progress = reading.second)
+                currentReadings.forEachIndexed { index, reading ->
+                    if (index > 2) return@Column
+                    CurrentlyReadingItem(title = reading.bookTitle, progress = reading.progress)
                 }
+            }
+
+            //TODO: Make this section expandable later
+            if (currentReadings.size > 2) {
+                Spacer(Modifier.padding(8.dp))
+                Text(
+                    text = stringResource(R.string.and_more),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontStyle = FontStyle.Italic
+                )
             }
         }
     }
@@ -98,11 +110,11 @@ private fun Preview_CurrentlyReadingItem() = KluvsTheme {
 private fun Preview_CurrentlyReadingSection() = KluvsTheme {
     CurrentlyReadingSection(
         modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
-        currentReadings = testCurrentlyReadingData
+        currentReadings = listOf(
+            CurrentlyReadingBook(bookTitle = "The Myth of Sisyphus", clubName = "Quill's Bookclub", progress = 0.25f, dueDate = "Tomorrow"),
+            CurrentlyReadingBook(bookTitle = "Pachita", clubName = "Another Bookclub", progress = 0.66f, dueDate = "December 31st, 2026"),
+            CurrentlyReadingBook(bookTitle = "1984", clubName = "Third Bookclub", progress = 0.10f, dueDate = "December 31st, 2027"),
+            CurrentlyReadingBook(bookTitle = "The Philosopher Queens", clubName = "Hidden Bookclub", progress = 0.0f, dueDate = "December 31st, 2028")
+        )
     )
 }
-
-val testCurrentlyReadingData = listOf(
-    Pair("The Myth of Sisyphus", 0.5f),
-    Pair("Pachita", 0.1f),
-)

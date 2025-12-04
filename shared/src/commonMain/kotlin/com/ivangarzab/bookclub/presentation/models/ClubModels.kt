@@ -23,7 +23,7 @@ data class ActiveSessionDetails(
     val sessionId: String,
     val book: BookInfo,
     val dueDate: String,
-    val discussions: List<DiscussionTimelineItem>
+    val discussions: List<DiscussionTimelineItemInfo>
 )
 
 /**
@@ -31,14 +31,13 @@ data class ActiveSessionDetails(
  *
  * Status flags (isPast, isNext, isFuture) enable UI to render different states.
  */
-data class DiscussionTimelineItem(
+data class DiscussionTimelineItemInfo(
     val id: String,
     val title: String,
-    val location: String?,
+    val location: String,
     val date: String,
     val isPast: Boolean,
-    val isNext: Boolean,
-    val isFuture: Boolean
+    val isNext: Boolean
 )
 
 /**
@@ -60,14 +59,14 @@ data class BookInfo(
  */
 data class DiscussionInfo(
     val title: String,
-    val location: String?,
+    val location: String,
     val formattedDate: String
 )
 
 /**
  * UI model for member displayed in MembersTab list.
  */
-data class MemberListItem(
+data class MemberListItemInfo(
     val memberId: String,
     val name: String,
     val points: Int,

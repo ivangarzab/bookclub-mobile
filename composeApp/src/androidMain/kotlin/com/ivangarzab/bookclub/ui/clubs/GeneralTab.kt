@@ -17,16 +17,32 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.ivangarzab.bookclub.R
+import com.ivangarzab.bookclub.presentation.models.BookInfo
+import com.ivangarzab.bookclub.presentation.models.ClubDetails
+import com.ivangarzab.bookclub.presentation.models.DiscussionInfo
 import com.ivangarzab.bookclub.theme.KluvsTheme
 import com.ivangarzab.bookclub.ui.components.NextDiscussionCard
+import com.ivangarzab.bookclub.ui.components.NoSectionData
+import com.ivangarzab.bookclub.ui.components.NoTabData
 
 @Composable
 fun GeneralTab(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    clubDetails: ClubDetails? = null,
 ) {
+    if (clubDetails == null) {
+        NoTabData(
+            modifier = modifier,
+            text = R.string.no_club_details
+        )
+        return
+    }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -40,19 +56,22 @@ fun GeneralTab(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = stringResource(R.string.club_name),
+                    text = clubDetails.clubName,
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = stringResource(R.string.x_members, "X"),
+                    text = stringResource(R.string.x_members, clubDetails.memberCount),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = stringResource(R.string.founded_in_x, "Year"),
+                    text = stringResource(
+                        R.string.founded_in_x,
+                        clubDetails.foundedYear ?: stringResource(R.string.na)
+                    ),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium,
                 )
@@ -75,35 +94,39 @@ fun GeneralTab(
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(Modifier.height(8.dp))
-                Text(
-                    text = "Book title",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = "Book Author",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(Modifier.height(4.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                clubDetails.currentBook?.let { clubInfo ->
                     Text(
-                        text = "Year",
+                        text = clubInfo.title,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = clubInfo.author,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    Text(
-                        text = stringResource(R.string.vertical_separator),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        text = stringResource(R.string.x_pages, "XXX"),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
+                    Spacer(Modifier.height(4.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            text = clubDetails.currentBook?.year ?: stringResource(R.string.na),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        clubDetails.currentBook?.pageCount?.let { pages ->
+                            Text(
+                                text = stringResource(R.string.vertical_separator),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Text(
+                                text = stringResource(R.string.x_pages, pages),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                } ?: NoSectionData(text = R.string.no_book_data)
             }
         }
 
@@ -125,12 +148,14 @@ fun GeneralTab(
                 )
                 Spacer(Modifier.height(8.dp))
 
-                NextDiscussionCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = "Discussion Title",
-                    location = "Location",
-                    formattedDate = "Month Day, Year at Time"
-                )
+                clubDetails.nextDiscussion?.let { discussion ->
+                    NextDiscussionCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        title = discussion.title,
+                        location = discussion.location,
+                        formattedDate = discussion.formattedDate,
+                    )
+                } ?: NoSectionData(text = R.string.no_upcoming_discussion)
             }
         }
     }
@@ -143,6 +168,23 @@ fun Preview_GeneralTab() = KluvsTheme {
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surface)
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        clubDetails = ClubDetails(
+            clubId = "club1",
+            clubName = "Test Club Name",
+            memberCount = 6,
+            foundedYear = "2026",
+            currentBook = BookInfo(
+                title = "1984",
+                author = "George Orwell",
+                year = "1948",
+                pageCount = 169
+            ),
+            nextDiscussion = DiscussionInfo(
+                title = "Discussion #1",
+                location = "Discord",
+                formattedDate = "Tomorrow at 7:00 PM"
+            )
+        )
     )
 }

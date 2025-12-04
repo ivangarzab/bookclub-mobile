@@ -43,7 +43,10 @@ fun ClubResponseDto.toDomain(): Club {
         // Map nested DTOs to domain models using their respective mappers
         members = members.map { it.toDomain() },
         activeSession = active_session?.toDomain(),
-        pastSessions = past_sessions.map { it.toDomain() }
+        // Filter out past sessions without book data (backend only returns id + due_date for past sessions)
+        pastSessions = past_sessions.mapNotNull { session ->
+            if (session.book != null) session.toDomain() else null
+        }
     )
 }
 

@@ -57,7 +57,7 @@ class GetClubDetailsUseCase(
                     ?.let {
                         DiscussionInfo(
                             title = it.title,
-                            location = it.location,
+                            location = it.location ?: "TBD...",
                             formattedDate = formatDateTime(it.date, DateTimeFormat.FULL)
                         )
                     }

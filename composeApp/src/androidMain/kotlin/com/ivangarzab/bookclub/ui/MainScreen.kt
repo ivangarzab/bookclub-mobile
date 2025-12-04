@@ -34,7 +34,6 @@ import com.ivangarzab.bookclub.R
 import com.ivangarzab.bookclub.theme.KluvsTheme
 import com.ivangarzab.bookclub.ui.clubs.ClubsScreen
 import com.ivangarzab.bookclub.ui.me.MeScreen
-import com.ivangarzab.bookclub.ui.me.testCurrentlyReadingData
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -147,9 +146,9 @@ fun MainScreen(
             val contentModifier = Modifier
                 .fillMaxSize()
             when (page) {
-                0 -> ClubsScreen(contentModifier)
+                0 -> ClubsScreen(contentModifier, "0f01ad5e-0665-4f02-8cdd-8d55ecb26ac3")
                 1 -> /*HomeScreen(contentModifier)
-                2 ->*/ MeScreen(contentModifier, testCurrentlyReadingData)
+                2 ->*/ MeScreen(contentModifier, "5cc30117-4f77-462a-9881-dd63f0130a09")
             }
         }
     }

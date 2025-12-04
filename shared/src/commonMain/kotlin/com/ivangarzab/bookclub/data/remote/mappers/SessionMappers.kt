@@ -3,7 +3,9 @@ package com.ivangarzab.bookclub.data.remote.mappers
 import com.ivangarzab.bookclub.data.remote.dtos.SessionDto
 import com.ivangarzab.bookclub.data.remote.dtos.SessionResponseDto
 import com.ivangarzab.bookclub.domain.models.Session
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.atTime
 
 /**
  * Maps a [SessionDto] from the API to a [Session] domain model.
@@ -16,7 +18,7 @@ fun SessionDto.toDomain(): Session {
         id = id,
         clubId = club_id ?: "",
         book = book?.toDomain() ?: error("SessionDto missing required book data"),
-        dueDate = due_date?.let { LocalDateTime.parse(it) },
+        dueDate = due_date?.parseDateString(),
         discussions = discussions.map { it.toDomain() }
     )
 }
@@ -31,7 +33,7 @@ fun SessionResponseDto.toDomain(): Session {
         id = id,
         clubId = club.id,
         book = book.toDomain(),
-        dueDate = due_date?.let { LocalDateTime.parse(it) },
+        dueDate = due_date?.parseDateString(),
         discussions = discussions.map { it.toDomain() }
     )
 }

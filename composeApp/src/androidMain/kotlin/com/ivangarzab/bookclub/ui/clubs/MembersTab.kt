@@ -23,31 +23,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.ivangarzab.bookclub.R
+import com.ivangarzab.bookclub.presentation.models.MemberListItemInfo
 import com.ivangarzab.bookclub.theme.KluvsTheme
-
-val memberList = listOf(
-    Pair("Iván Garza Bermea", 166),
-    Pair("Monica Michelle Morales", 100),
-    Pair("Marco \"Chitho\" Rivera", 143),
-    Pair("Anacleto \"Keto\" Longoria", 42),
-    Pair("Joel Oscar Julian Salinas", 0),
-    Pair("Ginseng Joaquin Guzman", 69),
-)
+import com.ivangarzab.bookclub.ui.components.NoTabData
 
 @Composable
-fun MembersTab(modifier: Modifier = Modifier) {
+fun MembersTab(
+    modifier: Modifier = Modifier,
+    members: List<MemberListItemInfo>
+) {
+    if (members.isEmpty()) {
+        NoTabData(
+            modifier = modifier,
+            text = R.string.no_members_in_club
+        )
+        return
+    }
+
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
-        Column(modifier = modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = stringResource(R.string.members_x, "X"),
+                text = stringResource(R.string.members_x, members.size),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium
             )
@@ -55,9 +61,9 @@ fun MembersTab(modifier: Modifier = Modifier) {
             Spacer(Modifier.height(8.dp))
 
             LazyColumn {
-                itemsIndexed(memberList) { index, member ->
-                    MemberListItem(member.first, member.second)
-                    if (index < memberList.size - 1) {
+                itemsIndexed(members) { index, member ->
+                    MemberListItem(member.name, member.points)
+                    if (index < members.size - 1) {
                         MemberDivider()
                     }
                 }
@@ -118,6 +124,14 @@ fun Preview_MembersTab() = KluvsTheme {
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surface)
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        members = listOf(
+            MemberListItemInfo("0", "Iván Garza Bermea", 166, ""),
+            MemberListItemInfo("1", "Monica Michelle Morales", 100, ""),
+            MemberListItemInfo("2", "Marco \"Chitho\" Rivera", 143, ""),
+            MemberListItemInfo("3", "Anacleto \"Keto\" Longoria", 42, ""),
+            MemberListItemInfo("4", "Joel Oscar Julian Salinas", 0, ""),
+            MemberListItemInfo("5", "Ginseng Joaquin Guzman", 69, ""),
+        )
     )
 }
