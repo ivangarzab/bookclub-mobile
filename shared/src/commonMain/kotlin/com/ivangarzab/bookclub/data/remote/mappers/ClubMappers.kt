@@ -17,6 +17,7 @@ fun ClubDto.toDomain(): Club {
         name = name,
         discordChannel = discord_channel,
         serverId = server_id,
+        foundedDate = parseDateOnlyString(founded_date),
         shameList = emptyList(),
         members = null,
         activeSession = null,
@@ -39,6 +40,7 @@ fun ClubResponseDto.toDomain(): Club {
         name = name,
         discordChannel = discord_channel,
         serverId = server_id,
+        foundedDate = parseDateOnlyString(founded_date),
         shameList = shame_list,
         // Map nested DTOs to domain models using their respective mappers
         members = members.map { it.toDomain() },
@@ -66,6 +68,7 @@ fun ServerClubDto.toDomain(): Club {
         name = name,
         discordChannel = discord_channel,
         serverId = null, // Not available in ServerClubDto
+        foundedDate = parseDateOnlyString(founded_date),
         shameList = emptyList(),
         members = null,
         activeSession = latest_session?.toDomain(),

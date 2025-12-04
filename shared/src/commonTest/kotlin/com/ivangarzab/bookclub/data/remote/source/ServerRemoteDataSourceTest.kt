@@ -42,7 +42,14 @@ class ServerRemoteDataSourceTest {
                     id = "server-1",
                     name = "Production",
                     clubs = listOf(
-                        ServerClubDto("club-1", "Fiction", "123456789", 10, null)
+                        ServerClubDto(
+                            id = "club-1",
+                            name = "Fiction",
+                            discord_channel = "123456789",
+                            founded_date = null,
+                            member_count = 10,
+                            latest_session = null
+                        )
                     )
                 ),
                 ServerResponseDto(

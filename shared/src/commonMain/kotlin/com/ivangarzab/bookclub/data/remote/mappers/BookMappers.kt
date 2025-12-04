@@ -13,6 +13,7 @@ fun BookDto.toDomain(): Book {
         author = author,
         edition = edition,
         year = year,
-        isbn = isbn
+        isbn = isbn,
+        pageCount = page_count
     )
 }

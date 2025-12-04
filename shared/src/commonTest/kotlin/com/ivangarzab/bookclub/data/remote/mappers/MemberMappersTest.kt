@@ -132,4 +132,127 @@ class MemberMappersTest {
         assertNull(domain.userId)
         assertNull(domain.role)
     }
+
+    @Test
+    fun `MemberDto with createdAt timestamp maps to LocalDateTime`() {
+        // Given: A MemberDto with createdAt timestamp
+        val dto = MemberDto(
+            id = "1",
+            name = "Test Member",
+            handle = null,
+            points = 0,
+            books_read = 0,
+            user_id = null,
+            role = null,
+            created_at = "2024-01-15T10:30:00+00:00",
+            clubs = emptyList()
+        )
+
+        // When: Mapping to domain
+        val domain = dto.toDomain()
+
+        // Then: createdAt is parsed correctly
+        assertNotNull(domain.createdAt)
+        assertEquals(2024, domain.createdAt?.year)
+        assertEquals(1, domain.createdAt?.monthNumber)
+        assertEquals(15, domain.createdAt?.dayOfMonth)
+        assertEquals(10, domain.createdAt?.hour)
+        assertEquals(30, domain.createdAt?.minute)
+    }
+
+    @Test
+    fun `MemberDto with null createdAt maps correctly`() {
+        // Given: A MemberDto without createdAt
+        val dto = MemberDto(
+            id = "1",
+            name = "Test Member",
+            handle = null,
+            points = 0,
+            books_read = 0,
+            user_id = null,
+            role = null,
+            created_at = null,
+            clubs = emptyList()
+        )
+
+        // When: Mapping to domain
+        val domain = dto.toDomain()
+
+        // Then: createdAt is null
+        assertNull(domain.createdAt)
+    }
+
+    @Test
+    fun `MemberDto with handle maps correctly`() {
+        // Given: A MemberDto with handle
+        val dto = MemberDto(
+            id = "1",
+            name = "Test Member",
+            handle = "testuser",
+            points = 0,
+            books_read = 0,
+            user_id = null,
+            role = null,
+            created_at = null,
+            clubs = emptyList()
+        )
+
+        // When: Mapping to domain
+        val domain = dto.toDomain()
+
+        // Then: handle is mapped correctly
+        assertEquals("testuser", domain.handle)
+    }
+
+    @Test
+    fun `MemberDto with null handle maps correctly`() {
+        // Given: A MemberDto without handle
+        val dto = MemberDto(
+            id = "1",
+            name = "Test Member",
+            handle = null,
+            points = 0,
+            books_read = 0,
+            user_id = null,
+            role = null,
+            created_at = null,
+            clubs = emptyList()
+        )
+
+        // When: Mapping to domain
+        val domain = dto.toDomain()
+
+        // Then: handle is null
+        assertNull(domain.handle)
+    }
+
+    @Test
+    fun `MemberResponseDto with createdAt and handle maps correctly`() {
+        // Given: A MemberResponseDto with createdAt and handle
+        val dto = MemberResponseDto(
+            id = "2",
+            name = "John Smith",
+            handle = "johnsmith",
+            points = 200,
+            books_read = 15,
+            user_id = "user-456",
+            role = "admin",
+            created_at = "2023-06-10T14:22:33Z",
+            clubs = emptyList(),
+            shame_clubs = emptyList()
+        )
+
+        // When: Mapping to domain
+        val domain = dto.toDomain()
+
+        // Then: createdAt and handle are mapped correctly
+        assertEquals("johnsmith", domain.handle)
+        assertNotNull(domain.createdAt)
+        assertEquals(2023, domain.createdAt?.year)
+        assertEquals(6, domain.createdAt?.monthNumber)
+        assertEquals(10, domain.createdAt?.dayOfMonth)
+        assertEquals(14, domain.createdAt?.hour)
+        assertEquals(22, domain.createdAt?.minute)
+        assertEquals(33, domain.createdAt?.second)
+    }
 }

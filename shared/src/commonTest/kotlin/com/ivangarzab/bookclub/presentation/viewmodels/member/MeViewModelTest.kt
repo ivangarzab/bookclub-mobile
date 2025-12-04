@@ -83,9 +83,9 @@ class MeViewModelTest {
             points = 150,
             booksRead = 12,
             clubs = listOf(
-                Club("club-1", "Fantasy Readers", null, null, emptyList(), null, null, emptyList()),
-                Club("club-2", "Sci-Fi Club", null, null, emptyList(), null, null, emptyList()),
-                Club("club-3", "Mystery Book Club", null, null, emptyList(), null, null, emptyList())
+                Club("club-1", "Fantasy Readers", null, null, null, emptyList(), null, null, emptyList()),
+                Club("club-2", "Sci-Fi Club", null, null, null, emptyList(), null, null, emptyList()),
+                Club("club-3", "Mystery Book Club", null, null, null, emptyList(), null, null, emptyList())
             )
         )
 
@@ -118,9 +118,9 @@ class MeViewModelTest {
             )
         )
 
-        val club1 = Club("club-1", "Fantasy Readers", null, null, emptyList(), null, session1, emptyList())
-        val club2 = Club("club-2", "Sci-Fi Club", null, null, emptyList(), null, session2, emptyList())
-        val club3 = Club("club-3", "Mystery Book Club", null, null, emptyList(), null, null, emptyList())
+        val club1 = Club("club-1", "Fantasy Readers", null, null, null, emptyList(), null, session1, emptyList())
+        val club2 = Club("club-2", "Sci-Fi Club", null, null, null, emptyList(), null, session2, emptyList())
+        val club3 = Club("club-3", "Mystery Book Club", null, null, null, emptyList(), null, null, emptyList())
 
         everySuspend { clubRepository.getClub("club-1") } returns Result.success(club1)
         everySuspend { clubRepository.getClub("club-2") } returns Result.success(club2)
@@ -210,7 +210,7 @@ class MeViewModelTest {
             points = 100,
             booksRead = 5,
             clubs = listOf(
-                Club("club-1", "Test Club", null, null, emptyList(), null, null, emptyList())
+                Club("club-1", "Test Club", null, null, null, emptyList(), null, null, emptyList())
             )
         )
 
@@ -228,7 +228,7 @@ class MeViewModelTest {
             )
         )
 
-        val club = Club("club-1", "Test Club", null, null, emptyList(), null, session, emptyList())
+        val club = Club("club-1", "Test Club", null, null, null, emptyList(), null, session, emptyList())
 
         everySuspend { memberRepository.getMemberByUserId(userId) } returns Result.success(member)
         everySuspend { clubRepository.getClub("club-1") } returns Result.success(club)
@@ -294,7 +294,7 @@ class MeViewModelTest {
         assertEquals("Error", viewModel.state.value.error)
 
         // Given - Now succeed
-        val member = Member("member-1", "Alice", 100, 5, userId, null, emptyList())
+        val member = Member("member-1", "Alice", null, 100, 5, userId, null, null, emptyList(), null)
         everySuspend { memberRepository.getMemberByUserId(userId) } returns Result.success(member)
 
         // When - Load again
@@ -308,7 +308,7 @@ class MeViewModelTest {
     fun `loadUserData generates handle from member name`() = runTest {
         // Given
         val userId = "user-123"
-        val member = Member("member-1", "John Doe", 50, 2, userId, null, emptyList())
+        val member = Member("member-1", "John Doe", null, 50, 2, userId, null, null, emptyList(), null)
         everySuspend { memberRepository.getMemberByUserId(userId) } returns Result.success(member)
 
         // When
@@ -329,11 +329,11 @@ class MeViewModelTest {
             points = 100,
             booksRead = 5,
             clubs = listOf(
-                Club("club-1", "Inactive Club", null, null, emptyList(), null, null, emptyList())
+                Club("club-1", "Inactive Club", null, null, null, emptyList(), null, null, emptyList())
             )
         )
 
-        val club = Club("club-1", "Inactive Club", null, null, emptyList(), null, null, emptyList())
+        val club = Club("club-1", "Inactive Club", null, null, null, emptyList(), null, null, emptyList())
 
         everySuspend { memberRepository.getMemberByUserId(userId) } returns Result.success(member)
         everySuspend { clubRepository.getClub("club-1") } returns Result.success(club)

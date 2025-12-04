@@ -14,10 +14,12 @@ fun MemberDto.toDomain(): Member {
     return Member(
         id = id,
         name = name ?: "",  // Provide default if backend doesn't return name
+        handle = handle,
         points = points,
         booksRead = books_read,
         userId = user_id,
         role = role,
+        createdAt = parseDateTimeString(created_at),
         clubs = null,
         shameClubs = null
     )
@@ -34,10 +36,12 @@ fun MemberResponseDto.toDomain(): Member {
     return Member(
         id = id,
         name = name,
+        handle = handle,
         points = points,
         booksRead = books_read,
         userId = user_id,
         role = role,
+        createdAt = parseDateTimeString(created_at),
         // Map nested ClubDto objects to domain models
         clubs = clubs.map { it.toDomain() },
         shameClubs = shame_clubs.map { it.toDomain() }

@@ -18,7 +18,8 @@ data class BookDto(
     val author: String,
     val edition: String? = null,
     val year: Int? = null,
-    val isbn: String? = null
+    val isbn: String? = null,
+    val page_count: Int? = null
 )
 
 @Serializable
@@ -35,10 +36,12 @@ data class MemberDto(
     @Serializable(with = IntToStringSerializer::class)
     val id: String,
     val name: String? = null,  // Nullable to handle incomplete API responses
+    val handle: String? = null,
     val points: Int = 0,
     val books_read: Int = 0,
     val user_id: String? = null,
     val role: String? = null,
+    val created_at: String? = null,
     val clubs: List<String> = emptyList()
 )
 
@@ -47,7 +50,8 @@ data class ClubDto(
     val id: String,
     val name: String,
     val discord_channel: String? = null,
-    val server_id: String? = null
+    val server_id: String? = null,
+    val founded_date: String? = null
 )
 
 @Serializable
@@ -94,6 +98,7 @@ data class ClubResponseDto(
     val name: String,
     val discord_channel: String?,
     val server_id: String?,
+    val founded_date: String? = null,
     val members: List<MemberDto>,
     val active_session: SessionDto?,
     val past_sessions: List<SessionDto>,
@@ -141,10 +146,12 @@ data class MemberResponseDto(
     @Serializable(with = IntToStringSerializer::class)
     val id: String,
     val name: String,
+    val handle: String? = null,
     val points: Int,
     val books_read: Int,
     val user_id: String?,
     val role: String?,
+    val created_at: String? = null,
     val clubs: List<ClubDto>,
     val shame_clubs: List<ClubDto>
 )
@@ -249,8 +256,9 @@ data class ServersResponseDto(
 data class ServerClubDto(
     val id: String,
     val name: String,
-    
+
     val discord_channel: String?,
+    val founded_date: String? = null,
     val member_count: Int? = null,
     val latest_session: SessionDto? = null
 )

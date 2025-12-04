@@ -3,6 +3,7 @@ package com.ivangarzab.bookclub.domain.usecases.member
 import com.ivangarzab.bookclub.data.repositories.MemberRepository
 import com.ivangarzab.bookclub.domain.models.Member
 import com.ivangarzab.bookclub.domain.usecases.util.FormatDateTimeUseCase
+import com.ivangarzab.bookclub.presentation.models.DateTimeFormat
 import com.ivangarzab.bookclub.presentation.models.UserProfile
 
 /**
@@ -31,12 +32,21 @@ class GetCurrentUserProfileUseCase(
             UserProfile(
                 memberId = member.id,
                 name = member.name,
-                // Generate a handle from the name if not available
-                handle = "@${member.name.lowercase().replace(" ", "")}",
-                // TODO: Add created_at field to members table to show real join date
-                joinDate = "2025",
+                handle = member.handle ?: generateHandleFromName(member.name),
+                joinDate = member.createdAt?.let {
+                    formatDateTime(it, DateTimeFormat.YEAR_ONLY)
+                } ?: "2025",
                 avatarUrl = null // TODO: Add avatar support when available
             )
         }
     }
+
+    /**
+    * Generates a handle from a member's name.
+    * Converts "John Doe" to "@johndoe".
+    */
+    private fun generateHandleFromName(name: String): String {
+        return "@${name.lowercase().replace(" ", "")}"
+    }
+
 }

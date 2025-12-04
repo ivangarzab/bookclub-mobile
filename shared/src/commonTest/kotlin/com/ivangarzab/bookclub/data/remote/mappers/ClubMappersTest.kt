@@ -146,4 +146,90 @@ class ClubMappersTest {
         assertEquals("club-2", domain.id)
         assertNull(domain.activeSession)
     }
+
+    @Test
+    fun `ClubDto with foundedDate maps to LocalDate`() {
+        // Given: A ClubDto with foundedDate
+        val dto = ClubDto(
+            id = "club-1",
+            name = "Test Club",
+            discord_channel = null,
+            server_id = null,
+            founded_date = "2024-01-15"
+        )
+
+        // When: Mapping to domain
+        val domain = dto.toDomain()
+
+        // Then: foundedDate is parsed correctly
+        assertNotNull(domain.foundedDate)
+        assertEquals(2024, domain.foundedDate?.year)
+        assertEquals(1, domain.foundedDate?.monthNumber)
+        assertEquals(15, domain.foundedDate?.dayOfMonth)
+    }
+
+    @Test
+    fun `ClubDto with null foundedDate maps correctly`() {
+        // Given: A ClubDto without foundedDate
+        val dto = ClubDto(
+            id = "club-1",
+            name = "Test Club",
+            discord_channel = null,
+            server_id = null,
+            founded_date = null
+        )
+
+        // When: Mapping to domain
+        val domain = dto.toDomain()
+
+        // Then: foundedDate is null
+        assertNull(domain.foundedDate)
+    }
+
+    @Test
+    fun `ClubResponseDto with foundedDate maps to LocalDate`() {
+        // Given: A ClubResponseDto with foundedDate
+        val dto = ClubResponseDto(
+            id = "club-1",
+            name = "Test Club",
+            discord_channel = null,
+            server_id = null,
+            founded_date = "2024-06-01",
+            members = emptyList(),
+            active_session = null,
+            past_sessions = emptyList(),
+            shame_list = emptyList()
+        )
+
+        // When: Mapping to domain
+        val domain = dto.toDomain()
+
+        // Then: foundedDate is parsed correctly
+        assertNotNull(domain.foundedDate)
+        assertEquals(2024, domain.foundedDate?.year)
+        assertEquals(6, domain.foundedDate?.monthNumber)
+        assertEquals(1, domain.foundedDate?.dayOfMonth)
+    }
+
+    @Test
+    fun `ServerClubDto with foundedDate maps to LocalDate`() {
+        // Given: A ServerClubDto with foundedDate
+        val dto = ServerClubDto(
+            id = "club-1",
+            name = "Server Club",
+            discord_channel = null,
+            founded_date = "2023-12-25",
+            member_count = 5,
+            latest_session = null
+        )
+
+        // When: Mapping to domain
+        val domain = dto.toDomain()
+
+        // Then: foundedDate is parsed correctly
+        assertNotNull(domain.foundedDate)
+        assertEquals(2023, domain.foundedDate?.year)
+        assertEquals(12, domain.foundedDate?.monthNumber)
+        assertEquals(25, domain.foundedDate?.dayOfMonth)
+    }
 }

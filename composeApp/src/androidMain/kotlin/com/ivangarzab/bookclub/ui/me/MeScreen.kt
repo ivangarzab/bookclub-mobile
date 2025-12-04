@@ -101,7 +101,7 @@ fun MeScreenContent(
                     ProfileSection(
                         imageUrl = state.profile?.avatarUrl ?: "",
                         name = state.profile?.name ?: "",
-                        handle = state.profile?.name ?: "",
+                        handle = state.profile?.handle ?: "",
                         joinDate = state.profile?.joinDate ?: ""
                     )
                     Divider()

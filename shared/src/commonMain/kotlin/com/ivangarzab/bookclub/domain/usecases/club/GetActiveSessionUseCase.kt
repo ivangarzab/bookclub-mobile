@@ -52,7 +52,7 @@ class GetActiveSessionUseCase(
                         title = session.book.title,
                         author = session.book.author,
                         year = session.book.year?.toString(),
-                        pageCount = null // TODO: Add page_count to books table if needed
+                        pageCount = session.book.pageCount
                     ),
                     dueDate = session.dueDate?.let { formatDateTime(it, DateTimeFormat.DATE_ONLY) } ?: "No due date",
                     discussions = sortedDiscussions.mapIndexed { index, discussion ->

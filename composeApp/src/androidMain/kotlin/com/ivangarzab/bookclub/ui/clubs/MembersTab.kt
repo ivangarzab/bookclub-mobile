@@ -62,7 +62,7 @@ fun MembersTab(
 
             LazyColumn {
                 itemsIndexed(members) { index, member ->
-                    MemberListItem(member.name, member.points)
+                    MemberListItem(member.name, member.handle, member.points)
                     if (index < members.size - 1) {
                         MemberDivider()
                     }
@@ -75,6 +75,7 @@ fun MembersTab(
 @Composable
 private fun MemberListItem(
     name: String,
+    handle: String,
     points: Int,
     modifier: Modifier = Modifier
 ) {
@@ -83,7 +84,6 @@ private fun MemberListItem(
             .fillMaxWidth()
             .padding(vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -98,11 +98,18 @@ private fun MemberListItem(
                         shape = CircleShape
                     )
             )
-            Text(
-                text = name,
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyLarge
-            )
+            Column {
+                Text(
+                    text = name,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = handle,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
         Text(
             text = stringResource(R.string.x_points, points),
@@ -126,12 +133,12 @@ fun Preview_MembersTab() = KluvsTheme {
             .fillMaxSize()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         members = listOf(
-            MemberListItemInfo("0", "Iván Garza Bermea", 166, ""),
-            MemberListItemInfo("1", "Monica Michelle Morales", 100, ""),
-            MemberListItemInfo("2", "Marco \"Chitho\" Rivera", 143, ""),
-            MemberListItemInfo("3", "Anacleto \"Keto\" Longoria", 42, ""),
-            MemberListItemInfo("4", "Joel Oscar Julian Salinas", 0, ""),
-            MemberListItemInfo("5", "Ginseng Joaquin Guzman", 69, ""),
+            MemberListItemInfo("0", "Iván Garza Bermea", "@ivangarzab", 166, ""),
+            MemberListItemInfo("1", "Monica Michelle Morales", "@monica", 100, ""),
+            MemberListItemInfo("2", "Marco \"Chitho\" Rivera", "@chitho23", 143, ""),
+            MemberListItemInfo("3", "Anacleto \"Keto\" Longoria", "@keto92", 42, ""),
+            MemberListItemInfo("4", "Joel Oscar Julian Salinas", "@josalinas", 0, ""),
+            MemberListItemInfo("5", "Ginseng Joaquin Guzman", "gino1", 69, ""),
         )
     )
 }
