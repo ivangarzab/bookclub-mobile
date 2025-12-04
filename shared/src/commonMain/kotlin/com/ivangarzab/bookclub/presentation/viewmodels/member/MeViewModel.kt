@@ -72,6 +72,7 @@ class MeViewModel(
     }
 
     fun refresh() {
+        Bark.v("Refreshing member data")
         currentUserId?.let { loadUserData(it) }
     }
 }

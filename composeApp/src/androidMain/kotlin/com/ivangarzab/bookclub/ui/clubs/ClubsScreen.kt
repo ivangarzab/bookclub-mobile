@@ -1,5 +1,9 @@
 package com.ivangarzab.bookclub.ui.clubs
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +30,7 @@ import com.ivangarzab.bookclub.presentation.viewmodels.club.ClubDetailsViewModel
 import com.ivangarzab.bookclub.theme.KluvsTheme
 import com.ivangarzab.bookclub.ui.components.ErrorScreen
 import com.ivangarzab.bookclub.ui.components.LoadingScreen
+import com.ivangarzab.bookclub.presentation.models.ScreenState
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -53,43 +58,57 @@ fun ClubsScreenContent(
     state: ClubDetailsState,
     onRetry: () -> Unit,
 ) {
-    when {
-        state.isLoading -> LoadingScreen()
-        state.error != null -> ErrorScreen(
-            message = state.error!!,
-            onRetry = onRetry
-        )
-        else -> {
-            var selectedTabIndex by remember { mutableIntStateOf(0) }
-            val tabs = listOf(
-                stringResource(R.string.general),
-                stringResource(R.string.active_session),
-                stringResource(R.string.members)
+    val screenState = when {
+        state.isLoading -> ScreenState.Loading
+        state.error != null -> ScreenState.Error(state.error!!)
+        else -> ScreenState.Content
+    }
+
+    AnimatedContent(
+        targetState = screenState,
+        transitionSpec = {
+            fadeIn() togetherWith fadeOut()
+        },
+        label = "ClubsScreenTransition"
+    ) { targetState ->
+        when (targetState) {
+            is ScreenState.Loading -> LoadingScreen()
+            is ScreenState.Error -> ErrorScreen(
+                message = targetState.message,
+                onRetry = onRetry
             )
+            is ScreenState.Content -> {
+                var selectedTabIndex by remember { mutableIntStateOf(0) }
+                val tabs = listOf(
+                    stringResource(R.string.general),
+                    stringResource(R.string.active_session),
+                    stringResource(R.string.members)
+                )
 
-            Column(modifier = modifier) {
-                TabRow(
-                    selectedTabIndex = selectedTabIndex,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    tabs.forEachIndexed { index, title ->
-                        Tab(
-                            selected = selectedTabIndex == index,
-                            onClick = { selectedTabIndex = index },
-                            text = { Text(title) }
-                        )
+                Column(modifier = modifier) {
+                    TabRow(
+                        selectedTabIndex = selectedTabIndex,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        tabs.forEachIndexed { index, title ->
+                            Tab(
+                                selected = selectedTabIndex == index,
+                                onClick = { selectedTabIndex = index },
+                                text = { Text(title) }
+                            )
+                        }
                     }
-                }
 
-                val tabModifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.surface)
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                // Tab content
-                when (selectedTabIndex) {
-                    0 -> GeneralTab(tabModifier, state.clubDetails)
-                    1 -> ActiveSessionTab(tabModifier, state.activeSession)
-                    2 -> MembersTab(tabModifier, state.members)
+                    val tabModifier = Modifier
+                        .background(color = MaterialTheme.colorScheme.surface)
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                    // Tab content
+                    when (selectedTabIndex) {
+                        0 -> GeneralTab(tabModifier, state.clubDetails)
+                        1 -> ActiveSessionTab(tabModifier, state.activeSession)
+                        2 -> MembersTab(tabModifier, state.members)
+                    }
                 }
             }
         }

@@ -72,6 +72,7 @@ class ClubDetailsViewModel(
     }
 
     fun refresh() {
+        Bark.v("Refreshing club data")
         currentClubId?.let { loadClubData(it) }
     }
 }

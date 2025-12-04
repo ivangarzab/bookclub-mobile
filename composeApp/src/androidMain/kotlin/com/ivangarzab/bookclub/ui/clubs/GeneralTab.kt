@@ -27,6 +27,8 @@ import com.ivangarzab.bookclub.presentation.models.ClubDetails
 import com.ivangarzab.bookclub.presentation.models.DiscussionInfo
 import com.ivangarzab.bookclub.theme.KluvsTheme
 import com.ivangarzab.bookclub.ui.components.NextDiscussionCard
+import com.ivangarzab.bookclub.ui.components.NoSectionData
+import com.ivangarzab.bookclub.ui.components.NoTabData
 
 @Composable
 fun GeneralTab(
@@ -34,13 +36,9 @@ fun GeneralTab(
     clubDetails: ClubDetails? = null,
 ) {
     if (clubDetails == null) {
-        Text(
+        NoTabData(
             modifier = modifier,
-            text = stringResource(R.string.no_club_details),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.titleMedium,
-            fontStyle = FontStyle.Italic,
-            textAlign = TextAlign.Center,
+            text = R.string.no_club_details
         )
         return
     }
@@ -128,12 +126,7 @@ fun GeneralTab(
                             )
                         }
                     }
-                } ?: Text(
-                    text = stringResource(R.string.no_book_data),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontStyle = FontStyle.Italic,
-                )
+                } ?: NoSectionData(text = R.string.no_book_data)
             }
         }
 
@@ -159,15 +152,10 @@ fun GeneralTab(
                     NextDiscussionCard(
                         modifier = Modifier.fillMaxWidth(),
                         title = discussion.title,
-                        location = discussion.location ?: stringResource(R.string.tbd),
+                        location = discussion.location,
                         formattedDate = discussion.formattedDate,
                     )
-                } ?: Text(
-                    text = stringResource(R.string.no_upcoming_discussion),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontStyle = FontStyle.Italic,
-                )
+                } ?: NoSectionData(text = R.string.no_upcoming_discussion)
             }
         }
     }

@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.ivangarzab.bookclub.R
 import com.ivangarzab.bookclub.presentation.models.MemberListItemInfo
 import com.ivangarzab.bookclub.theme.KluvsTheme
+import com.ivangarzab.bookclub.ui.components.NoTabData
 
 @Composable
 fun MembersTab(
@@ -37,13 +38,9 @@ fun MembersTab(
     members: List<MemberListItemInfo>
 ) {
     if (members.isEmpty()) {
-        Text(
+        NoTabData(
             modifier = modifier,
-            text = stringResource(R.string.no_members_in_club),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.titleMedium,
-            fontStyle = FontStyle.Italic,
-            textAlign = TextAlign.Center,
+            text = R.string.no_members_in_club
         )
         return
     }

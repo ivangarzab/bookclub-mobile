@@ -41,6 +41,7 @@ import com.ivangarzab.bookclub.presentation.models.BookInfo
 import com.ivangarzab.bookclub.presentation.models.DiscussionTimelineItemInfo
 import com.ivangarzab.bookclub.theme.KluvsTheme
 import com.ivangarzab.bookclub.ui.components.NextDiscussionCard
+import com.ivangarzab.bookclub.ui.components.NoTabData
 
 @Composable
 fun ActiveSessionTab(
@@ -48,13 +49,9 @@ fun ActiveSessionTab(
     sessionDetails: ActiveSessionDetails?,
 ) {
     if (sessionDetails == null) {
-        Text(
+        NoTabData(
             modifier = modifier,
-            text = stringResource(R.string.no_session_details),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.titleMedium,
-            fontStyle = FontStyle.Italic,
-            textAlign = TextAlign.Center,
+            text = R.string.no_session_details
         )
         return
     }
@@ -206,7 +203,7 @@ private fun DiscussionTimelineItem(
             NextDiscussionCard(
                 modifier = Modifier.fillMaxWidth(),
                 title = discussion.title,
-                location = discussion.location ?: stringResource(R.string.tbd),
+                location = discussion.location,
                 formattedDate = discussion.date
             )
         } else {
@@ -237,7 +234,7 @@ private fun DiscussionTimelineItem(
                         tint = textColor
                     )
                     Text(
-                        text = discussion.location ?: stringResource(R.string.tbd),
+                        text = discussion.location,
                         color = textColor,
                         style = MaterialTheme.typography.bodyMedium
                     )

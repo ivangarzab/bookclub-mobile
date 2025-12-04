@@ -59,7 +59,7 @@ class GetActiveSessionUseCase(
                         DiscussionTimelineItemInfo(
                             id = discussion.id,
                             title = discussion.title,
-                            location = discussion.location,
+                            location = discussion.location ?: "TBD...",
                             date = formatDateTime(discussion.date, DateTimeFormat.FULL),
                             // If no upcoming discussions (nextDiscussionIndex == -1), all are past
                             // Otherwise, discussions before the next one are past

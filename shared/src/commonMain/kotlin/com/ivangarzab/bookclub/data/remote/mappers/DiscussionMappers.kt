@@ -14,13 +14,7 @@ fun DiscussionDto.toDomain(): Discussion {
         id = id,
         sessionId = session_id,
         title = title,
-        date = try {
-            // Try parsing as full datetime (e.g., "2025-11-15T19:00:00")
-            LocalDateTime.parse(date)
-        } catch (e: Exception) {
-            // If that fails, parse as date-only and default to 7:00 PM
-            LocalDate.parse(date).atTime(19, 0)
-        },
+        date = date.parseDateString(),
         location = location
     )
 }

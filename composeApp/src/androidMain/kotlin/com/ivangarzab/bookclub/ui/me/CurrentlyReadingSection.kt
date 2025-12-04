@@ -53,6 +53,7 @@ fun CurrentlyReadingSection(
                 }
             }
 
+            //TODO: Make this section expandable later
             if (currentReadings.size > 2) {
                 Spacer(Modifier.padding(8.dp))
                 Text(

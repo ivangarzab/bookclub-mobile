@@ -34,7 +34,7 @@ data class ActiveSessionDetails(
 data class DiscussionTimelineItemInfo(
     val id: String,
     val title: String,
-    val location: String?,
+    val location: String,
     val date: String,
     val isPast: Boolean,
     val isNext: Boolean
@@ -59,7 +59,7 @@ data class BookInfo(
  */
 data class DiscussionInfo(
     val title: String,
-    val location: String?,
+    val location: String,
     val formattedDate: String
 )
 

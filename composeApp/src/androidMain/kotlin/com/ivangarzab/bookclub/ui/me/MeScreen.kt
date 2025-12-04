@@ -1,6 +1,10 @@
 package com.ivangarzab.bookclub.ui.me
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +44,7 @@ import com.ivangarzab.bookclub.presentation.viewmodels.member.MeViewModel
 import com.ivangarzab.bookclub.theme.KluvsTheme
 import com.ivangarzab.bookclub.ui.components.ErrorScreen
 import com.ivangarzab.bookclub.ui.components.LoadingScreen
+import com.ivangarzab.bookclub.presentation.models.ScreenState
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -67,37 +72,51 @@ fun MeScreenContent(
     state: MeState,
     onRetry: () -> Unit,
 ) {
-    when {
-        state.isLoading -> LoadingScreen()
-        state.error != null -> ErrorScreen(
-            message = state.error!!,
-            onRetry = onRetry
-        )
-        else -> {
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
-            ) {
-                ProfileSection(
-                    imageUrl = state.profile?.avatarUrl ?: "",
-                    name = state.profile?.name ?: "",
-                    handle = state.profile?.name ?: "",
-                    joinDate = state.profile?.joinDate ?: ""
-                )
-                Divider()
-                StatisticsSection(
-                    modifier = Modifier.fillMaxWidth(),
-                    data = state.statistics
-                )
-                Divider()
-                CurrentlyReadingSection(
-                    modifier = Modifier.fillMaxWidth(),
-                    currentReadings = state.currentlyReading
-                )
-                Divider()
-                Footer(modifier = Modifier.fillMaxWidth())
+    val screenState = when {
+        state.isLoading -> ScreenState.Loading
+        state.error != null -> ScreenState.Error(state.error!!)
+        else -> ScreenState.Content
+    }
+
+    AnimatedContent(
+        targetState = screenState,
+        transitionSpec = {
+            fadeIn() togetherWith fadeOut()
+        },
+        label = "MeScreenTransition"
+    ) { targetState ->
+        when (targetState) {
+            is ScreenState.Loading -> LoadingScreen()
+            is ScreenState.Error -> ErrorScreen(
+                message = targetState.message,
+                onRetry = onRetry
+            )
+            is ScreenState.Content -> {
+                Column(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp),
+                ) {
+                    ProfileSection(
+                        imageUrl = state.profile?.avatarUrl ?: "",
+                        name = state.profile?.name ?: "",
+                        handle = state.profile?.name ?: "",
+                        joinDate = state.profile?.joinDate ?: ""
+                    )
+                    Divider()
+                    StatisticsSection(
+                        modifier = Modifier.fillMaxWidth(),
+                        data = state.statistics
+                    )
+                    Divider()
+                    CurrentlyReadingSection(
+                        modifier = Modifier.fillMaxWidth(),
+                        currentReadings = state.currentlyReading
+                    )
+                    Divider()
+                    FooterSection(modifier = Modifier.fillMaxWidth())
+                }
             }
         }
     }
@@ -155,7 +174,7 @@ private fun ProfileSection(
 }
 
 @Composable
-private fun Footer(
+private fun FooterSection(
     modifier: Modifier = Modifier,
 ) {
     Card(
