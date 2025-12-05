@@ -6,46 +6,48 @@ struct MeView: View {
     private let userId = "5cc30117-4f77-462a-9881-dd63f0130a09" // TODO: Get from auth
 
     var body: some View {
-        NavigationView {
-            Group {
-                if viewModel.isLoading {
-                    LoadingView()
-                } else if let error = viewModel.error {
-                    ErrorView(message: error, onRetry: {
-                        viewModel.loadUserData(userId: userId)
-                    })
-                } else {
-                    ScrollView {
-                        VStack(spacing: 0) {
-                            if let profile = viewModel.profile {
-                                ProfileSection(profile: profile)
-                            }
-
-                            Divider()
-                                .padding(.vertical, 8)
-
-                            if let statistics = viewModel.statistics {
-                                StatisticsSection(statistics: statistics)
-                                
-                                Divider()
-                                    .padding(.vertical, 8)
-                            }
-
-                            CurrentlyReadingSection(currentReadings: viewModel.currentlyReading)
-
-                            Divider()
-                                .padding(.vertical, 8)
-
-                            FooterSection()
+        ZStack {
+            if viewModel.isLoading {
+                LoadingView()
+                    .transition(.opacity)
+            } else if let error = viewModel.error {
+                ErrorView(message: error, onRetry: {
+                    viewModel.loadUserData(userId: userId)
+                })
+                .transition(.opacity)
+            } else {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        if let profile = viewModel.profile {
+                            ProfileSection(profile: profile)
                         }
-                        .padding(16)
+
+                        Divider()
+                            .padding(.vertical, 8)
+
+                        if let statistics = viewModel.statistics {
+                            StatisticsSection(statistics: statistics)
+
+                            Divider()
+                                .padding(.vertical, 8)
+                        }
+
+                        CurrentlyReadingSection(currentReadings: viewModel.currentlyReading)
+
+                        Divider()
+                            .padding(.vertical, 8)
+
+                        FooterSection()
                     }
+                    .padding(16)
                 }
+                .transition(.opacity)
             }
-            .navigationTitle("Me")
-            .onAppear {
-                viewModel.loadUserData(userId: userId)
-            }
+        }
+        .animation(.easeInOut(duration: 0.3), value: viewModel.isLoading)
+        .animation(.easeInOut(duration: 0.3), value: viewModel.error)
+        .onAppear {
+            viewModel.loadUserData(userId: userId)
         }
     }
 }
