@@ -12,7 +12,7 @@ struct NextDiscussionCard: View {
                 .fontWeight(.medium)
 
             HStack(spacing: 2) {
-                Image(systemName: "location.fill")
+                Image.custom(.location)
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Text(location)

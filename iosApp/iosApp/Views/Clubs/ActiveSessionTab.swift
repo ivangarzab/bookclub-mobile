@@ -81,7 +81,7 @@ struct DiscussionTimelineItem: View {
                         .frame(width: 24, height: 24)
 
                     if discussion.isPast {
-                        Image(systemName: "checkmark")
+                        Image.custom(.checkmark)
                             .font(.system(size: 12, weight: .bold))
                             .foregroundColor(.white)
                     }
@@ -115,7 +115,7 @@ struct DiscussionTimelineItem: View {
                             .opacity(discussion.isPast ? 0.5 : 1.0)
 
                         HStack(spacing: 2) {
-                            Image(systemName: "location.fill")
+                            Image.custom(.location)
                                 .font(.caption)
                             Text(discussion.location)
                                 .font(.subheadline)

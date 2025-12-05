@@ -7,13 +7,21 @@ struct MainView: View {
         TabView(selection: $selectedTab) {
             ClubsView()
                 .tabItem {
-                    Label("Clubs", systemImage: "book.circle.fill")
+                    Label {
+                        Text("Clubs")
+                    } icon: {
+                        Image.custom(.club)
+                    }
                 }
                 .tag(0)
 
             MeView()
                 .tabItem {
-                    Label("Me", systemImage: "person.circle.fill")
+                    Label {
+                        Text("Me")
+                    } icon: {
+                        Image.custom(.user)
+                    }
                 }
                 .tag(1)
         }

@@ -92,19 +92,19 @@ struct StatisticsSection: View {
                 .foregroundColor(.secondary)
 
             StatisticsItem(
-                icon: "book.circle.fill",
+                icon: .clubs,
                 label: "No. of Clubs",
                 value: statistics.clubsCount > 0 ? "\(statistics.clubsCount)" : "N/A"
             )
 
             StatisticsItem(
-                icon: "star.circle.fill",
+                icon: .points,
                 label: "Points",
                 value: statistics.totalPoints > 0 ? "\(statistics.totalPoints)" : "N/A"
             )
 
             StatisticsItem(
-                icon: "books.vertical.fill",
+                icon: .book,
                 label: "Books Read",
                 value: statistics.booksRead > 0 ? "\(statistics.booksRead)" : "N/A"
             )
@@ -114,13 +114,13 @@ struct StatisticsSection: View {
 }
 
 struct StatisticsItem: View {
-    let icon: String
+    let icon: CustomIcon
     let label: String
     let value: String
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: icon)
+            Image.custom(icon)
                 .font(.system(size: 24))
                 .foregroundColor(.brandOrange)
                 .frame(width: 28, height: 28)
@@ -189,11 +189,11 @@ struct CurrentlyReadingItem: View {
 struct FooterSection: View {
     var body: some View {
         VStack(spacing: 0) {
-            FooterItem(label: "Settings", icon: "gearshape.fill")
+            FooterItem(label: "Settings", icon: .settings)
 
             Divider()
 
-            FooterItem(label: "Help & Support", icon: "questionmark.circle.fill")
+            FooterItem(label: "Help & Support", icon: .help)
             
             Divider()
 
@@ -212,11 +212,11 @@ struct FooterSection: View {
 
 struct FooterItem: View {
     let label: String
-    let icon: String
+    let icon: CustomIcon
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: icon)
+            Image.custom(icon)
                 .font(.system(size: 20))
                 .foregroundColor(.brandOrange)
                 .frame(width: 24, height: 24)
