@@ -77,7 +77,7 @@ struct DiscussionTimelineItem: View {
                 // Circle indicator
                 ZStack {
                     Circle()
-                        .fill(discussion.isPast || discussion.isNext ? Color.blue : Color.gray.opacity(0.3))
+                        .fill(discussion.isPast || discussion.isNext ? Color.brandOrange : Color.gray.opacity(0.3))
                         .frame(width: 24, height: 24)
 
                     if discussion.isPast {

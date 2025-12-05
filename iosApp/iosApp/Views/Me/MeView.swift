@@ -58,7 +58,7 @@ struct ProfileSection: View {
         HStack(alignment: .center, spacing: 16) {
             // Avatar placeholder
             Circle()
-                .fill(Color.blue)
+                .fill(Color.brandOrange)
                 .frame(width: 60, height: 60)
 
             VStack(alignment: .leading, spacing: 4) {
@@ -122,7 +122,7 @@ struct StatisticsItem: View {
         HStack(spacing: 12) {
             Image(systemName: icon)
                 .font(.system(size: 24))
-                .foregroundColor(.blue)
+                .foregroundColor(.brandOrange)
                 .frame(width: 28, height: 28)
 
             VStack(alignment: .leading, spacing: 2) {
@@ -179,7 +179,7 @@ struct CurrentlyReadingItem: View {
                 .fontWeight(.medium)
 
             ProgressView(value: Double(reading.progress))
-                .progressViewStyle(LinearProgressViewStyle(tint: .blue))
+                .progressViewStyle(LinearProgressViewStyle(tint: .brandOrange))
                 .frame(height: 8)
         }
     }
@@ -192,9 +192,10 @@ struct FooterSection: View {
             FooterItem(label: "Settings", icon: "gearshape.fill")
 
             Divider()
-                .padding(.vertical, 8)
 
             FooterItem(label: "Help & Support", icon: "questionmark.circle.fill")
+            
+            Divider()
 
             HStack {
                 Spacer()
@@ -217,7 +218,7 @@ struct FooterItem: View {
         HStack(spacing: 12) {
             Image(systemName: icon)
                 .font(.system(size: 20))
-                .foregroundColor(.blue)
+                .foregroundColor(.brandOrange)
                 .frame(width: 24, height: 24)
 
             Text(label)

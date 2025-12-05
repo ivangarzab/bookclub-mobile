@@ -17,7 +17,6 @@ struct MainView: View {
                 }
                 .tag(1)
         }
-        .accentColor(.blue)
     }
 }
 

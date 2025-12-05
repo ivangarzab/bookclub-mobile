@@ -19,7 +19,7 @@ struct ErrorView: View {
                     .fontWeight(.medium)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
-                    .background(Color.blue)
+                    .background(Color.brandOrange)
                     .foregroundColor(.white)
                     .cornerRadius(8)
             }

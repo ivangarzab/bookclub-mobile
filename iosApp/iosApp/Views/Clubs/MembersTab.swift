@@ -37,7 +37,7 @@ struct MemberListItem: View {
         HStack(spacing: 12) {
             // Avatar placeholder
             Circle()
-                .fill(Color.blue)
+                .fill(Color.brandOrange)
                 .frame(width: 40, height: 40)
 
             VStack(alignment: .leading, spacing: 2) {

@@ -26,10 +26,10 @@ struct NextDiscussionCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
-        .background(Color.blue.opacity(0.2))
+        .background(Color.brandOrange.opacity(0.2))
         .overlay(
             RoundedRectangle(cornerRadius: 4)
-                .stroke(Color.blue, lineWidth: 1)
+                .stroke(Color.brandOrange, lineWidth: 1)
         )
     }
 }
