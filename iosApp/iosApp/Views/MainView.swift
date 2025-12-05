@@ -4,27 +4,20 @@ struct MainView: View {
     @State private var selectedTab = 0
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            ClubsView()
-                .tabItem {
-                    Label {
-                        Text("Clubs")
-                    } icon: {
-                        Image.custom(.club)
-                    }
+        VStack(spacing: 0) {
+            // Content area
+            Group {
+                if selectedTab == 0 {
+                    ClubsView()
+                } else {
+                    MeView()
                 }
-                .tag(0)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            MeView()
-                .tabItem {
-                    Label {
-                        Text("Me")
-                    } icon: {
-                        Image.custom(.user)
-                    }
-                }
-                .tag(1)
+            MaterialBottomNavBar(selectedTab: $selectedTab)
         }
+        .ignoresSafeArea(edges: .bottom)
     }
 }
 
