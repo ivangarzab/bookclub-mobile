@@ -26,10 +26,10 @@ struct MeView: View {
 
                             if let statistics = viewModel.statistics {
                                 StatisticsSection(statistics: statistics)
+                                
+                                Divider()
+                                    .padding(.vertical, 8)
                             }
-
-                            Divider()
-                                .padding(.vertical, 8)
 
                             CurrentlyReadingSection(currentReadings: viewModel.currentlyReading)
 
@@ -81,110 +81,6 @@ struct ProfileSection: View {
     }
 }
 
-// MARK: - Statistics Section
-struct StatisticsSection: View {
-    let statistics: Shared.UserStatistics
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Your Statistics")
-                .font(.headline)
-                .foregroundColor(.secondary)
-
-            StatisticsItem(
-                icon: .clubs,
-                label: "No. of Clubs",
-                value: statistics.clubsCount > 0 ? "\(statistics.clubsCount)" : "N/A"
-            )
-
-            StatisticsItem(
-                icon: .points,
-                label: "Points",
-                value: statistics.totalPoints > 0 ? "\(statistics.totalPoints)" : "N/A"
-            )
-
-            StatisticsItem(
-                icon: .book,
-                label: "Books Read",
-                value: statistics.booksRead > 0 ? "\(statistics.booksRead)" : "N/A"
-            )
-        }
-        .padding()
-    }
-}
-
-struct StatisticsItem: View {
-    let icon: CustomIcon
-    let label: String
-    let value: String
-
-    var body: some View {
-        HStack(spacing: 12) {
-            Image.custom(icon)
-                .font(.system(size: 24))
-                .foregroundColor(.brandOrange)
-                .frame(width: 28, height: 28)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(label)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-
-                Text(value)
-                    .font(.body)
-                    .fontWeight(.medium)
-            }
-
-            Spacer()
-        }
-    }
-}
-
-// MARK: - Currently Reading Section
-struct CurrentlyReadingSection: View {
-    let currentReadings: [Shared.CurrentlyReadingBook]
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Currently Reading")
-                .font(.headline)
-                .foregroundColor(.secondary)
-
-            if currentReadings.isEmpty {
-                NoSectionData(text: "No books currently reading")
-            } else {
-                ForEach(Array(currentReadings.prefix(3).enumerated()), id: \.offset) { _, reading in
-                    CurrentlyReadingItem(reading: reading)
-                }
-
-                if currentReadings.count > 3 {
-                    Text("...and more")
-                        .font(.body)
-                        .italic()
-                        .foregroundColor(.secondary)
-                }
-            }
-        }
-        .padding()
-    }
-}
-
-struct CurrentlyReadingItem: View {
-    let reading: Shared.CurrentlyReadingBook
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(reading.bookTitle)
-                .font(.body)
-                .fontWeight(.medium)
-
-            ProgressView(value: Double(reading.progress))
-                .progressViewStyle(LinearProgressViewStyle(tint: .brandOrange))
-                .frame(height: 8)
-        }
-    }
-}
-
 // MARK: - Footer Section
 struct FooterSection: View {
     var body: some View {
@@ -192,21 +88,23 @@ struct FooterSection: View {
             FooterItem(label: "Settings", icon: .settings)
 
             Divider()
+                .padding(.vertical, 8)
 
             FooterItem(label: "Help & Support", icon: .help)
-            
+
             Divider()
+                .padding(.vertical, 8)
 
             HStack {
                 Spacer()
-                Text("Version 0.0.1")
+                Text("Version 0.0.1") //TODO: Get actual version from KMP
                     .font(.caption)
                     .italic()
                     .foregroundColor(.secondary)
                     .padding(.top, 8)
             }
+            .padding(.horizontal, 16)
         }
-        .padding()
     }
 }
 
@@ -227,6 +125,7 @@ struct FooterItem: View {
 
             Spacer()
         }
+        .padding(.horizontal, 16)
     }
 }
 

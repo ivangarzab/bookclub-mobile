@@ -12,7 +12,7 @@ struct MembersTab: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Members (\(members.count))")
                         .font(.headline)
-                        .padding(.bottom, 8)
+                        .padding(8)
 
                     ForEach(Array(members.enumerated()), id: \.offset) { index, member in
                         MemberListItem(member: member)
@@ -34,7 +34,7 @@ struct MemberListItem: View {
     let member: Shared.MemberListItemInfo
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(alignment: .top, spacing: 12) {
             // Avatar placeholder
             Circle()
                 .fill(Color.brandOrange)
@@ -52,9 +52,11 @@ struct MemberListItem: View {
 
             Spacer()
 
-            Text("\(member.points) points")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+            VStack(alignment: .trailing, spacing: 0) {
+                Text("\(member.points) points")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
         }
         .padding(.vertical, 12)
     }
