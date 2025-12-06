@@ -20,9 +20,9 @@ struct ClubsView: View {
                 VStack(spacing: 0) {
                     // Tab selector
                     Picker("", selection: $selectedTab) {
-                        Text("General").tag(0)
-                        Text("Active Session").tag(1)
-                        Text("Members").tag(2)
+                        Text("tab_general").tag(0)
+                        Text("tab_active_session").tag(1)
+                        Text("tab_members").tag(2)
                     }
                     .pickerStyle(SegmentedPickerStyle())
                     .tint(.brandOrange)

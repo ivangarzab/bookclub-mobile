@@ -13,12 +13,12 @@ struct ActiveSessionTab: View {
                         Text(session.book.title)
                             .font(.headline)
 
-                        Text("by \(session.book.author)")
+                        Text(String(format: NSLocalizedString("label_by_author", comment: ""), session.book.author))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
 
                         HStack {
-                            Text("Due Date:")
+                            Text("label_due_date")
                                 .fontWeight(.medium)
                             Text(session.dueDate)
                         }
@@ -32,7 +32,7 @@ struct ActiveSessionTab: View {
 
                     // Discussion Timeline
                     VStack(alignment: .leading, spacing: 0) {
-                        Text("Discussion Timeline")
+                        Text("section_discussion_timeline")
                             .font(.headline)
                             .padding(.bottom, 8)
 
@@ -48,7 +48,7 @@ struct ActiveSessionTab: View {
                 }
                 .padding()
             } else {
-                NoTabData(text: "No session details")
+                NoTabData(text: String(localized: "empty_no_session_details"))
             }
         }
     }

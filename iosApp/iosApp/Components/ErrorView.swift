@@ -15,7 +15,7 @@ struct ErrorView: View {
                 .padding(.horizontal)
 
             Button(action: onRetry) {
-                Text("Retry")
+                Text("button_retry")
                     .fontWeight(.medium)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)

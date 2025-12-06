@@ -7,14 +7,14 @@ struct MaterialBottomNavBar: View {
         HStack(spacing: 0) {
             MaterialNavBarItem(
                 icon: .club,
-                label: "Clubs",
+                label: String(localized: "tab_clubs"),
                 isSelected: selectedTab == 0,
                 action: { selectedTab = 0 }
             )
 
             MaterialNavBarItem(
                 icon: .user,
-                label: "Me",
+                label: String(localized: "tab_me"),
                 isSelected: selectedTab == 1,
                 action: { selectedTab = 1 }
             )

@@ -7,10 +7,10 @@ struct MembersTab: View {
     var body: some View {
         ScrollView {
             if members.isEmpty {
-                NoTabData(text: "No members in club")
+                NoTabData(text: String(localized: "empty_no_members"))
             } else {
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Members (\(members.count))")
+                    Text(String(format: NSLocalizedString("label_members_section", comment: ""), Int32(members.count)))
                         .font(.headline)
                         .padding(8)
 
@@ -53,7 +53,7 @@ struct MemberListItem: View {
             Spacer()
 
             VStack(alignment: .trailing, spacing: 0) {
-                Text("\(member.points) points")
+                Text(String(format: NSLocalizedString("label_points", comment: ""), member.points))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }

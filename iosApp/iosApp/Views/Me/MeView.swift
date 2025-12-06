@@ -72,7 +72,7 @@ struct ProfileSection: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
 
-                Text("Member since \(profile.joinDate)")
+                Text(String(format: NSLocalizedString("label_member_since", comment: ""), profile.joinDate))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
@@ -87,19 +87,19 @@ struct ProfileSection: View {
 struct FooterSection: View {
     var body: some View {
         VStack(spacing: 0) {
-            FooterItem(label: "Settings", icon: .settings)
+            FooterItem(label: String(localized: "button_settings"), icon: .settings)
 
             Divider()
                 .padding(.vertical, 8)
 
-            FooterItem(label: "Help & Support", icon: .help)
+            FooterItem(label: String(localized: "button_help_support"), icon: .help)
 
             Divider()
                 .padding(.vertical, 8)
 
             HStack {
                 Spacer()
-                Text("Version 0.0.1") //TODO: Get actual version from KMP
+                Text(String(format: NSLocalizedString("app_version", comment: ""), "0.0.1")) //TODO: Get actual version from KMP
                     .font(.caption)
                     .italic()
                     .foregroundColor(.secondary)

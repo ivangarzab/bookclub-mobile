@@ -13,19 +13,19 @@ struct CurrentlyReadingSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Currently Reading")
+            Text("section_currently_reading")
                 .font(.headline)
                 .foregroundColor(.secondary)
 
             if currentReadings.isEmpty {
-                NoSectionData(text: "No books currently reading")
+                NoSectionData(text: String(localized: "empty_no_books_reading"))
             } else {
                 ForEach(Array(currentReadings.prefix(3).enumerated()), id: \.offset) { _, reading in
                     CurrentlyReadingItem(reading: reading)
                 }
 
                 if currentReadings.count > 3 {
-                    Text("...and more")
+                    Text("label_and_more")
                         .font(.body)
                         .italic()
                         .foregroundColor(.secondary)

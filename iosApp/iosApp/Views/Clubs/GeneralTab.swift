@@ -13,12 +13,12 @@ struct GeneralTab: View {
                         Text(clubDetails.clubName)
                             .font(.headline)
 
-                        Text("\(clubDetails.memberCount) members")
+                        Text(String(format: NSLocalizedString("label_members_count", comment: ""), clubDetails.memberCount))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
 
                         if let foundedYear = clubDetails.foundedYear {
-                            Text("Founded in \(foundedYear)")
+                            Text(String(format: NSLocalizedString("label_founded_in", comment: ""), foundedYear))
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
@@ -30,7 +30,7 @@ struct GeneralTab: View {
 
                     // Current Book Card
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Current Book")
+                        Text("section_current_book")
                             .font(.headline)
                             .foregroundColor(.secondary)
 
@@ -44,20 +44,20 @@ struct GeneralTab: View {
                                 .foregroundColor(.secondary)
 
                             HStack(spacing: 4) {
-                                Text(book.year ?? "N/A")
+                                Text(book.year ?? String(localized: "label_not_available"))
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
 
                                 if let pageCount = book.pageCount {
                                     Text("•")
                                         .foregroundColor(.secondary)
-                                    Text("\(pageCount) pages")
+                                    Text(String(format: NSLocalizedString("label_pages", comment: ""), pageCount.int32Value))
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
                                 }
                             }
                         } else {
-                            NoSectionData(text: "No book data")
+                            NoSectionData(text: String(localized: "empty_no_book_data"))
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -67,7 +67,7 @@ struct GeneralTab: View {
 
                     // Next Discussion Card
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Next Discussion")
+                        Text("section_next_discussion")
                             .font(.headline)
                             .foregroundColor(.secondary)
 
@@ -78,7 +78,7 @@ struct GeneralTab: View {
                                 formattedDate: discussion.formattedDate
                             )
                         } else {
-                            NoSectionData(text: "No upcoming discussion")
+                            NoSectionData(text: String(localized: "empty_no_upcoming_discussion"))
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -86,7 +86,7 @@ struct GeneralTab: View {
                 }
                 .padding()
             } else {
-                NoTabData(text: "No club details")
+                NoTabData(text: String(localized: "empty_no_club_details"))
             }
         }
     }

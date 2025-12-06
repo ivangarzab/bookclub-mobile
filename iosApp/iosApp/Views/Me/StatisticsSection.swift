@@ -12,26 +12,26 @@ struct StatisticsSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Your Statistics")
+            Text("section_your_statistics")
                 .font(.headline)
                 .foregroundColor(.secondary)
 
             StatisticsItem(
                 icon: .clubs,
-                label: "Number of Clubs",
-                value: statistics.clubsCount > 0 ? "\(statistics.clubsCount)" : "N/A"
+                label: String(localized: "stat_number_of_clubs"),
+                value: statistics.clubsCount > 0 ? "\(statistics.clubsCount)" : String(localized: "label_not_available")
             )
 
             StatisticsItem(
                 icon: .points,
-                label: "Points",
-                value: statistics.totalPoints > 0 ? "\(statistics.totalPoints)" : "N/A"
+                label: String(localized: "stat_points"),
+                value: statistics.totalPoints > 0 ? "\(statistics.totalPoints)" : String(localized: "label_not_available")
             )
 
             StatisticsItem(
                 icon: .book,
-                label: "Books Read",
-                value: statistics.booksRead > 0 ? "\(statistics.booksRead)" : "N/A"
+                label: String(localized: "stat_books_read"),
+                value: statistics.booksRead > 0 ? "\(statistics.booksRead)" : String(localized: "label_not_available")
             )
         }
         .padding()

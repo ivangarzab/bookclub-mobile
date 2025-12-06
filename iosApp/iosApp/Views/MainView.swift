@@ -3,7 +3,10 @@ import SwiftUI
 struct MainView: View {
     @State private var selectedTab = 0
 
-    private let titles = ["Clubs", "Me"]
+    private let titles = [
+        String(localized: "tab_clubs"),
+        String(localized: "tab_me")
+    ]
 
     var body: some View {
         GeometryReader { geometry in
