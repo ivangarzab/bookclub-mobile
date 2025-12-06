@@ -52,6 +52,7 @@ ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 
 supabase = { module = "io.github.jan-tennert.supabase:supabase-kt", version.ref = "supabase" }
 supabase-functions = { module = "io.github.jan-tennert.supabase:functions-kt", version.ref = "supabase" }
+supabase-auth = { module = "io.github.jan-tennert.supabase:auth-kt", version.ref = "supabase" }
 supabase-test = { module = "io.github.jan-tennert.supabase:test-kt", version.ref = "supabase" }
 
 bark = { module = "com.ivangarzab:bark", version.ref = "bark" }

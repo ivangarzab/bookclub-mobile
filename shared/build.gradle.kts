@@ -49,6 +49,7 @@ kotlin {
 
             implementation(libs.supabase)
             implementation(libs.supabase.functions)
+            implementation(libs.supabase.auth)
 
             implementation(libs.koin)
             implementation(libs.bark)
