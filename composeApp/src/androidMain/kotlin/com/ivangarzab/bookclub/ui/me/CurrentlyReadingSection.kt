@@ -53,9 +53,10 @@ fun CurrentlyReadingSection(
                 }
             }
 
+            Spacer(Modifier.padding(8.dp))
+
             //TODO: Make this section expandable later
             if (currentReadings.size > 2) {
-                Spacer(Modifier.padding(8.dp))
                 Text(
                     text = stringResource(R.string.and_more),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
