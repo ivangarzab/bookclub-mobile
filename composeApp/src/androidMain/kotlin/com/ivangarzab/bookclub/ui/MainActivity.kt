@@ -14,7 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ivangarzab.bookclub.theme.KluvsTheme
-import com.ivangarzab.bookclub.ui.login.LoginScreen
+import com.ivangarzab.bookclub.ui.auth.LoginScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
