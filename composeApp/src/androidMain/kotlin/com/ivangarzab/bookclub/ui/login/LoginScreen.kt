@@ -1,7 +1,9 @@
 package com.ivangarzab.bookclub.ui.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -38,6 +41,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -47,12 +52,16 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ivangarzab.bookclub.R
 import com.ivangarzab.bookclub.presentation.viewmodels.auth.AuthState
 import com.ivangarzab.bookclub.presentation.viewmodels.auth.AuthViewModel
 import com.ivangarzab.bookclub.presentation.viewmodels.auth.LoginNavigation
 import com.ivangarzab.bookclub.presentation.viewmodels.auth.OAuthProvider
 import com.ivangarzab.bookclub.theme.KluvsTheme
+import com.ivangarzab.bookclub.theme.signInDiscord
+import com.ivangarzab.bookclub.theme.signInGoogle
 import com.ivangarzab.bookclub.ui.components.LoadingScreen
+import com.ivangarzab.bookclub.ui.components.SocialButton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -150,27 +159,25 @@ fun LoginScreenContent(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button( //TODO: Add icon
-                modifier = Modifier.fillMaxWidth(),
+            SocialButton(
+                text = "Continue with Discord",
+                icon = painterResource(R.drawable.ic_discord),
+                iconSize = 20.dp,
+                backgroundColor = signInDiscord,
+                textColor = Color(0xFFFFFFFF),
                 onClick = { onOAuthSignIn(OAuthProvider.DISCORD) }
-            ) {
-                Text(
-                    text = "Continue with Discord",
-                    color = MaterialTheme.colorScheme.background
-                )
-            }
+            )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Button( //TODO: Add icon
-                modifier = Modifier.fillMaxWidth(),
+            SocialButton(
+                text = "Continue with Google",
+                icon = painterResource(R.drawable.ic_google),
+                iconSize = 40.dp,
+                backgroundColor = signInGoogle,
+                textColor = Color(0xFF1F1F1F),
                 onClick = { onOAuthSignIn(OAuthProvider.GOOGLE) }
-            ) {
-                Text(
-                    text = "Continue with Google",
-                    color = MaterialTheme.colorScheme.background
-                )
-            }
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -236,10 +243,12 @@ fun LoginScreenContent(
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
                 onClick = { onEmailSignIn(emailField, passwordField) }
             ) {
                 Text(
                     text = "Sign In",
+                    fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.background
                 )
             }
