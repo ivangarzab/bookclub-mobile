@@ -5,6 +5,7 @@ package com.ivangarzab.bookclub.presentation.viewmodels.auth
  * from the Login screen.
  */
 sealed class LoginNavigation {
+    object SignIn: LoginNavigation()
     object SignUp: LoginNavigation()
     object ForgetPassword: LoginNavigation()
 }

@@ -66,6 +66,7 @@ fun AuthFormContent(
     //TODO: Should these be hoisted?
     var emailField by remember { mutableStateOf("") }
     var passwordField by remember { mutableStateOf("") }
+    var confirmPasswordField by remember { mutableStateOf("") }
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -109,7 +110,11 @@ fun AuthFormContent(
 
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = "Sign in to your account",
+                text = if (mode == AuthFormMode.LOGIN) {
+                    "Sign in to your account"
+                } else {
+                    "Create a new account"
+                },
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyLarge,
             )
@@ -171,7 +176,11 @@ fun AuthFormContent(
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password, //TODO: Replace with custom icon
-                    imeAction = ImeAction.Go
+                    imeAction = if (mode == AuthFormMode.LOGIN) {
+                        ImeAction.Go
+                    } else {
+                        ImeAction.Next
+                    }
                 ),
                 keyboardActions = KeyboardActions(
                     onGo = { onEmailSignIn(emailField, passwordField)}
@@ -184,19 +193,49 @@ fun AuthFormContent(
                 },
             )
 
-            TextButton (
-                modifier = Modifier
-                    .align(Alignment.End),
-                onClick = { onNavigate(LoginNavigation.ForgetPassword) },
-                content = {
-                    Text(
-                        text = "Forgot password?",
-                        textAlign = TextAlign.Right,
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                },
-            )
+            if (mode == AuthFormMode.SIGNUP) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = confirmPasswordField,
+                    onValueChange = { passwordField = it },
+                    singleLine = true,
+                    label = { Text("Confirm Password") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password, //TODO: Replace with custom icon
+                        imeAction = ImeAction.Go
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onGo = { onEmailSignIn(emailField, passwordField)}
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Lock,
+                            contentDescription = ""
+                        )
+                    },
+                )
+            }
+
+            if (mode == AuthFormMode.LOGIN) {
+                TextButton(
+                    modifier = Modifier
+                        .align(Alignment.End),
+                    onClick = { onNavigate(LoginNavigation.ForgetPassword) },
+                    content = {
+                        Text(
+                            text = "Forgot password?",
+                            textAlign = TextAlign.Right,
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    },
+                )
+            } else {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
@@ -204,7 +243,11 @@ fun AuthFormContent(
                 onClick = { onEmailSignIn(emailField, passwordField) }
             ) {
                 Text(
-                    text = "Sign In",
+                    text = if (mode == AuthFormMode.LOGIN) {
+                        "Sign In"
+                    } else {
+                        "Sign Up"
+                    },
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.background
                 )
@@ -218,7 +261,11 @@ fun AuthFormContent(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Don't have an account?",
+                    text = if (mode == AuthFormMode.LOGIN) {
+                        "Don't have an account?"
+                    } else {
+                        "Already have an account?"
+                    },
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium,
                 )
@@ -226,9 +273,21 @@ fun AuthFormContent(
                 Text(
                     modifier = Modifier
                         .clickable(
-                            onClick = { onNavigate(LoginNavigation.SignUp) }
+                            onClick = {
+                                onNavigate(
+                                    if (mode == AuthFormMode.LOGIN) {
+                                        LoginNavigation.SignUp
+                                    } else {
+                                        LoginNavigation.SignIn
+                                    }
+                                )
+                            }
                         ),
-                    text = "Sign up",
+                    text = if (mode == AuthFormMode.LOGIN) {
+                        "Sign up"
+                    } else {
+                        "Sign in"
+                    },
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
