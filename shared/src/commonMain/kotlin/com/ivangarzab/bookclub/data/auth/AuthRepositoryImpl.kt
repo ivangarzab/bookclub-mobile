@@ -1,6 +1,7 @@
 package com.ivangarzab.bookclub.data.auth
 
 import com.ivangarzab.bark.Bark
+import com.ivangarzab.bookclub.data.auth.mappers.toAuthErrorMessage
 import com.ivangarzab.bookclub.data.auth.mappers.toDomain
 import com.ivangarzab.bookclub.data.local.storage.SecureStorage
 import com.ivangarzab.bookclub.domain.models.User
@@ -64,7 +65,7 @@ class AuthRepositoryImpl(
         } catch (e: Exception) {
             Bark.e("Failed to initialize auth", e)
             clearStoredSession()
-            Result.failure(e)
+            Result.failure(e.toAuthErrorMessage())
         }
     }
 
@@ -86,7 +87,7 @@ class AuthRepositoryImpl(
             Result.success(user)
         } catch (e: Exception) {
             Bark.e("Sign up failed for: $email", e)
-            Result.failure(e)
+            Result.failure(e.toAuthErrorMessage())
         }
     }
 
@@ -108,7 +109,7 @@ class AuthRepositoryImpl(
             Result.success(user)
         } catch (e: Exception) {
             Bark.e("Sign in failed for: $email", e)
-            Result.failure(e)
+            Result.failure(e.toAuthErrorMessage())
         }
     }
 
@@ -121,7 +122,7 @@ class AuthRepositoryImpl(
             Result.success(url)
         } catch (e: Exception) {
             Bark.e("Failed to get Discord OAuth URL", e)
-            Result.failure(e)
+            Result.failure(e.toAuthErrorMessage())
         }
     }
 
@@ -134,7 +135,7 @@ class AuthRepositoryImpl(
             Result.success(url)
         } catch (e: Exception) {
             Bark.e("Failed to get Google OAuth URL", e)
-            Result.failure(e)
+            Result.failure(e.toAuthErrorMessage())
         }
     }
 
@@ -156,7 +157,7 @@ class AuthRepositoryImpl(
             Result.success(user)
         } catch (e: Exception) {
             Bark.e("OAuth callback failed", e)
-            Result.failure(e)
+            Result.failure(e.toAuthErrorMessage())
         }
     }
 
@@ -180,7 +181,7 @@ class AuthRepositoryImpl(
             // Still clear local state even if server sign out fails
             clearStoredSession()
             updateAuthState(null)
-            Result.failure(e)
+            Result.failure(e.toAuthErrorMessage())
         }
     }
 
@@ -205,7 +206,7 @@ class AuthRepositoryImpl(
             // If refresh fails, user needs to sign in again
             clearStoredSession()
             updateAuthState(null)
-            Result.failure(e)
+            Result.failure(e.toAuthErrorMessage())
         }
     }
 
