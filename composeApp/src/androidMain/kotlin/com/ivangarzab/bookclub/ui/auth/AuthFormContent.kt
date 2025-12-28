@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
@@ -58,7 +59,7 @@ fun AuthFormContent(
     modifier: Modifier = Modifier,
     mode: AuthMode,
     state: AuthUiState,
-    errorMessage: String? = null, //TODO: Should we reset once it's shown?
+    errorMessage: String? = null,
     onEmailFieldChange: (String) -> Unit,
     onPasswordFieldChange: (String) -> Unit,
     onConfirmPasswordFieldChange: (String) -> Unit,
@@ -145,7 +146,7 @@ fun AuthFormContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
+            OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = state.emailField,
                 onValueChange = onEmailFieldChange,
@@ -157,18 +158,25 @@ fun AuthFormContent(
                 ),
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Filled.Email, //TODO: Replace with custom icon
+                        painter = painterResource(R.drawable.ic_email),
                         contentDescription = "Email text field icon"
                     )
                 },
-                supportingText = state.emailError?.let {
-                    { Text(it, color = MaterialTheme.colorScheme.error) }
+                supportingText = {
+                    Text(
+                        text = state.emailError ?: "Enter valid email address",
+                        color = if (state.emailError != null) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        }
+                    )
                 },
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            TextField(
+            OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = state.passwordField,
                 onValueChange = onPasswordFieldChange,
@@ -176,7 +184,7 @@ fun AuthFormContent(
                 label = { Text("Password") },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password, //TODO: Replace with custom icon
+                    keyboardType = KeyboardType.Password,
                     imeAction = if (mode == AuthMode.LOGIN) {
                         ImeAction.Go
                     } else {
@@ -188,19 +196,26 @@ fun AuthFormContent(
                 ),
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Filled.Lock,
+                        painter = painterResource(R.drawable.ic_password),
                         contentDescription = "Password text field icon"
                     )
                 },
-                supportingText = state.passwordError?.let {
-                    { Text(it, color = MaterialTheme.colorScheme.error) }
+                supportingText = {
+                    Text(
+                        text = state.passwordError ?: "Minimum 8 characters",
+                        color = if (state.passwordError != null) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        }
+                    )
                 },
             )
 
             if (mode == AuthMode.SIGNUP) {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                TextField(
+                OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = state.confirmPasswordField,
                     onValueChange = onConfirmPasswordFieldChange,
@@ -208,7 +223,7 @@ fun AuthFormContent(
                     label = { Text("Confirm Password") },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password, //TODO: Replace with custom icon
+                        keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Go
                     ),
                     keyboardActions = KeyboardActions(
@@ -216,12 +231,19 @@ fun AuthFormContent(
                     ),
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Filled.Lock,
+                            painter = painterResource(R.drawable.ic_password),
                             contentDescription = "Confirm password text field icon"
                         )
                     },
-                    supportingText = state.confirmPasswordError?.let {
-                        { Text(it, color = MaterialTheme.colorScheme.error) }
+                    supportingText = {
+                        Text(
+                            text = state.confirmPasswordError ?: "Must match password above",
+                            color = if (state.confirmPasswordError != null) {
+                                MaterialTheme.colorScheme.error
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+                        )
                     },
                 )
             }
