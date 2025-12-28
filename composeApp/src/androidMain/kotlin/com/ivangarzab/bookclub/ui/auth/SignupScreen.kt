@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.ivangarzab.bookclub.presentation.viewmodels.auth.AuthMode
 import com.ivangarzab.bookclub.presentation.viewmodels.auth.AuthState
 import com.ivangarzab.bookclub.presentation.viewmodels.auth.AuthViewModel
 import com.ivangarzab.bookclub.presentation.viewmodels.auth.LoginNavigation
@@ -21,6 +22,8 @@ fun SignupScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
+    val uiState by viewModel.uiState.collectAsState()
+
     when (state) {
         is AuthState.Loading -> LoadingScreen()
         is AuthState.Authenticated -> LaunchedEffect(Unit) {
@@ -30,9 +33,13 @@ fun SignupScreen(
         is AuthState.Error -> {
             AuthFormContent(
                 modifier = modifier,
-                mode = AuthFormMode.SIGNUP,
+                mode = AuthMode.SIGNUP,
+                state = uiState,
                 errorMessage = (state as? AuthState.Error)?.message,
-                onEmailSignIn = viewModel::signUp,
+                onEmailFieldChange = viewModel::onEmailFieldChanged,
+                onPasswordFieldChange = viewModel::onPasswordFieldChanged,
+                onConfirmPasswordFieldChange = viewModel::onConfirmPasswordFieldChanged,
+                onSubmit = viewModel::validateAndSignUp,
                 onOAuthSignIn = { provider ->
                     // TODO: Implement provider login
                 },

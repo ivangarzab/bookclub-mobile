@@ -30,10 +30,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,6 +44,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ivangarzab.bookclub.R
+import com.ivangarzab.bookclub.presentation.viewmodels.auth.AuthMode
+import com.ivangarzab.bookclub.presentation.viewmodels.auth.AuthUiState
 import com.ivangarzab.bookclub.presentation.viewmodels.auth.LoginNavigation
 import com.ivangarzab.bookclub.presentation.viewmodels.auth.OAuthProvider
 import com.ivangarzab.bookclub.theme.KluvsTheme
@@ -57,17 +56,16 @@ import com.ivangarzab.bookclub.ui.components.SocialButton
 @Composable
 fun AuthFormContent(
     modifier: Modifier = Modifier,
-    mode: AuthFormMode,
-    errorMessage: String? = null,
-    onEmailSignIn: (String, String) -> Unit,
+    mode: AuthMode,
+    state: AuthUiState,
+    errorMessage: String? = null, //TODO: Should we reset once it's shown?
+    onEmailFieldChange: (String) -> Unit,
+    onPasswordFieldChange: (String) -> Unit,
+    onConfirmPasswordFieldChange: (String) -> Unit,
+    onSubmit: () -> Unit,
     onOAuthSignIn: (OAuthProvider) -> Unit,
     onNavigate: (LoginNavigation) -> Unit,
 ) {
-    //TODO: Should these be hoisted?
-    var emailField by remember { mutableStateOf("") }
-    var passwordField by remember { mutableStateOf("") }
-    var confirmPasswordField by remember { mutableStateOf("") }
-
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(errorMessage) {
@@ -110,7 +108,7 @@ fun AuthFormContent(
 
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = if (mode == AuthFormMode.LOGIN) {
+                text = if (mode == AuthMode.LOGIN) {
                     "Sign in to your account"
                 } else {
                     "Create a new account"
@@ -149,8 +147,8 @@ fun AuthFormContent(
 
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = emailField,
-                onValueChange = { emailField = it },
+                value = state.emailField,
+                onValueChange = onEmailFieldChange,
                 singleLine = true,
                 label = { Text("Email") },
                 keyboardOptions = KeyboardOptions(
@@ -160,8 +158,11 @@ fun AuthFormContent(
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Email, //TODO: Replace with custom icon
-                        contentDescription = ""
+                        contentDescription = "Email text field icon"
                     )
+                },
+                supportingText = state.emailError?.let {
+                    { Text(it, color = MaterialTheme.colorScheme.error) }
                 },
             )
 
@@ -169,37 +170,40 @@ fun AuthFormContent(
 
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = passwordField,
-                onValueChange = { passwordField = it },
+                value = state.passwordField,
+                onValueChange = onPasswordFieldChange,
                 singleLine = true,
                 label = { Text("Password") },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password, //TODO: Replace with custom icon
-                    imeAction = if (mode == AuthFormMode.LOGIN) {
+                    imeAction = if (mode == AuthMode.LOGIN) {
                         ImeAction.Go
                     } else {
                         ImeAction.Next
                     }
                 ),
                 keyboardActions = KeyboardActions(
-                    onGo = { onEmailSignIn(emailField, passwordField)}
+                    onGo = { onSubmit()}
                 ),
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Lock,
-                        contentDescription = ""
+                        contentDescription = "Password text field icon"
                     )
+                },
+                supportingText = state.passwordError?.let {
+                    { Text(it, color = MaterialTheme.colorScheme.error) }
                 },
             )
 
-            if (mode == AuthFormMode.SIGNUP) {
+            if (mode == AuthMode.SIGNUP) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = confirmPasswordField,
-                    onValueChange = { passwordField = it },
+                    value = state.confirmPasswordField,
+                    onValueChange = onConfirmPasswordFieldChange,
                     singleLine = true,
                     label = { Text("Confirm Password") },
                     visualTransformation = PasswordVisualTransformation(),
@@ -208,18 +212,21 @@ fun AuthFormContent(
                         imeAction = ImeAction.Go
                     ),
                     keyboardActions = KeyboardActions(
-                        onGo = { onEmailSignIn(emailField, passwordField)}
+                        onGo = { onSubmit()}
                     ),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Filled.Lock,
-                            contentDescription = ""
+                            contentDescription = "Confirm password text field icon"
                         )
+                    },
+                    supportingText = state.confirmPasswordError?.let {
+                        { Text(it, color = MaterialTheme.colorScheme.error) }
                     },
                 )
             }
 
-            if (mode == AuthFormMode.LOGIN) {
+            if (mode == AuthMode.LOGIN) {
                 TextButton(
                     modifier = Modifier
                         .align(Alignment.End),
@@ -240,10 +247,10 @@ fun AuthFormContent(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
-                onClick = { onEmailSignIn(emailField, passwordField) }
+                onClick = { onSubmit() }
             ) {
                 Text(
-                    text = if (mode == AuthFormMode.LOGIN) {
+                    text = if (mode == AuthMode.LOGIN) {
                         "Sign In"
                     } else {
                         "Sign Up"
@@ -261,7 +268,7 @@ fun AuthFormContent(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = if (mode == AuthFormMode.LOGIN) {
+                    text = if (mode == AuthMode.LOGIN) {
                         "Don't have an account?"
                     } else {
                         "Already have an account?"
@@ -275,7 +282,7 @@ fun AuthFormContent(
                         .clickable(
                             onClick = {
                                 onNavigate(
-                                    if (mode == AuthFormMode.LOGIN) {
+                                    if (mode == AuthMode.LOGIN) {
                                         LoginNavigation.SignUp
                                     } else {
                                         LoginNavigation.SignIn
@@ -283,7 +290,7 @@ fun AuthFormContent(
                                 )
                             }
                         ),
-                    text = if (mode == AuthFormMode.LOGIN) {
+                    text = if (mode == AuthMode.LOGIN) {
                         "Sign up"
                     } else {
                         "Sign in"
@@ -297,8 +304,6 @@ fun AuthFormContent(
     }
 }
 
-enum class AuthFormMode { LOGIN, SIGNUP }
-
 @PreviewLightDark
 @Composable
 fun Preview_LoginScreen() = KluvsTheme {
@@ -306,9 +311,13 @@ fun Preview_LoginScreen() = KluvsTheme {
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surface)
             .fillMaxSize(),
-        mode = AuthFormMode.LOGIN,
+        mode = AuthMode.LOGIN,
+        state = AuthUiState(),
+        onEmailFieldChange = { _ -> },
+        onPasswordFieldChange = { _ -> },
+        onConfirmPasswordFieldChange = { _ -> },
         onOAuthSignIn = { _ -> },
-        onEmailSignIn = { _, _ -> },
+        onSubmit = { },
         onNavigate = { _ -> },
     )
 }
@@ -320,9 +329,13 @@ fun Preview_SignupScreen() = KluvsTheme {
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surface)
             .fillMaxSize(),
-        mode = AuthFormMode.SIGNUP,
+        mode = AuthMode.SIGNUP,
+        state = AuthUiState(),
+        onEmailFieldChange = { _ -> },
+        onPasswordFieldChange = { _ -> },
+        onConfirmPasswordFieldChange = { _ -> },
         onOAuthSignIn = { _ -> },
-        onEmailSignIn = { _, _ -> },
+        onSubmit = { },
         onNavigate = { _ -> },
     )
 }

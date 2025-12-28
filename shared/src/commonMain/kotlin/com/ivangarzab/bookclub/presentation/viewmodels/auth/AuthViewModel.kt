@@ -21,6 +21,9 @@ class AuthViewModel(
     private val _state = MutableStateFlow<AuthState>(AuthState.Unauthenticated)
     val state: StateFlow<AuthState> = _state.asStateFlow()
 
+    private val _uiState = MutableStateFlow(AuthUiState())
+    val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
+
     init {
         viewModelScope.launch {
             authRepository.initialize()
@@ -34,35 +37,108 @@ class AuthViewModel(
         }
     }
 
-    fun signUp(email: String, password: String) = viewModelScope.launch {
-        _state.update{ AuthState.Loading }
-        authRepository.signUpWithEmail(email, password)
-            .onSuccess { user ->
-                _state.update { AuthState.Authenticated(user) }
-            }
-            .onFailure { error ->
-                _state.update { AuthState.Error(error.message ?: "Error signing up") }
-            }
+    fun onEmailFieldChanged(value: String) {
+        _uiState.update { it.copy(emailField = value, emailError = null) }
     }
 
-    fun signIn(email: String, password: String) = viewModelScope.launch {
-        _state.update{ AuthState.Loading }
-        authRepository.signInWithEmail(email, password)
-            .onSuccess { user ->
-                _state.update { AuthState.Authenticated(user) }
+    fun onPasswordFieldChanged(value: String) {
+        _uiState.update { it.copy(passwordField = value, passwordError = null) }
+    }
+
+    fun onConfirmPasswordFieldChanged(value: String) {
+        _uiState.update { it.copy(confirmPasswordField = value, confirmPasswordError = null) }
+    }
+
+    fun validateAndSignIn() {
+        val emailError = when {
+            _uiState.value.emailField.isBlank() -> "Email is required"
+            !_uiState.value.emailField.contains("@") -> "Please enter a valid email"
+            else -> null
+        }
+
+        val passwordError = when {
+            _uiState.value.passwordField.isBlank() -> "Password is required"
+            _uiState.value.passwordField.length < 6 -> "Password must be at least 6 characters"
+            else -> null
+        }
+
+        if (emailError != null || passwordError != null) {
+            _uiState.update { it.copy(emailError = emailError, passwordError = passwordError) }
+            return  // Don't proceed with API call
+        }
+
+        signIn()
+    }
+
+    fun validateAndSignUp() {
+        val emailError = when {
+            _uiState.value.emailField.isBlank() -> "Email is required"
+            !_uiState.value.emailField.contains("@") -> "Please enter a valid email"
+            else -> null
+        }
+
+        val passwordError = when {
+            _uiState.value.passwordField.isBlank() -> "Password is required"
+            _uiState.value.passwordField.length < 6 -> "Password must be at least 6 characters"
+            else -> null
+        }
+
+        val confirmPasswordError = when {
+            _uiState.value.passwordField != _uiState.value.confirmPasswordField -> "Passowrds must match"
+            else -> null
+        }
+
+        if (emailError != null || passwordError != null || confirmPasswordError != null) {
+            _uiState.update {
+                it.copy(
+                    emailError = emailError,
+                    passwordError = passwordError,
+                    confirmPasswordError = confirmPasswordError
+                )
             }
-            .onFailure { error ->
-                _state.update { AuthState.Error(error.message ?: "Error signing in") }
-            }
+            return  // Don't proceed with API call
+        }
+
+        signUp()
+    }
+
+    private fun signUp() = viewModelScope.launch {
+        _state.update { AuthState.Loading }
+        authRepository.signUpWithEmail(
+            email = uiState.value.emailField,
+            password = uiState.value.passwordField
+        ).onSuccess { user ->
+            _state.update { AuthState.Authenticated(user) }
+            clearForm()
+        }.onFailure { error ->
+            _state.update { AuthState.Error(error.message ?: "Error signing up") }
+        }
+    }
+
+    private fun signIn() = viewModelScope.launch {
+        _state.update { AuthState.Loading }
+        authRepository.signInWithEmail(
+            email = uiState.value.emailField,
+            password = uiState.value.passwordField
+        ).onSuccess { user ->
+            _state.update { AuthState.Authenticated(user) }
+            clearForm()
+        }.onFailure { error ->
+            _state.update { AuthState.Error(error.message ?: "Error signing in") }
+        }
     }
 
     fun signOut() = viewModelScope.launch {
-        _state.update{ AuthState.Loading }
+        _state.update { AuthState.Loading }
         authRepository.signOut()
             .onSuccess { _state.update { AuthState.Unauthenticated } }
             .onFailure { error ->
                 _state.update { AuthState.Error(error.message ?: "Error signing out") }
             }
+    }
+
+    private fun clearForm() {
+        _uiState.update { AuthUiState() }
     }
 }
 
