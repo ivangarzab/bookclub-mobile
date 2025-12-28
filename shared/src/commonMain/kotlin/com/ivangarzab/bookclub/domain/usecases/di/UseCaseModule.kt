@@ -1,5 +1,6 @@
 package com.ivangarzab.bookclub.domain.usecases.di
 
+import com.ivangarzab.bookclub.domain.usecases.auth.SignOutUseCase
 import com.ivangarzab.bookclub.domain.usecases.club.GetActiveSessionUseCase
 import com.ivangarzab.bookclub.domain.usecases.club.GetClubDetailsUseCase
 import com.ivangarzab.bookclub.domain.usecases.club.GetClubMembersUseCase
@@ -29,4 +30,7 @@ val useCaseModule = module {
     singleOf(::GetCurrentUserProfileUseCase)
     singleOf(::GetUserStatisticsUseCase)
     singleOf(::GetCurrentlyReadingBooksUseCase)
+
+    // Auth UseCases
+    singleOf(::SignOutUseCase)
 }
