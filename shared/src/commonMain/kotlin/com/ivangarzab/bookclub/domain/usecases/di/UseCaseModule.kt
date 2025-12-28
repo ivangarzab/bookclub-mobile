@@ -6,6 +6,7 @@ import com.ivangarzab.bookclub.domain.usecases.club.GetClubDetailsUseCase
 import com.ivangarzab.bookclub.domain.usecases.club.GetClubMembersUseCase
 import com.ivangarzab.bookclub.domain.usecases.member.GetCurrentUserProfileUseCase
 import com.ivangarzab.bookclub.domain.usecases.member.GetCurrentlyReadingBooksUseCase
+import com.ivangarzab.bookclub.domain.usecases.member.GetMemberClubsUseCase
 import com.ivangarzab.bookclub.domain.usecases.member.GetUserStatisticsUseCase
 import com.ivangarzab.bookclub.domain.usecases.util.FormatDateTimeUseCase
 import org.koin.core.module.dsl.singleOf
@@ -30,6 +31,7 @@ val useCaseModule = module {
     singleOf(::GetCurrentUserProfileUseCase)
     singleOf(::GetUserStatisticsUseCase)
     singleOf(::GetCurrentlyReadingBooksUseCase)
+    singleOf(::GetMemberClubsUseCase)
 
     // Auth UseCases
     singleOf(::SignOutUseCase)
