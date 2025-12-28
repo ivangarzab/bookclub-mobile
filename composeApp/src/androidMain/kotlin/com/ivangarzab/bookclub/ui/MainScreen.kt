@@ -22,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -31,26 +32,54 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.ivangarzab.bookclub.R
+import com.ivangarzab.bookclub.presentation.viewmodels.main.MainViewModel
 import com.ivangarzab.bookclub.theme.KluvsTheme
 import com.ivangarzab.bookclub.ui.clubs.ClubsScreen
+import com.ivangarzab.bookclub.ui.components.LoadingScreen
 import com.ivangarzab.bookclub.ui.me.MeScreen
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
+    viewModel: MainViewModel = koinViewModel(),
+    onNavigateToLogin: () -> Unit,
+) {
+    val state by viewModel.state.collectAsState()
+
+    if (state.clubId == null || state.userId == null) {
+        LoadingScreen()
+    } else {
+        MainScreenContent(
+            modifier = modifier,
+            userId = state.userId!!,
+            clubId = state.clubId!!,
+            onNavigateToLogin = onNavigateToLogin
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainScreenContent(
+    modifier: Modifier = Modifier,
+    userId: String,
+    clubId: String,
     onNavigateToLogin: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
+
     val pagerState = rememberPagerState(
         pageCount = { 2 },
         initialPage = 0
     )
+
     val titles = listOf(
         stringResource(R.string.clubs),
         stringResource(R.string.me)
     )
+
 
     Scaffold(
         modifier = modifier,
@@ -149,12 +178,12 @@ fun MainScreen(
             when (page) {
                 0 -> ClubsScreen(
                     modifier = contentModifier,
-                    clubId = "0f01ad5e-0665-4f02-8cdd-8d55ecb26ac3"
+                    clubId = clubId,
                 )
                 1 -> /*HomeScreen(contentModifier)
                 2 ->*/ MeScreen(
                     modifier = contentModifier,
-                    userId = "5cc30117-4f77-462a-9881-dd63f0130a09",
+                    userId = userId,
                     onNavigateToLogin = onNavigateToLogin
                 )
             }
@@ -165,5 +194,8 @@ fun MainScreen(
 @PreviewLightDark
 @Composable
 fun Preview_MainScreen() = KluvsTheme {
-    MainScreen { }
+    MainScreenContent(
+        userId = "",
+        clubId = ""
+    ) { }
 }

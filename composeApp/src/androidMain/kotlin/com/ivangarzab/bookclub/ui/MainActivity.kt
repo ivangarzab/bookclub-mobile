@@ -80,7 +80,13 @@ fun MainNavHost(
             Text("Coming Soon...")
         }
         composable(NavDestinations.MAIN) {
-            MainScreen()
+            MainScreen(
+                onNavigateToLogin = {
+                    navController.navigate(NavDestinations.LOGIN) {
+                        popUpTo(NavDestinations.MAIN) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }
