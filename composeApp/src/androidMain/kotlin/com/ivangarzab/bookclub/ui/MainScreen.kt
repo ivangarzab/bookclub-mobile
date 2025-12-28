@@ -39,7 +39,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigateToLogin: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(
@@ -146,9 +147,16 @@ fun MainScreen(
             val contentModifier = Modifier
                 .fillMaxSize()
             when (page) {
-                0 -> ClubsScreen(contentModifier, "0f01ad5e-0665-4f02-8cdd-8d55ecb26ac3")
+                0 -> ClubsScreen(
+                    modifier = contentModifier,
+                    clubId = "0f01ad5e-0665-4f02-8cdd-8d55ecb26ac3"
+                )
                 1 -> /*HomeScreen(contentModifier)
-                2 ->*/ MeScreen(contentModifier, "5cc30117-4f77-462a-9881-dd63f0130a09")
+                2 ->*/ MeScreen(
+                    modifier = contentModifier,
+                    userId = "5cc30117-4f77-462a-9881-dd63f0130a09",
+                    onNavigateToLogin = onNavigateToLogin
+                )
             }
         }
     }
@@ -157,5 +165,5 @@ fun MainScreen(
 @PreviewLightDark
 @Composable
 fun Preview_MainScreen() = KluvsTheme {
-    MainScreen()
+    MainScreen { }
 }
